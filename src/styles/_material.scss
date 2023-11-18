@@ -1,0 +1,31 @@
+// **** Variables
+$primary-color: #39404A;
+
+// **** USE
+
+// Material Card
+@use "@material/card";
+
+// TextField
+@use "@material/floating-label/mdc-floating-label";
+@use "@material/line-ripple/mdc-line-ripple";
+@use "@material/notched-outline/mdc-notched-outline";
+@use "@material/textfield";
+
+// Button
+@use "@material/button/styles";
+
+// **** Include
+@include card.core-styles;
+@include textfield.core-styles;
+
+// 
+.textfield-custom {
+    @include textfield.focused-outline-color($primary-color);
+    // @include textfield.outline-color(#39404A);
+    @include textfield.label-color($primary-color)
+}
+
+.theme-dark {
+    --mdc-theme-primary: #39404A;
+}
