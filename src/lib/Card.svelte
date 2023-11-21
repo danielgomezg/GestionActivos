@@ -1,8 +1,4 @@
-<script>
-</script>
-
-<div 
-    class="mdc-card mdc-card--outlined">
+<div class="mdc-card mdc-card--outlined">
     <slot />
 </div>
 <style>

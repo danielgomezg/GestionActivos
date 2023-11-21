@@ -1,0 +1,97 @@
+<script>
+    // @ts-nocheck
+    import { TextField, Button } from "$lib";
+
+    export let openModal
+    let company = {
+        name: '',
+        rut: '',
+        pais: ''
+    }
+
+</script>
+
+<div class="form-company">
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Número" 
+        bind:value={company.name}
+    />
+    
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Descripcion" 
+        bind:value={company.rut}
+    />
+
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Dirección" 
+        bind:value={company.rut}
+    />
+
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Ciudad" 
+        bind:value={company.rut}
+    />
+
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Comuna" 
+        bind:value={company.rut}
+    />
+
+    <br>
+    <br>
+    <br>
+    <div class="company-actions grid-col-1">
+        <Button 
+            label="Guardar"
+        />
+        <Button 
+            type="outlined"
+            label="Cancelar"
+            color=""
+            on:click={ () => openModal = false }
+        />
+    </div>
+
+    <div class="grid-col-1">
+        <Button 
+            label="Agregar oficina"
+            color="#4F5DDB"
+        />
+    </div>
+</div>
+
+<style>
+    .form-company {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 8px;
+        padding: 0 24px 0 16px;
+        margin-top: 30px;
+    }
+
+    .company-actions {
+        display: flex;
+        gap: 8px;
+        grid-column: 1;
+    }
+
+    .grid-col-1 {
+        grid-column: 1;
+    }
+
+</style>

@@ -18,7 +18,7 @@
     })
 
 </script>
-<Card >
+<Card>
     <div class="logo-container theme-dark">
         <img
             src="/sca-logo-1.png"
@@ -28,14 +28,12 @@
     <div class="login-content">
         <h3>Ingreso usuarios</h3>
         <TextField 
-            version=2
             required 
             type="email"
             label="Correo" 
             bind:value={email} 
         />
         <TextField 
-            version=2
             required 
             type="password"
             label="Contraseña" 
