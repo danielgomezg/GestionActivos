@@ -1,6 +1,7 @@
 <script>
     // @ts-nocheck
     import { TextField, Button } from "$lib";
+    import { empresas } from "../../stores/user";
 
     export let openModal
     let company = {
@@ -8,7 +9,30 @@
         rut: '',
         pais: ''
     }
-    let showSucursalesBtn = false
+    let showSucursalesBtn = false, disabledSave = false
+
+    function formatRut(code) {
+        if (code == undefined) return ''
+        if (code.length >= 13) return code.slice(0, -1);
+        
+        let rut = code.replace(/[^\dkK]/g, '')
+
+        if (rut.length > 1) {
+            rut = rut.slice(0, -1) + '-' + rut.charAt(rut.length - 1);
+        }
+
+        if (rut.length > 5) {
+            rut = rut.slice(0, -5) + '.' + rut.slice(-5);
+        }
+
+        if (rut.length > 9) {
+            rut = rut.slice(0, -9) + '.' + rut.slice(-9);
+        }
+
+        return rut
+        
+        // return code
+    }
 
     function validForm() {
         if (company.name == '') return false;
@@ -19,20 +43,26 @@
     }
 
     const saveCompany = () => {
-        console.log('in save company')
-        console.log(company)
+        // Validacion formulario
         let isValid = validForm();
-        console.log(isValid)
         if (!isValid) return
-
+        
         // Peticion
+        disabledSave =  true;
+        setTimeout(() => {
+            empresas.update(data => {
+                data.push(company);
+                return data;
+            })
+            disabledSave = false
+            // Si la peticion es correcta 
+            showSucursalesBtn = true
+        }, 2000)
 
-        // Si la peticion es correcta 
-        showSucursalesBtn = true
     }
 
-    $: console.log(company)
-
+    $: company.rut = formatRut(company.rut)
+    
 </script>
 
 <div class="form-company">
@@ -66,6 +96,9 @@
     <br>
     <div class="company-actions grid-col-1">
         <Button 
+            trailing
+            disabled={disabledSave}
+            icon="save"
             label="Guardar"
             on:click={ saveCompany }
         />

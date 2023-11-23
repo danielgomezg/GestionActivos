@@ -15,6 +15,9 @@ $primary-color: #39404A;
 // Button
 @use "@material/button/styles";
 
+// Snackbar
+@use "@material/snackbar/mdc-snackbar";
+@use "@material/snackbar";
 // **** Include
 @include card.core-styles;
 @include textfield.core-styles;

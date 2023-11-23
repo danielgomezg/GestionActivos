@@ -1,6 +1,6 @@
 <script>
     // @ts-ignore
-    import { Button, SideSheets } from "$lib";
+    import { Button, SideSheets, Card } from "$lib";
     import Company from "../../components/company/company.svelte";
     import Sucursal from "../../components/sucursal/sucursal.svelte";
 
@@ -23,13 +23,64 @@
 
 </script>
 
-<Button label="Add Company" color="#4F5DDB" icon="add" on:click={ () => openSideSheets('company') }  />
-<Button label="Add Sucursal" color="#4F5DDB" icon="add" on:click={ () => openSideSheets('sucursal') }  />
+<div class="home__content">
+
+    <Card>
+        <div class="card__content">
+            <div class="card__title">
+                Empresas
+            </div>
+
+            <div class="card__actions">
+                <Button label="Sucursales" color="#4F5DDB" on:click={ () => openSideSheets('company') }  />
+                <Button label="Agregar" color="#4F5DDB" on:click={ () => openSideSheets('company') }  />
+            </div>
+        </div>
+    </Card>
+
+    <Card>
+        <div class="card__content">
+            <div class="card__title">
+                Sucursal
+            </div>
+
+            <div class="card__actions">
+                <Button label="Oficinas" color="#4F5DDB" on:click={ () => openSideSheets('sucursal') }  />
+                <Button label="Agregar" color="#4F5DDB" on:click={ () => openSideSheets('sucursal') }  />
+            </div>
+        </div>
+    </Card>
+
+</div>
 
 <SideSheets bind:open={openModal} title={modalTitle} >
     
     <svelte:component this={modalContent} bind:openModal={openModal} />
     
 </SideSheets>
-<h1>Home</h1>
+
+
 <a href="/">back</a>
+
+<style>
+    .card__title {
+        text-align: left;
+        font-size: 30px;
+        font-weight: 600;
+    }
+    .card__content {
+        padding: 16px;
+        width: 390px;
+    }
+
+    .card__actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+    .home__content {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+</style>

@@ -1,6 +1,6 @@
 <script>
     // @ts-ignore
-    import { Card, Button, TextField } from "$lib";
+    import { Card, Button, TextField, Snackbar, Loading } from "$lib";
     import { onMount } from "svelte";
     import { navigate } from "svelte-routing";
   
@@ -40,6 +40,7 @@
             bind:value={password} 
         />
         <br>
+        <Snackbar type="error" message="Un error ha ocurrido" />
         <Button label="Ingresar" on:click={ ingresar } />
     </div>
 

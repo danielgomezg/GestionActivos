@@ -17,3 +17,5 @@ export const user = createUser()
 export const user = writable(
     localStorage.user ? JSON.parse(localStorage.getItem("user")): null
 )*/
+
+export const empresas = writable([])

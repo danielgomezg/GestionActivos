@@ -1,3 +1,6 @@
+<script>
+    export let widthh = 'auto';
+</script>
 <div class="mdc-card mdc-card--outlined">
     <slot />
 </div>

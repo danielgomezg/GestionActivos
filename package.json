@@ -16,6 +16,7 @@
   "dependencies": {
     "@material/button": "^14.0.0",
     "@material/card": "^14.0.0",
+    "@material/snackbar": "^14.0.0",
     "@material/textfield": "^14.0.0",
     "@material/web": "^1.0.1",
     "sass": "^1.69.5",
