@@ -13,21 +13,54 @@ $primary-color: #39404A;
 @use "@material/textfield";
 
 // Button
-@use "@material/button/styles";
+@use "@material/button/styles" as button;
 
 // Snackbar
 @use "@material/snackbar/mdc-snackbar";
 @use "@material/snackbar";
+
+// Menu
+@use "@material/list/mdc-list";
+@use "@material/menu-surface/mdc-menu-surface";
+@use "@material/menu/mdc-menu";
+
+// Select
+@use "@material/select/styles" as Select;
+
+// Tabs
+@use "@material/tab-bar/mdc-tab-bar";
+@use "@material/tab-scroller/mdc-tab-scroller";
+@use "@material/tab-indicator/mdc-tab-indicator";
+@use "@material/tab/mdc-tab";
+
+// Icon button
+@use "@material/icon-button/styles";
+
+// Top Bar
+@use "@material/top-app-bar/mdc-top-app-bar";
+
+// Drawer
+@use "@material/drawer";
+@use "@material/list";
+
+
 // **** Include
 @include card.core-styles;
 @include textfield.core-styles;
+@include drawer.core-styles;
+@include drawer.dismissible-core-styles;
+@include drawer.modal-core-styles;
+// @include list.core-styles;
+// @include icon.icon-core-styles;
+// @import "@material/icon-button/mdc-icon-button";
 
-// 
+// Other styles
 .textfield-custom {
     @include textfield.focused-outline-color($primary-color);
     // @include textfield.outline-color(#39404A);
     @include textfield.label-color($primary-color)
 }
+
 
 .theme-dark {
     --mdc-theme-primary: #39404A;

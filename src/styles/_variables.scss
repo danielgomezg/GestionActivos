@@ -1,1 +1,28 @@
-$primary-color: #39404A
+.title {
+    font-size: 28px;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.card-container {
+    padding: 16px;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-actions {
+    gap: 8px;
+    display: flex;
+    justify-content: flex-end;
+}

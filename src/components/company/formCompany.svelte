@@ -4,11 +4,12 @@
     import { empresas } from "../../stores/user";
 
     export let openModal
-    let company = {
-        name: '',
-        rut: '',
-        pais: ''
-    }
+    export let company = {}
+    // let company = {
+    //     name: '',
+    //     rut: '',
+    //     pais: ''
+    // }
     let showSucursalesBtn = false, disabledSave = false
 
     function formatRut(code) {
@@ -126,7 +127,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-gap: 8px;
-        padding: 0 24px 0 16px;
+        /* padding: 0 24px 0 16px; */
         margin-top: 30px;
     }
 

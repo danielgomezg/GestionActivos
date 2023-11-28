@@ -1,7 +1,12 @@
 <script>
-    export let widthh = 'auto';
+    export let width = 'auto';
+
+    let style = `width: ${width}`
 </script>
-<div class="mdc-card mdc-card--outlined">
+<div 
+    class="mdc-card mdc-card--outlined"
+    style={style}
+>
     <slot />
 </div>
 <style>

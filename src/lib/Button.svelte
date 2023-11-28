@@ -1,10 +1,11 @@
 <script>
+    // @ts-ignore
     import { Loading } from "$lib"
     import { MDCRipple } from '@material/ripple';
     import { onMount } from 'svelte';
 
     export let label
-    export let color = '#39404A'
+    export let color = '#107acc'//'#39404A'
     export let icon = ''
     export let type = 'raised'
     export let trailing = false

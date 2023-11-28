@@ -3,11 +3,7 @@
     import { TextField, Button } from "$lib";
 
     export let openModal
-    let company = {
-        name: '',
-        rut: '',
-        pais: ''
-    }
+    export let sucursal = { }
 
 </script>
 
@@ -17,7 +13,7 @@
         required 
         type="text"
         label="Número" 
-        bind:value={company.name}
+        bind:value={sucursal.numero}
     />
     
     <TextField 
@@ -25,7 +21,7 @@
         required 
         type="text"
         label="Descripcion" 
-        bind:value={company.rut}
+        bind:value={sucursal.descripcion}
     />
 
     <TextField 
@@ -33,7 +29,7 @@
         required 
         type="text"
         label="Dirección" 
-        bind:value={company.rut}
+        bind:value={sucursal.direccion}
     />
 
     <TextField 
@@ -41,7 +37,7 @@
         required 
         type="text"
         label="Ciudad" 
-        bind:value={company.rut}
+        bind:value={sucursal.ciudad}
     />
 
     <TextField 
@@ -49,7 +45,7 @@
         required 
         type="text"
         label="Comuna" 
-        bind:value={company.rut}
+        bind:value={sucursal.comuna}
     />
 
     <br>
@@ -80,7 +76,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-gap: 8px;
-        padding: 0 24px 0 16px;
+        /* padding: 0 24px 0 16px; */
         margin-top: 30px;
     }
 

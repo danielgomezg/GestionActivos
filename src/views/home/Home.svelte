@@ -1,86 +1,52 @@
 <script>
+    import { onMount } from "svelte";
+    import Login from "../login/login.svelte";
+    import { Router, Route } from "svelte-routing";
+
     // @ts-ignore
-    import { Button, SideSheets, Card } from "$lib";
-    import Company from "../../components/company/company.svelte";
-    import Sucursal from "../../components/sucursal/sucursal.svelte";
+    import { TopAppBar, NavigationDrawer } from "$lib";
 
-    let openModal, modalTitle = '', modalContent
+    import ContentCompany from "../../components/company/contentCompany.svelte";
+    import ContentArticle from "../../components/articles/contentArticle.svelte";
 
-    const openSideSheets = (title = '') => {
-        switch (title) {
-            case 'company':
-                modalTitle = 'Empresa'
-                modalContent = Company
-                break;
-        
-            default:
-                modalTitle = 'Sucursal'
-                modalContent = Sucursal
-                break;
-        }
-        openModal = true
-    }
+    let isMobile = false, open = true;
+
+    onMount(() => {
+        isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        open = !isMobile
+    })
 
 </script>
 
-<div class="home__content">
-
-    <Card>
-        <div class="card__content">
-            <div class="card__title">
-                Empresas
-            </div>
-
-            <div class="card__actions">
-                <Button label="Sucursales" color="#4F5DDB" on:click={ () => openSideSheets('company') }  />
-                <Button label="Agregar" color="#4F5DDB" on:click={ () => openSideSheets('company') }  />
-            </div>
+<TopAppBar {isMobile} on:openNav={ () => open = !open }  />
+<main class="main" class:main-mobile={isMobile}>
+        <NavigationDrawer     
+            props={ { open, isMobile } } 
+        />
+        <div class="main-content" >
+            <Router>  
+                <Route path="/login" component={Login} />
+                <Route path="/empresas" component={ContentCompany} />
+                <Route path="/articulos" component={ContentArticle} />
+            </Router>
         </div>
-    </Card>
-
-    <Card>
-        <div class="card__content">
-            <div class="card__title">
-                Sucursal
-            </div>
-
-            <div class="card__actions">
-                <Button label="Oficinas" color="#4F5DDB" on:click={ () => openSideSheets('sucursal') }  />
-                <Button label="Agregar" color="#4F5DDB" on:click={ () => openSideSheets('sucursal') }  />
-            </div>
-        </div>
-    </Card>
-
-</div>
-
-<SideSheets bind:open={openModal} title={modalTitle} >
-    
-    <svelte:component this={modalContent} bind:openModal={openModal} />
-    
-</SideSheets>
-
-
-<a href="/">back</a>
+</main>
 
 <style>
-    .card__title {
-        text-align: left;
-        font-size: 30px;
-        font-weight: 600;
-    }
-    .card__content {
-        padding: 16px;
-        width: 390px;
+    .main {
+        position: relative;
+        top: 64px;
     }
 
-    .card__actions {
-        display: flex;
-        gap: 8px;
-        justify-content: flex-end;
+    .main-mobile {
+        top: 57px;
     }
-    .home__content {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+    .main-content {
+        max-width: 1230px;
+        margin: 0px auto;
+        padding: 0 16px;
     }
+
+
+
 </style>
