@@ -26,3 +26,23 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 8px;
+    /* padding: 0 24px 0 16px; */
+    margin-top: 30px;
+}
+
+.grid-col-span-2 {
+    grid-column: span 2;
+}
+
+.grid-col-span-1 {
+    grid-column: 1;
+}
+
+h4 {
+    margin: 0;
+}

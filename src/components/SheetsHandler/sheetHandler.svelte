@@ -1,11 +1,12 @@
 <script>
     // @ts-nocheck
-    import { SideSheets, BottomSheets } from "$lib";
     import { onMount } from "svelte";
+    import { fly } from "svelte/transition";
+    // @ts-nocheck
+    import { SideSheets, BottomSheets } from "$lib";
 
-    export let modalContent, openModal = false, modalTitle = '', props = { }
+    export let modalContent, openModal = false, modalTitle = '', props = { }, backButton
     let isMobile = false;
-    let previusComponent;
 
     onMount(() => {
         
@@ -23,15 +24,15 @@
         bind:open={openModal} 
     >
 
-        <svelte:component this={modalContent} bind:openModal={openModal} {...props} />
+        <svelte:component this={modalContent} {...props} />
 
     </BottomSheets>
 
 {:else}
 
-    <SideSheets bind:open={openModal} title={modalTitle} >
-        
-        <svelte:component this={modalContent} bind:openModal={openModal} {...props} />
+    <SideSheets bind:open={openModal} title={modalTitle} {backButton} >
+
+        <svelte:component this={modalContent} {...props} />
         
     </SideSheets>
 

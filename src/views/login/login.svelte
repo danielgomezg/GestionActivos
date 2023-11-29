@@ -15,6 +15,7 @@
             user.set({
                 name: 'Admin',
                 token: '',
+                perfil: '',
                 profile: {
                     name: 'admin',
                     actions: ['post', 'put', 'delete'] 

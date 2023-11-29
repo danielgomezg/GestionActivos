@@ -7,7 +7,7 @@
     
 
     // @ts-nocheck
-    export let open = false, title = ''
+    export let open = false, title = '', backButton = false
 
     $: if (open) {
         document.body.style.overflowY = "hidden";
@@ -20,10 +20,15 @@
     <div class="side-sheet" class:open={open} id="sideSheet">
         <div class="side-sheets__header">
             <div style="display: flex; align-items: center;">
-                <IconButton icon="arrow_back" on:click={ () => backModalContent() }/>
+                {#if backButton}
+                    <IconButton icon="arrow_back" on:click={ (event) => backModalContent(event) }/>
+                {/if}
                 <div class="title">{title}</div>
             </div>
-            <IconButton icon="close" on:click={ () => open = false }/>
+            <IconButton icon="close" on:click={ () => {
+                console.log('aaaaaaaaaaaaaaaaaaaaaaaa')
+                open = false
+            } }/>
         </div>
         <div class="side-sheets__content">
             <slot />

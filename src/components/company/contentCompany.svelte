@@ -11,25 +11,24 @@
     import { setContext } from "svelte";
     
 
-    let openModal = false;
+    let openModal = false, backButton = false;
     let modalTitle = ''
     let modalContent;  
     let props;
-    let previusComponent;
+    let previusComponent, previusProps;
 
     setContext('backModalContent', (e) => {
         e.preventDefault();
-        console.log('in back.......')
-        console.log(previusComponent)
-        
+        // if (modalContent === previusComponent) openModal = false;
+        backButton = false
         modalContent = previusComponent
-        openModal = true
+        props = { ...previusProps }
+        // openModal = true
     })
 
     setContext('editStore', (store) => {
         // Esta funcion cambia el contenido del side sheets o bottom.
         // guardamos el componente que se esta mostrando
-        previusComponent = modalContent;
         editStore(store)
     })
 
@@ -52,9 +51,14 @@
     }
 
     const showStores = (company) => {
+        // Se guarda componente actual para boton back
+        previusComponent = modalContent;
+        previusProps = { ...props };
+
         modalTitle = `${company.name} - sucursales`
         modalContent = StoresInfo;
         props = { }
+        backButton = false
         openModal = true
     }
 
@@ -72,12 +76,19 @@
     }
 
     const editStore = (sucursal) => {
-        modalTitle = `Tienda ${sucursal.numero}`
+        // Se guarda componente actual para boton back
+        previusComponent = modalContent;
+        previusProps = { ...props };
+
+        modalTitle = `Sucursal ${sucursal.numero}`
         modalContent = FormSucursal;
         props = { sucursal }
+        backButton = true
         openModal = true
 
     }
+
+    $: console.log('open modal: ', openModal)
 
 </script>
 
@@ -104,16 +115,10 @@
 <SheetHandler
     {props}
     {modalTitle}
+    {backButton}
     {modalContent}
     bind:openModal={openModal}
-    on:editStore={ (event) => editStore(event.detail) }
 />
-
-<!-- <SideSheets bind:open={openModal} title={modalTitle} >
-    
-    <svelte:component this={modalContent} bind:openModal={openModal} {...props} />
-    
-</SideSheets> -->
 
 <style>
     .header-company {
