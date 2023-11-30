@@ -46,3 +46,25 @@
 h4 {
     margin: 0;
 }
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 8px;
+    /* padding: 0 24px 0 16px; */
+    margin-top: 30px;
+}

@@ -1,7 +1,7 @@
 <script>
     import Nav from "../components/nav.svelte";
     import Input from "../components/input.svelte";
-    import { user } from "../stores/user";
+    import { user } from "../stores/store";
     import Btn from "../components/btn.svelte";
     
     //Datos de usuario
@@ -53,9 +53,9 @@
 
 //Guarda en el store el user
     function guardarStore(){
-        user.setUser({
-            username, password, fullname, id
-        })
+        // user.setUser({
+        //     username, password, fullname, id
+        // })
         localStorage.setItem('user', JSON.stringify({
         username, password, fullname, id
         }))

@@ -3,7 +3,7 @@
     // @ts-ignore
     import { Select, Card, Button } from "$lib";
     
-    import { empresas, session } from "../../stores/user";
+    import { empresas, session } from "../../stores/store";
 
     let loading = false, selectCompany;
 

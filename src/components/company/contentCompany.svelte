@@ -2,7 +2,7 @@
     // @ts-ignore
     import { Button, IconButton } from "$lib"
     import StoresInfo from "./storesInfo.svelte";
-    import { empresas } from "../../stores/user";
+    import { empresas } from "../../stores/store";
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
     import FormSucursal from "../sucursal/formSucursal.svelte";

@@ -3,7 +3,7 @@
   import Btn from '../components/btn.svelte'
   import AddCard from "../components/addCard.svelte";
   import BtnAccion from "../components/btnAccion.svelte";
-  import {user} from "../stores/user"
+  import {user} from "../stores/store"
   import { navigate } from "svelte-routing";
   import Nav from "../components/nav.svelte";
   

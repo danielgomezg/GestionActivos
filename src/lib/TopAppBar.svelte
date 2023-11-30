@@ -1,7 +1,7 @@
 <script>
     // @ts-ignore
     import { IconButton } from "$lib";
-    import { user } from "../stores/user";
+    import { user } from "../stores/store";
     import { MDCTopAppBar } from '@material/top-app-bar';
     import { createEventDispatcher, onMount } from 'svelte';
 
@@ -39,6 +39,7 @@
         <!-- <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Favorite">favorite</button>
         <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Search">search</button>
         <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Options">more_vert</button> -->
+        <slot name="account" />
       </section>
     </div>
 </header>

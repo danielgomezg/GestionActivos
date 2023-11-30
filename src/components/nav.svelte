@@ -1,6 +1,6 @@
 <script>
 import { navigate } from "svelte-routing";
-import {user} from "../stores/user"
+import { user } from "../stores/store"
 
 function goToPerfil(){
     navigate("/perfil", {replace: true})
@@ -11,7 +11,7 @@ function goToMovies(){
 }
 
 function logOut(){
-    user.setUser(null)
+    // user.setUser(null)s
     localStorage.clear()
     navigate("/", {replace: true})
   }

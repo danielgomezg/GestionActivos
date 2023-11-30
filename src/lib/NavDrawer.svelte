@@ -1,18 +1,17 @@
 <script>
-    import { MDCList } from "@material/list";
+  import { onMount } from "svelte";
+    import { user, sideNavigationLinks } from "../stores/store";
     import { Link, Router } from "svelte-routing";
-    import { user } from "../stores/user";
 
     export let props = {}
 
     let drawerList, selected = '';
 
-    const linkSelected = (to = '') => {
-        // event.preventDefault();
-        selected = to
-    }
+    onMount(() => {
+        console.log()
+        selected = window.location.pathname
+    })
 
-    $: console.log($user)
 
 
 </script>
@@ -26,35 +25,16 @@
             <span class="mdc-list-item__text">Empresas</span>
         </a> -->
         <Router>
-            <Link class="link" to="/empresas" style="color: inherit; text-decoration: none;" on:click={() => selected = '/empresas'}>
-                <div class="mdc-list-item mdc-list-item--activated" class:mdc-list-item--activated={selected == '/empresas'} >
 
-                    <span class="mdc-list-item__ripple"></span>
-                    <!-- <i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i> -->
-                    <span class="mdc-list-item__text">Empresas</span>
-                </div>
-            </Link>
-            <Link  to="/articulos" style="color: inherit; text-decoration: none;" on:click={() => linkSelected('/articulos')}>
-                <div class="mdc-list-item" class:mdc-list-item--activated={selected == '/articulos'} >
-                    <span class="mdc-list-item__ripple"></span>
-                    <!-- <i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i> -->
-                    <span class="mdc-list-item__text">Articulos</span>
-                </div>
-            </Link>
-            <Link  to="/sucursales" style="color: inherit; text-decoration: none;" on:click={() => linkSelected('/sucursales')}>
-                <div class="mdc-list-item" class:mdc-list-item--activated={selected == '/sucursales'}>
-                    <span class="mdc-list-item__ripple"></span>
-                    <!-- <i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i> -->
-                    <span class="mdc-list-item__text">Sucursales</span>
-                </div>
-            </Link>
-            <Link  to="/reportes" style="color: inherit; text-decoration: none;" on:click={() => linkSelected('/reportes')}>
-                <div class="mdc-list-item" class:mdc-list-item--activated={selected == '/reportes'}>
-                    <span class="mdc-list-item__ripple"></span>
-                    <!-- <i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i> -->
-                    <span class="mdc-list-item__text">Reportes</span>
-                </div>
-            </Link>
+            {#each $sideNavigationLinks as navigation }
+                <Link to="/{navigation.link}" style="color: inherit; text-decoration: none;" on:click={() => selected = '/' + navigation.link }>
+                    <div class="mdc-list-item" class:mdc-list-item--activated={ selected == '/' + navigation.link } >
+                        <span class="mdc-list-item__ripple"></span>
+                        <!-- <i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i> -->
+                        <span class="mdc-list-item__text">{navigation.link}</span>
+                    </div>
+                </Link>
+            {/each}
 
         </Router>   
     </nav>
@@ -81,6 +61,10 @@
 
     .mobile {
         width: 100%;
+    }
+
+    .mdc-list-item__text {
+        text-transform: capitalize;
     }
 
 </style>

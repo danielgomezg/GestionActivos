@@ -3,7 +3,7 @@
     import { Card, Button, TextField, Snackbar } from "$lib";
     import { onMount } from "svelte";
     import { navigate } from "svelte-routing";
-    import { user } from "../../stores/user";
+    import { user } from "../../stores/store";
   
     let email = "", password = "", loading = false, error = false
 

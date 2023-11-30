@@ -6,8 +6,8 @@
     // export let openModal
     export let sucursal = { }
 
-    let addOffice = false, office = { piso: '', descripcion: ''}
-    let officeEdit = {}
+    let addOffice = false
+    let officeEdit = {}, editing = -1
 
     let offices = [
         {
@@ -27,12 +27,15 @@
         }
     ]
 
-    let editing = null;
-
     function toggleEdit(office, index) {
-        // editing = editing === index ? null : index;
+        if (editing == index) {
+            editing = -1;
+            return;
+        }
+
         officeEdit = { ...office }
-        document.querySelector(`#office-${index}`).style.display = "block"
+        addOffice = false
+        editing = index
     }
 
     onMount(() => {
@@ -109,28 +112,31 @@
         <ul>
             {#each offices as office, index} 
             <tr>
-                <td style="width: 50%;"><li>{ office.piso  + ' ' + office.descripcion }</li></td>
-                <td style="width: 50%;">
+                <td style="width: 65%;"><li>{ office.piso  + ' ' + office.descripcion }</li></td>
+                <td style="width: 65%;">
                     <IconButton icon="edit" on:click={ () => toggleEdit(office, index) } />
                     <IconButton icon="delete" on:click />
                 </td>    
             </tr>
-            <tr  id="office-{index}" style="display: none;">
-                <TextField 
-                    version=2
-                    required 
-                    type="text"
-                    label="Número piso" 
-                    bind:value={office.piso}
-                />
-                <TextField 
-                    version=2
-                    required 
-                    type="text"
-                    label="Descripción" 
-                    bind:value={office.descripcion}
-                />
-            </tr>
+            {#if editing == index}
+                <tr style="display: block;">
+                    <TextField 
+                        version=2
+                        required 
+                        type="text"
+                        label="Número piso" 
+                        bind:value={officeEdit.piso}
+                    />
+                    <TextField 
+                        version=2
+                        required 
+                        type="text"
+                        label="Descripción" 
+                        bind:value={officeEdit.descripcion}
+                    />
+                    <IconButton icon="save" />
+                </tr>
+            {/if}
             {/each}
         </ul>
     </table>
@@ -158,10 +164,27 @@
     {/if}
     
     <div class="company-actions grid-col-span-1">
-        <Button 
-            label="Agregar"
-            on:click={ () => addOffice = true}
-        />
+        {#if addOffice}
+            <Button 
+                label="Guardar"
+                on:click={ () => {
+                    officeEdit = { piso: '', descripcion: '' }
+                    addOffice = true
+                    editing = -1
+                }}
+            />
+        {:else}
+            <Button 
+                label="Agregar"
+                on:click={ () => {
+                    officeEdit = { piso: '', descripcion: '' }
+                    addOffice = true
+                    editing = -1
+                }}
+            />
+        {/if}
+        
+        
         <Button 
             label="Cancelar"
             type="outlined"

@@ -1,9 +1,8 @@
 <script>
     // @ts-nocheck
     import { TextField, Button } from "$lib";
-    import { empresas } from "../../stores/user";
+    import { empresas } from "../../stores/store";
 
-    export let openModal
     export let company = {}
     // let company = {
     //     name: '',
@@ -103,12 +102,12 @@
             label="Guardar"
             on:click={ saveCompany }
         />
-        <Button 
+        <!-- <Button 
             type="outlined"
             label="Cancelar"
             color=""
             on:click={ () => openModal = false }
-        />
+        /> -->
     </div>
 
     {#if showSucursalesBtn}
