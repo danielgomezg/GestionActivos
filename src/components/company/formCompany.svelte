@@ -65,7 +65,7 @@
     
 </script>
 
-<div class="form-company">
+<div class="form">
     <TextField 
         version=2
         id="name-company"
@@ -122,14 +122,6 @@
 </div>
 
 <style>
-    .form-company {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 8px;
-        /* padding: 0 24px 0 16px; */
-        margin-top: 30px;
-    }
-
     .company-actions {
         display: flex;
         gap: 8px;

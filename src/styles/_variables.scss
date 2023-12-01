@@ -25,18 +25,31 @@
     gap: 8px;
     display: flex;
     justify-content: flex-end;
+
+    @media only screen and (max-width: 600px) {
+        flex-direction: column;
+        margin-top: 10px;    
+    }
 }
 
 .form {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 8px;
-    /* padding: 0 24px 0 16px; */
     margin-top: 30px;
+
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        grid-template-columns: 1fr;
+    }
 }
 
 .grid-col-span-2 {
     grid-column: span 2;
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        grid-column: 1;
+    }
 }
 
 .grid-col-span-1 {
@@ -59,12 +72,4 @@ h4 {
 
 .align-center {
     align-items: center;
-}
-
-.form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 8px;
-    /* padding: 0 24px 0 16px; */
-    margin-top: 30px;
 }

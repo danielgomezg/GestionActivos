@@ -23,7 +23,7 @@
 </script>
 
 
-<div>NOMBRE DE USUARIO</div>
+<div style="text-align: right;">NOMBRE DE USUARIO</div>
 <div class="account-container">
     <IconButton on:click={() => { openOptions=!openOptions }} icon="account_circle" />
     {#if openOptions}

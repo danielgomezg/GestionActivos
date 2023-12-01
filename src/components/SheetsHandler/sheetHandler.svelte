@@ -19,10 +19,7 @@
 
 {#if isMobile}
 
-    <BottomSheets 
-        title={modalTitle}
-        bind:open={openModal} 
-    >
+    <BottomSheets bind:open={openModal}  title={modalTitle} {backButton} >
 
         <svelte:component this={modalContent} {...props} />
 

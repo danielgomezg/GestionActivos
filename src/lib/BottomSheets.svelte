@@ -1,13 +1,17 @@
 <script>
+        import { getContext } from "svelte";
+
         // @ts-nocheck
         import { fade, fly } from 'svelte/transition';
         // @ts-ignore
         import { IconButton } from "$lib";
         
-        export let open = false, persistance = false, height = '80%', drag = false, title = ''
-    
-        let resize = false;
+        
+        export let open = false, persistance = false, height = '90%', drag = false, title = '', backButton = false
+        
         let content;
+        let resize = false;
+        let backModalContent = getContext('backModalContent');
         
         
         // @ts-ignore
@@ -50,15 +54,20 @@
             out:fade 
         >
             <div class="header">
+                <div style="display: flex; align-items: center;">
+                    {#if backButton}
+                        <IconButton icon="arrow_back" on:click={ (event) => backModalContent(event) }/>
+                    {/if}
+                    <div class="title">{title}</div>
+                </div>
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div>{ title }</div>
                 <div class="drag" 
                     on:touchmove={ dragging }
                 >
                     <!-- <slot name="header" /> -->
                 </div>
-                <IconButton icon="close" />
+                <IconButton icon="close" on:click={ () => open = persistance } />
             </div>
             <div class="body">
                 <!-- <slot name="content" /> -->
