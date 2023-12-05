@@ -1,13 +1,31 @@
 <script>
     // @ts-nocheck
-    import { TextField, Button, Divider, IconButton } from "$lib";
+    import { TextField, Button, Divider, IconButton, Select } from "$lib";
     import { onMount } from "svelte";
+    import { locationsChile } from "../../../helpers/locationsChile"
 
     // export let openModal
     export let sucursal = { }
 
     let addOffice = false
     let officeEdit = {}, editing = -1
+    let regiones = [
+            {
+                label: 'Bread, Cereal, Rice, and Pasta',
+                value: 'grains',
+                selected: false
+            },
+            {
+                label: 'Vegetables',
+                value: 'vegetables',
+                selected: false
+            },
+            {
+                label: 'Fruit',
+                value: 'fruit',
+                selected: false
+            }
+        ], comunas = [], regionSelected = ''
 
     let offices = [
         {
@@ -38,9 +56,43 @@
         editing = index
     }
 
+    const setComuna = (region) => {
+        console.log('set comunas > ', region)
+        // comunas = locationsChile.find((location, index) => {
+        //     return {
+        //         index,
+        //         name: location.region
+        //     }
+        // })
+    }
+
     onMount(() => {
+        console.log('mount form sucursal')
         // Peticion para buscar las oficinas de una sucursal
-        
+        // regiones = locationsChile.map((location, index) => {
+        //     return {
+        //         id: index,
+        //         value: index + 1,
+        //         name: location.region
+        //     }
+        // })
+        // regiones = [
+        //     {
+        //         label: 'Bread, Cereal, Rice, and Pasta',
+        //         value: 'grains',
+        //         selected: false
+        //     },
+        //     {
+        //         label: 'Vegetables',
+        //         value: 'vegetables',
+        //         selected: false
+        //     },
+        //     {
+        //         label: 'Fruit',
+        //         value: 'fruit',
+        //         selected: false
+        //     }
+        // ]
     })
 
 </script>
@@ -70,7 +122,39 @@
         bind:value={sucursal.direccion}
     />
 
-    <TextField 
+    <Select 
+        label="Región"
+        options={ 
+            locationsChile.map((location, index) => {
+                return {
+                    value: location.region,
+                    label: location.region
+                }
+            })
+        }
+        bind:selected={ regionSelected }
+        on:change={ (event) => {
+            let r = locationsChile.find(rg => rg.region == event.detail)
+            comunas = r.comunas.map(cm => {
+                return {
+                    label: cm,
+                    value: cm
+                }
+            })
+        } }
+    />
+
+    {#key comunas}
+
+    <Select 
+        label="Comunas"
+        options={comunas}
+        on:change={ (event) => setComuna(event.detail) }
+    />
+
+    {/key}
+
+    <!-- <TextField 
         version=2
         required 
         type="text"
@@ -84,7 +168,7 @@
         type="text"
         label="Comuna" 
         bind:value={sucursal.comuna}
-    />
+    /> -->
 
     <br>
     <br>

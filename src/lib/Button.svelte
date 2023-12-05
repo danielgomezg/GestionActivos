@@ -20,7 +20,7 @@
         new MDCRipple(button);
     })
 
-    $: if (loading) disabled = true
+    $: if (loading) disabled = !disabled
 
 </script>
 

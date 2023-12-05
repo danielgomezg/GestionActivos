@@ -1,15 +1,21 @@
 <script>
     // @ts-nocheck
-    import { TextField, Button } from "$lib";
-    import { empresas } from "../../stores/store";
+    import { TextField, Button, Select, Snackbar } from "$lib";
+    import Api from "../../../helpers/ApiCall";
+
 
     export let company = {}
-    // let company = {
-    //     name: '',
-    //     rut: '',
-    //     pais: ''
-    // }
-    let showSucursalesBtn = false, disabledSave = false
+    let showSucursalesBtn = false, disabledSave = false, loading = false, message = 'Empresa agregada'
+    let paises = [
+        {
+            label: 'Chile',
+            value: 'Chile'
+        },
+        {
+            label: 'Perú',
+            value: 'Perú'
+        }
+    ]
 
     function formatRut(code) {
         if (code == undefined) return ''
@@ -37,33 +43,40 @@
     function validForm() {
         if (company.name == '') return false;
         if (company.rut == '') return false;
-        if (company.pais == '') return false;
+        if (company.country == '') return false;
         
         return true
     }
 
-    const saveCompany = () => {
+    const saveCompany = async () => {
         // Validacion formulario
         let isValid = validForm();
         if (!isValid) return
-        
+        loading = true;
+
         // Peticion
-        disabledSave =  true;
-        setTimeout(() => {
-            empresas.update(data => {
-                data.push(company);
-                return data;
-            })
-            disabledSave = false
-            // Si la peticion es correcta 
-            showSucursalesBtn = true
-        }, 2000)
+        console.log('SAVE')
+        console.log(company)    
+        let body = JSON.stringify(company)  
+        let response = (await Api.call('http://localhost:7000/company', 'POST', { body }))
+        console.log('RESPONSE SAVE COMPANY --> ', response)
+        if (response.success) {
+            if (response.data.code == 201) {
+                message = "Empresa agregada"
+                company.name = '',
+                company.rut = ''
+                company.country = ''
+            }
+        }
+        loading = false
 
     }
 
     $: company.rut = formatRut(company.rut)
     
 </script>
+
+<Snackbar {message} />
 
 <div class="form">
     <TextField 
@@ -83,12 +96,10 @@
         bind:value={company.rut}
     />
 
-    <TextField 
-        version=2
-        required 
-        type="text"
-        label="País" 
-        bind:value={company.pais}
+    <Select 
+        label="País"
+        options={paises}
+        on:change={ (event) => company.country = event.detail }
     />
 
     <br>
@@ -96,10 +107,10 @@
     <br>
     <div class="company-actions grid-col-1">
         <Button 
-            trailing
-            disabled={disabledSave}
-            icon="save"
+            leading
+            icon="done"
             label="Guardar"
+            bind:loading={loading}
             on:click={ saveCompany }
         />
         <!-- <Button 
@@ -111,12 +122,12 @@
     </div>
 
     {#if showSucursalesBtn}
-    <div class="grid-col-1">
-        <Button 
-            label="Agregar Sucursales"
-            color="#4F5DDB"
-        />
-    </div>
+        <div class="grid-col-1">
+            <Button 
+                label="Agregar Sucursales"
+                color="#4F5DDB"
+            />
+        </div>
 
     {/if}
 </div>

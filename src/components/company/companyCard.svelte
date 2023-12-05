@@ -6,6 +6,8 @@
     export let company = {}
     let dispath = createEventDispatcher();
 
+    $: console.log('company > ', company)
+
 </script>
 
 <Card>
@@ -18,11 +20,11 @@
             <div>🆔 { company.rut }</div>
             <div>
                 <img src="/ChileFlag.png" style="width: 20px;" alt="flag" />
-                { company.pais }
+                { company.country }
             </div>
             <div class="store-info">
                 <span class="material-symbols-outlined">store</span>
-                <div> { company.totalSucursales } sucursales</div>
+                <div> { company.sucursales.length || 0 } sucursales</div>
             </div>
         </div>
         <div class="card-actions">

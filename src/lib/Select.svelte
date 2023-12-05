@@ -1,25 +1,46 @@
 <script>
-    import { onMount, createEventDispatcher  } from 'svelte';
-    import { MDCMenu } from '@material/menu';
+    import { onMount, createEventDispatcher, onDestroy  } from 'svelte';
     import { MDCSelect } from '@material/select';
 
-    export let label = '', options = [], value = ''
+    export let label = '', options = [], selected = -1
 
     let dispatch = createEventDispatcher()
 
     let selectComponent;
     let menuComponent;
+    let select
+
+    const updateValue = (selected) => {
+        if (options.length  == 0) return;
+        if (!select) return;
+
+        select.value = selected.toString();
+        // selectedIndex = select.selectedIndex = options.findIndex(option => option.value == selectedValue);
+    }
+
+    const setDispatch = () => {
+        console.log('set dispach')
+        console.log(select)
+        
+            
+        dispatch("change", select.value)
+    }
 
     onMount(() => {
-        const select = new MDCSelect(selectComponent);
-        select.listen('MDCSelect:change', () => {
-            // alert(`Selected option at index ${select.selectedIndex} with value "${select.value}"`);
-            
-            dispatch("change", {
-                value: select.value,
-                index: select.selectedIndex
-            })
-        });
+        console.log('mount select')
+        select = new MDCSelect(selectComponent);
+        console.log(select)
+        // select.value = ''
+        // select.menuItemValues = options
+        select.listen('MDCSelect:change', setDispatch);
+
+
+    })
+
+    onDestroy(() => {
+        if (select != undefined) {
+            select.unlisten("MDCSelect:change", setDispatch)
+        }
     })
 
 </script>
@@ -57,16 +78,55 @@
 
     <!-- Other elements from the select remain. -->
     <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
-        <ul class="mdc-list">
-          
-            {#each options as option}
-                <li class="mdc-list-item" aria-selected="false" data-value="grains" role="option">
+        <ul class="mdc-list " role="listbox" aria-label="">
+            
+            <!-- svelte-ignore a11y-role-supports-aria-props -->
+            <!-- {#each options as option, index}
+                <li 
+                    class="mdc-list-item"  
+                    data-value={option.value.toString()} 
+                    class:mdc-list-item--selected={ option.value == selected }
+                    aria-selected={ option.value == selected }
+                    role="option"
+                >
+                    <span class="mdc-list-item__ripple"></span>
+                    <span class="mdc-list-item__text">{ option.name }</span>
+                </li>
+            {/each} -->
+            <!-- <li class="mdc-list-item mdc-list-item--selected" aria-selected="true" data-value="" role="option">
+                <span class="mdc-list-item__ripple"></span>
+            </li> -->
+            {#each options as option }
+                <li 
+                    class="mdc-list-item" 
+                    aria-selected={option.selected} 
+                    data-value={option.value} 
+                    role="option"
+                >
                     <span class="mdc-list-item__ripple"></span>
                     <span class="mdc-list-item__text">
-                        { option.name }
+                        {option.label}
                     </span>
                 </li>
             {/each}
+            <!-- <li class="mdc-list-item" aria-selected="false" data-value="grains" role="option">
+                <span class="mdc-list-item__ripple"></span>
+                <span class="mdc-list-item__text">
+                    Bread, Cereal, Rice, and Pasta
+                </span>
+            </li>
+            <li class="mdc-list-item " aria-selected="false" data-value="vegetables" role="option">
+                <span class="mdc-list-item__ripple"></span>
+                <span class="mdc-list-item__text">
+                    Vegetables
+                </span>
+            </li>
+            <li class="mdc-list-item" aria-selected="false" data-value="fruit" role="option">
+                <span class="mdc-list-item__ripple"></span>
+                <span class="mdc-list-item__text">
+                    Fruit
+                </span>
+            </li> -->
 
         </ul>
     </div>

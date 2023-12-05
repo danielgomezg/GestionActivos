@@ -3,13 +3,40 @@
     import { Card, Button, TextField, Snackbar } from "$lib";
     import { onMount } from "svelte";
     import { navigate } from "svelte-routing";
+    import { empresas } from "../../stores/store";
     import { user } from "../../stores/store";
   
-    let email = "", password = "", loading = false, error = false
+    let usuario = {
+        email: "",
+        password: ""
+    }
+    let message = "", error = false, loading = false;
+
+    const validData = () => {
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuario.email)) {
+            message = "Correo invalido"
+            error = true
+            return false;
+        }
+
+        if (usuario.password == "") {
+            message = "Falta ingresar constraseña"
+            error = true;
+            return false;
+        }
+
+        error = false;
+        return true;
+    }
 
     function ingresar() {
+        // let valid = validData()
+        // console.log(valid)
+        // console.log(error)
+        // if (!valid) return;
+
         loading = true;
-        
 
         setTimeout(() => {
             user.set({
@@ -32,6 +59,11 @@
         // SI ESTA LOGGEADO REDIRECCIONAR A /home
     })
 
+    // $: if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) {
+    //     error.message = ""
+    //     error.show = false
+    // }
+
 </script>
 <div style="display: flex; justify-content: center;">
     <Card width="320px">
@@ -47,19 +79,23 @@
                 required 
                 type="email"
                 label="Correo" 
-                bind:value={email} 
+                bind:value={usuario.email} 
             />
             <TextField 
                 required 
                 type="password"
                 label="Contraseña" 
-                bind:value={password} 
+                bind:value={usuario.password} 
             />
             <br>
             {#if error}
-                <Snackbar type="error" message="Un error ha ocurrido" />
+                <Snackbar type="error" message={message} />
             {/if}
-            <Button label="Ingresar" { loading } on:click={ ingresar } />
+            <Button 
+                label="Ingresar" 
+                { loading } 
+                on:click={ ingresar } 
+            />
         </div>
 
     </Card>

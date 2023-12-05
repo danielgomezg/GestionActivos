@@ -1,14 +1,18 @@
 <script>
+// @ts-nocheck
+
     // @ts-ignore
-    import { Button, IconButton } from "$lib"
+    import { Button, IconButton, Loading } from "$lib"
     import StoresInfo from "./storesInfo.svelte";
-    import { empresas } from "../../stores/store";
+    // import { empresas } from "../../stores/store";
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
-    import { setContext } from "svelte";
+    import Api from "../../../helpers/ApiCall";
+
+    import { onMount, setContext } from "svelte";
     
 
     let openModal = false, backButton = false;
@@ -16,6 +20,8 @@
     let modalContent;  
     let props;
     let previusComponent, previusProps;
+    let empresas = []
+    let loading = false;
 
     setContext('backModalContent', (e) => {
         e.preventDefault();
@@ -38,7 +44,7 @@
         props = { company: {
             name: '',
             rut: '',
-            pais: ''
+            country: ''
         } }
         openModal = true
     }
@@ -57,7 +63,7 @@
 
         modalTitle = `${company.name} - sucursales`
         modalContent = StoresInfo;
-        props = { }
+        props = { stores: company.sucursales }
         backButton = false
         openModal = true
     }
@@ -88,6 +94,20 @@
 
     }
 
+    const getCompanies = async () => {
+        loading = true;
+        let response = (await Api.call('http://localhost:7000/companies'))
+        console.log('RESPONSE GET COMPANIES --> ', response)
+        if (response.success) {
+            empresas = response.data //empresas.set(response.data)
+        } 
+        loading = false;
+    }
+
+    onMount(async () => {
+        getCompanies() 
+    })
+
     $: console.log('open modal: ', openModal)
 
 </script>
@@ -101,7 +121,10 @@
     <br>
 
     <div class="companies-content">
-        {#each $empresas as company }    
+        {#if loading}
+            <Loading />
+        {/if}
+        {#each empresas as company }    
             <CardCompany 
                 {company} 
                 on:edit={ (event) => editCompany(event.detail) } 

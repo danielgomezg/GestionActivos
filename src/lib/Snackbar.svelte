@@ -7,7 +7,7 @@
     let snackbar
 
     onMount(() => {
-        new MDCSnackbar(snackbar);
+        // new MDCSnackbar(snackbar);
     })
 </script>
 
@@ -25,6 +25,19 @@
         color: #FFFFFF;
         background-color: #FF6659;
         border-radius: 5px;
+    }
+
+    .default {
+      width: fit-content;
+      background-color: #322F35;
+      color: #F5EFF7;
+      border-radius: 4px;
+      font-size: 15px;
+      padding-left: 4px;
+      font-weight: 500;
+      padding-right: 8px;
+      width: 260px;
+
     }
 </style>
 

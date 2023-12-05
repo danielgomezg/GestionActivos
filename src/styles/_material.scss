@@ -61,6 +61,11 @@ $primary-color: #39404A;
     @include textfield.label-color($primary-color)
 }
 
+.mdc-button {
+    // @include shape-radius(12px) 
+}
+
+
 
 .theme-dark {
     --mdc-theme-primary: #39404A;
