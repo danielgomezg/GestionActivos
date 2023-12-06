@@ -49,6 +49,12 @@
         return true
     }
 
+    function getTokenFromLocalStorage() {
+        return localStorage.getItem('accessToken');
+    }
+
+    let token = getTokenFromLocalStorage()
+
     const saveCompany = async () => {
         // Validacion formulario
         let isValid = validForm();
@@ -59,7 +65,7 @@
         console.log('SAVE')
         console.log(company)    
         let body = JSON.stringify(company)  
-        let response = (await Api.call('http://localhost:7000/company', 'POST', { body }))
+        let response = (await Api.call('http://127.0.0.1:8000/company', 'POST', { body }, token))
         console.log('RESPONSE SAVE COMPANY --> ', response)
         if (response.success) {
             if (response.data.code == 201) {

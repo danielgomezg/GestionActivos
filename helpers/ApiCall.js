@@ -1,11 +1,11 @@
 class Api {
 
-    static call(url = '', method = 'GET', body = {}) {
+    static call(url = '', method = 'GET', body = {}, token = "") {
         
         let params = { 
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer <token>'
+                'Authorization': `Bearer ${token}`
             },
             ...body
         }
