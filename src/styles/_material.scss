@@ -50,6 +50,8 @@ $primary-color: #39404A;
 @include drawer.core-styles;
 @include drawer.dismissible-core-styles;
 @include drawer.modal-core-styles;
+@include snackbar.core-styles;
+// @include button.core-styles;
 // @include list.core-styles;
 // @include icon.icon-core-styles;
 // @import "@material/icon-button/mdc-icon-button";
@@ -58,14 +60,18 @@ $primary-color: #39404A;
 .textfield-custom {
     @include textfield.focused-outline-color($primary-color);
     // @include textfield.outline-color(#39404A);
-    @include textfield.label-color($primary-color)
+    @include textfield.label-color($primary-color);
 }
 
-.mdc-button {
-    // @include shape-radius(12px) 
+.mdc-snackbar-custom { 
+    @include snackbar.z-index(600);
+    top: 0;
+    bottom: auto;
 }
 
-
+// .mdc-button-custom {
+//     @include button.shape-radius(120px, 1, False)
+// }
 
 .theme-dark {
     --mdc-theme-primary: #39404A;

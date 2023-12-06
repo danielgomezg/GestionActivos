@@ -20,7 +20,8 @@
         new MDCRipple(button);
     })
 
-    $: if (loading) disabled = !disabled
+    $: console.log('button loading > ', loading)
+    $: if (loading) disabled = loading
 
 </script>
 
@@ -34,7 +35,6 @@
         class:disabled={disabled}
         on:click
         {style}
-        {disabled}
     >
     
         <span class="mdc-button__ripple"></span>

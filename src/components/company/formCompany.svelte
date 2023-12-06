@@ -1,7 +1,8 @@
 <script>
     // @ts-nocheck
-    import { TextField, Button, Select, Snackbar } from "$lib";
+    import { TextField, Button, Select } from "$lib";
     import Api from "../../../helpers/ApiCall";
+    import { snackbar } from "../../stores/store";
 
 
     export let company = {}
@@ -66,17 +67,20 @@
                 company.name = '',
                 company.rut = ''
                 company.country = ''
+
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.message = "Empresa agregada"
+                    return snk
+                })
             }
         }
         loading = false
-
     }
 
     $: company.rut = formatRut(company.rut)
     
 </script>
-
-<Snackbar {message} />
 
 <div class="form">
     <TextField 
@@ -108,9 +112,8 @@
     <div class="company-actions grid-col-1">
         <Button 
             leading
-            icon="done"
             label="Guardar"
-            bind:loading={loading}
+            {loading}
             on:click={ saveCompany }
         />
         <!-- <Button 

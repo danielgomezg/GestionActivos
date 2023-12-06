@@ -2,7 +2,7 @@
     import { onMount, createEventDispatcher, onDestroy  } from 'svelte';
     import { MDCSelect } from '@material/select';
 
-    export let label = '', options = [], selected = -1
+    export let label = '', options = [], selected = ''
 
     let dispatch = createEventDispatcher()
 
@@ -19,21 +19,15 @@
     }
 
     const setDispatch = () => {
-        console.log('set dispach')
-        console.log(select)
-        
             
         dispatch("change", select.value)
     }
 
     onMount(() => {
-        console.log('mount select')
         select = new MDCSelect(selectComponent);
-        console.log(select)
-        // select.value = ''
-        // select.menuItemValues = options
+        if (selected != '') updateValue(selected)
+       
         select.listen('MDCSelect:change', setDispatch);
-
 
     })
 
@@ -79,23 +73,6 @@
     <!-- Other elements from the select remain. -->
     <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
         <ul class="mdc-list " role="listbox" aria-label="">
-            
-            <!-- svelte-ignore a11y-role-supports-aria-props -->
-            <!-- {#each options as option, index}
-                <li 
-                    class="mdc-list-item"  
-                    data-value={option.value.toString()} 
-                    class:mdc-list-item--selected={ option.value == selected }
-                    aria-selected={ option.value == selected }
-                    role="option"
-                >
-                    <span class="mdc-list-item__ripple"></span>
-                    <span class="mdc-list-item__text">{ option.name }</span>
-                </li>
-            {/each} -->
-            <!-- <li class="mdc-list-item mdc-list-item--selected" aria-selected="true" data-value="" role="option">
-                <span class="mdc-list-item__ripple"></span>
-            </li> -->
             {#each options as option }
                 <li 
                     class="mdc-list-item" 
@@ -109,25 +86,6 @@
                     </span>
                 </li>
             {/each}
-            <!-- <li class="mdc-list-item" aria-selected="false" data-value="grains" role="option">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">
-                    Bread, Cereal, Rice, and Pasta
-                </span>
-            </li>
-            <li class="mdc-list-item " aria-selected="false" data-value="vegetables" role="option">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">
-                    Vegetables
-                </span>
-            </li>
-            <li class="mdc-list-item" aria-selected="false" data-value="fruit" role="option">
-                <span class="mdc-list-item__ripple"></span>
-                <span class="mdc-list-item__text">
-                    Fruit
-                </span>
-            </li> -->
-
         </ul>
     </div>
 </div>

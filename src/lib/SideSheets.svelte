@@ -57,7 +57,7 @@
         bottom: 0;
         top: 0;
         right: 0;
-        z-index: 10000;
+        z-index: 500;
     }
 
     .side-sheet {

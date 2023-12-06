@@ -1,5 +1,10 @@
 import { writable } from 'svelte/store'
 
+export const snackbar = writable({
+    open: false,
+    message: ''
+})
+
 export const user = writable(null) //createUser()
 export const session = writable({
     user: {},

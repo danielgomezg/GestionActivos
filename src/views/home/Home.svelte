@@ -6,7 +6,7 @@
 
 
     // @ts-ignore
-    import { TopAppBar, NavigationDrawer } from "$lib";
+    import { TopAppBar, NavigationDrawer, Snackbar } from "$lib";
 
     import UserAccount from "../../components/userAccount/userAccount.svelte";
     import ContentCompany from "../../components/company/contentCompany.svelte";
@@ -36,6 +36,7 @@
             />
         {/if}
         <div class="main-content" >
+            <Snackbar />
             <Router>  
                 <Route path="/login" component={Login} />
                 <Route path="/empresas" component={ContentCompany} />
