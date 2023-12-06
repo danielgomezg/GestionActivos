@@ -94,9 +94,16 @@
 
     }
 
+    function getTokenFromLocalStorage() {
+        return localStorage.getItem('accessToken');
+    }
+
+    let token = getTokenFromLocalStorage()
+
+
     const getCompanies = async () => {
         loading = true;
-        let response = (await Api.call('http://localhost:7000/companies'))
+        let response = (await Api.call('http://127.0.0.1:8000/companies', 'GET', {}, token))
         console.log('RESPONSE GET COMPANIES --> ', response)
         if (response.success) {
             empresas = response.data //empresas.set(response.data)

@@ -5,6 +5,7 @@
     import { navigate } from "svelte-routing";
     import { empresas } from "../../stores/store";
     import { user } from "../../stores/store";
+    import Api from "../../../helpers/ApiCall";
   
     let usuario = {
         email: "",
@@ -17,6 +18,12 @@
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuario.email)) {
             message = "Correo invalido"
             error = true
+            return false;
+        }
+
+        if (usuario.email == "") {
+            message = "Falta ingresar un correo"
+            error = true;
             return false;
         }
 
@@ -51,6 +58,37 @@
             navigate("/empresas", {replace: true})
             loading = false
         }, 1000)
+    }
+
+    function saveTokenToLocalStorage(token) {
+        localStorage.setItem('accessToken', token);
+    }
+
+    async function iniciarSesion(e){
+        e.preventDefault()
+
+        console.log("email: " + usuario.email + " password: " + usuario.password)
+
+        let valid = validData()
+
+        if(valid){
+            let body = JSON.stringify(usuario) 
+            let response = (await Api.call('http://127.0.0.1:8000/login', 'POST', { body }))
+            console.log('RESPONSE LOGIN --> ', response)
+            if (response.success) {
+                if (response.data.code == 201) {
+                    message = "Usuario ingresado correctamente"
+                    usuario.email = '',
+                    usuario.password = ''
+                    user.set({
+                        token: response.data.result.access_token
+                    })
+                    saveTokenToLocalStorage(response.data.result.access_token)
+                    navigate("/empresas", {replace: true})
+                }
+            } 
+        
+        }
     }
 
     onMount(() => {
@@ -94,7 +132,7 @@
             <Button 
                 label="Ingresar" 
                 { loading } 
-                on:click={ ingresar } 
+                on:click={ iniciarSesion } 
             />
         </div>
 

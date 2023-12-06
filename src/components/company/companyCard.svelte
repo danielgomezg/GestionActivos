@@ -6,7 +6,7 @@
     export let company = {}
     let dispath = createEventDispatcher();
 
-    $: console.log('company > ', company)
+    $: console.log('company => ', company)
 
 </script>
 
