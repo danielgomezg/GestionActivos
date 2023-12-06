@@ -2,6 +2,7 @@
     // @ts-nocheck
     import { IconButton, Button } from "$lib"
     import { onMount, onDestroy } from "svelte";
+    import { user } from "../../stores/store";
 
     let openOptions = false 
 
@@ -23,7 +24,7 @@
 </script>
 
 
-<div style="text-align: right;">NOMBRE DE USUARIO</div>
+<div style="text-align: right;">{ $user.name + ' ' + $user.lastName }</div>
 <div class="account-container">
     <IconButton on:click={() => { openOptions=!openOptions }} icon="account_circle" />
     {#if openOptions}

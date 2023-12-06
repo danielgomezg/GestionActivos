@@ -1,12 +1,11 @@
 <script>
-    // @ts-ignore
-    import { Card, Button, TextField, Snackbar } from "$lib";
     import { onMount } from "svelte";
     import { navigate } from "svelte-routing";
-    import { empresas } from "../../stores/store";
     import { user } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
-  
+    // @ts-ignore
+    import { Card, Button, TextField, Snackbar } from "$lib";
+    
     let usuario = {
         email: "",
         password: ""
@@ -37,29 +36,6 @@
         return true;
     }
 
-    function ingresar() {
-        // let valid = validData()
-        // console.log(valid)
-        // console.log(error)
-        // if (!valid) return;
-
-        loading = true;
-
-        setTimeout(() => {
-            user.set({
-                name: 'Admin',
-                token: '',
-                perfil: '',
-                profile: {
-                    name: 'admin',
-                    actions: ['post', 'put', 'delete'] 
-                }
-            })
-            navigate("/empresas", {replace: true})
-            loading = false
-        }, 1000)
-    }
-
     function saveTokenToLocalStorage(token) {
         localStorage.setItem('accessToken', token);
     }
@@ -76,13 +52,15 @@
             let response = (await Api.call('http://127.0.0.1:8000/login', 'POST', { body }))
             console.log('RESPONSE LOGIN --> ', response)
             if (response.success) {
+                // @ts-ignore
                 if (response.data.code == 201) {
                     message = "Usuario ingresado correctamente"
                     usuario.email = '',
                     usuario.password = ''
                     user.set({
-                        token: response.data.result.access_token
+                        ...response.data.result.user
                     })
+                    localStorage.setItem("user",  JSON.stringify($user))
                     saveTokenToLocalStorage(response.data.result.access_token)
                     navigate("/empresas", {replace: true})
                 }
@@ -92,15 +70,11 @@
     }
 
     onMount(() => {
-        // CHECK IF IS LOGGED.
-
-        // SI ESTA LOGGEADO REDIRECCIONAR A /home
+        localStorage.removeItem("user")
+        user.set(null)
     })
 
-    // $: if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) {
-    //     error.message = ""
-    //     error.show = false
-    // }
+    $: console.log('user store > ', $user)
 
 </script>
 <div style="display: flex; justify-content: center;">

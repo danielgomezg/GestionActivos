@@ -20,7 +20,6 @@
         new MDCRipple(button);
     })
 
-    $: console.log('button loading > ', loading)
     $: if (loading) disabled = loading
 
 </script>

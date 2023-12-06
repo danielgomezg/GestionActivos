@@ -18,6 +18,14 @@
     onMount(() => {
         isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         open = !isMobile
+
+
+        let userSession = localStorage.getItem("user")
+        console.log('local storage user: ', JSON.parse(userSession))
+        if (user != null) {
+            user.set(JSON.parse(userSession))
+        }
+        console.log($user)
     })
 
 </script>

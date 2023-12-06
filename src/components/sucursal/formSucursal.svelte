@@ -66,6 +66,10 @@
         // })
     }
 
+    const saveSucursal = () => {
+        
+    }
+
     onMount(() => {
         console.log('mount form sucursal')
         // Peticion para buscar las oficinas de una sucursal
@@ -176,6 +180,7 @@
     <div class="company-actions grid-col-span-1">
         <Button 
             label="Guardar"
+            on:click={ saveSucursal }
         />
         <!-- <Button 
             type="outlined"
