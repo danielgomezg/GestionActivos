@@ -4,8 +4,13 @@
     import { onMount } from "svelte";
     import { locationsChile } from "../../../helpers/locationsChile"
 
+    import Api from "../../../helpers/ApiCall";
+
     // export let openModal
     export let sucursal = { }
+
+    let message = ""
+    let token=""
 
     let addOffice = false
     let officeEdit = {}, editing = -1
@@ -58,6 +63,7 @@
 
     const setComuna = (region) => {
         console.log('set comunas > ', region)
+        sucursal.commune = region
         // comunas = locationsChile.find((location, index) => {
         //     return {
         //         index,
@@ -66,8 +72,56 @@
         // })
     }
 
-    const saveSucursal = () => {
-        
+    const setRegion = (region) => {
+        console.log('set región > ', region)
+        sucursal.region = region
+    }
+
+    function validForm() {
+        if (sucursal.description == ''){
+            message = "Falta agregar una descripción a la sucursal"
+            return false;
+        }
+        if (sucursal.number == ''){
+            message = "Falta agregar un numero a la sucursal"
+            return false;
+        } 
+        if (sucursal.address == ''){
+            message = "Falta agregar una dirección a la sucursal"
+            return false; 
+        }
+        if (sucursal.region == ''){
+            message = "Falta agregar una región a la sucursal"
+            return false; 
+        } 
+        if (sucursal.commune == ''){
+            message = "Falta agregar una comuna a la sucursal"
+            return false; 
+        }   
+        return true
+    }
+
+    const saveSucursal = async () => {
+        // Validacion formulario
+        let isValid = validForm();
+        if (!isValid) return console.log(message)
+        //loading = true;
+        // Peticion
+        console.log(sucursal)   
+        let body = JSON.stringify(sucursal)  
+        let response = (await Api.call('http://127.0.0.1:9000/sucursal', 'POST', { body }, token))
+        console.log('RESPONSE SAVE SUCURSAL --> ', response)
+        if (response.success) {
+            if (response.data.code == 201) {
+                message = "Sucursal agregada"
+                sucursal.desciption = '',
+                sucursal.number = ''
+                sucursal.address = ''
+                sucursal.region = ''
+                sucursal.commune= ''
+            }
+        }
+        //loading = false
     }
 
     onMount(() => {
@@ -107,7 +161,7 @@
         required 
         type="text"
         label="Número" 
-        bind:value={sucursal.numero}
+        bind:value={sucursal.number}
     />
     
     <TextField 
@@ -115,7 +169,7 @@
         required 
         type="text"
         label="Descripcion" 
-        bind:value={sucursal.descripcion}
+        bind:value={sucursal.description}
     />
 
     <TextField 
@@ -123,7 +177,7 @@
         required 
         type="text"
         label="Dirección" 
-        bind:value={sucursal.direccion}
+        bind:value={sucursal.address}
     />
 
     <Select 
@@ -139,6 +193,8 @@
         bind:selected={ regionSelected }
         on:change={ (event) => {
             let r = locationsChile.find(rg => rg.region == event.detail)
+            console.log(r)
+            setRegion(r.region)
             comunas = r.comunas.map(cm => {
                 return {
                     label: cm,

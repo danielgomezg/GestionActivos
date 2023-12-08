@@ -1,9 +1,24 @@
 <script>
     // @ts-nocheck
-    import { TextField, Button } from "$lib";
+    import { TextField, Button, Select } from "$lib";
+    import Api from "../../../helpers/ApiCall";
+    import { onMount } from "svelte";
+  import FormCompany from "../company/formCompany.svelte";
     
-    export let usuario = {}
+    export let usuario = {}, companies = {}
+    let message= '', token = ''
     let disabledSave = false
+
+    let perfil = [
+        {
+            label: 'Admin',
+            value: 1
+        },
+        {
+            label: 'Empresa',
+            value: 2
+        }
+    ]
 
     function formatRut(code) {
         if (code == undefined) return ''
@@ -28,11 +43,83 @@
         // return code
     }
 
-    const saveUser = () => {
-
+    function obtenerRut(cadena) {
+    // Elimina guiones y puntos usando expresiones regulares
+        const soloDigitos = cadena.replace(/[-.]/g, '');
+        const sinUltimoDigito = soloDigitos.slice(0, -1);
+        console.log(sinUltimoDigito)
+        return sinUltimoDigito;
     }
 
+    function validForm() {
+        if (usuario.firstName == ''){
+            message = "Falta agregar el nombre al usuario"
+            return false;
+        }
+        if (usuario.lastName == ''){
+            message = "Falta agregar el apellido al usuario"
+            return false;
+        } 
+        if (usuario.email == ''){
+            message = "Falta agregar el correo al usuario"
+            return false; 
+        }
+        if (usuario.rut == ''){
+            message = "Falta agregar el rut al usuario"
+            return false; 
+        } 
+        if (usuario.profile_id == ''){
+            message = "Falta agregarle un perfil al usuario"
+            return false; 
+        }   
+        return true
+    }
+
+    function getTokenFromLocalStorage() {
+        return localStorage.getItem('accessToken');
+    }
+
+    token = getTokenFromLocalStorage()
+
+
+    const saveUser = async () => {
+        // Validacion formulario
+        let isValid = validForm();
+        if (!isValid) return console.log(message)
+        //loading = true;
+
+        usuario.password = obtenerRut(usuario.rut)
+        usuario.company_id = parseInt(usuario.company_id, 10)
+        usuario.profile_id = parseInt(usuario.profile_id, 10)
+        // Peticion
+        console.log(usuario)   
+        let body = JSON.stringify(usuario)  
+        let response = (await Api.call('http://127.0.0.1:9000/user', 'POST', { body }, token))
+        console.log('RESPONSE SAVE USER --> ', response)
+        if (response.success) {
+            if (response.data.code == 201) {
+                message = "Usuario agregado"
+                usuario.firstName = ''
+                usuario.secondName = ''
+                usuario.lastName = ''
+                usuario.secondLastName = ''
+                usuario.email = ''
+                usuario.password = ''
+                usuario.rut = ''
+                usuario.company_id = ''
+                usuario.profile_id = ''
+            }
+        }
+        //loading = false
+    }
+    
+    onMount(async () => {
+    })
+
+    console.log(usuario)
+
     $: usuario.rut = formatRut(usuario.rut)
+    $: console.log(usuario.profile_id)
 
 </script>
 
@@ -44,7 +131,7 @@
         required 
         type="text"
         label="Nombre" 
-        bind:value={usuario.nombre}
+        bind:value={usuario.firstName}
     />
 
     <TextField 
@@ -53,7 +140,7 @@
         required 
         type="text"
         label="Segundo nombre" 
-        bind:value={usuario.segundoNombre}
+        bind:value={usuario.secondName}
     />
     
     <TextField 
@@ -61,7 +148,7 @@
         required 
         type="text"
         label="Apellido" 
-        bind:value={usuario.apellido}
+        bind:value={usuario.lastName}
     />
 
     <TextField 
@@ -69,7 +156,7 @@
         required 
         type="text"
         label="Segundo apellido" 
-        bind:value={usuario.segundoApellido}
+        bind:value={usuario.secondLastName}
     />
 
     <TextField 
@@ -77,7 +164,7 @@
         required 
         type="text"
         label="Correo" 
-        bind:value={usuario.correo}
+        bind:value={usuario.email}
     />
 
     <TextField 
@@ -86,6 +173,18 @@
         type="text"
         label="Rut" 
         bind:value={usuario.rut}
+    />
+
+    <Select 
+        label="Perfil"
+        options={perfil}
+        on:change={ (event) => usuario.profile_id = event.detail }
+    />
+
+    <Select 
+        label="Compañias"
+        options={companies}
+        on:change={ (event) => usuario.company_id = event.detail }
     />
 
     <br>

@@ -63,7 +63,7 @@
 
         modalTitle = `${company.name} - sucursales`
         modalContent = StoresInfo;
-        props = { stores: company.sucursales }
+        props = { stores: company.sucursales, company_id:  company.id}
         backButton = false
         openModal = true
     }
@@ -72,11 +72,12 @@
         modalTitle = `Nueva sucursal ${company.name}`
         modalContent = FormSucursal;
         props = { sucursal: {
-            numero: '',
-            direccion: '',
-            descripcion: '',
-            comuna: '',
-            ciudad: '',
+            number: '',
+            address: '',
+            description: '',
+            commune: '',
+            region: '',
+            company_id: company.id
         } }
         openModal = true
     }
@@ -103,10 +104,10 @@
 
     const getCompanies = async () => {
         loading = true;
-        let response = (await Api.call('http://127.0.0.1:8000/companies', 'GET', {}, token))
+        let response = (await Api.call('http://127.0.0.1:9000/companies', 'GET', {}, token))
         console.log('RESPONSE GET COMPANIES --> ', response)
         if (response.success) {
-            empresas = response.data //empresas.set(response.data)
+            empresas = response.data.result //empresas.set(response.data)
         } 
         loading = false;
     }
