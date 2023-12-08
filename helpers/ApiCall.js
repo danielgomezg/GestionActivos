@@ -1,7 +1,14 @@
 class Api {
 
+    static getTokenFromLocalStorage() {
+        return localStorage.getItem('accessToken');
+    }
+
     static call(url = '', method = 'GET', body = {}, token = "") {
         
+        
+        token = Api.getTokenFromLocalStorage()
+
         let params = { 
             headers: {
                 'Content-Type': 'application/json',
@@ -28,5 +35,4 @@ class Api {
     }
 
 }
-
 export default Api

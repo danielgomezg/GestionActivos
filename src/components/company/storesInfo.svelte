@@ -6,8 +6,9 @@
     import Api from "../../../helpers/ApiCall";
 
     let editStore = getContext('editStore');
-    export let stores = [], company_id = 0
-
+    export let company_id = 0
+    let stores = []
+    
     function getTokenFromLocalStorage() {
         return localStorage.getItem('accessToken');
     }
@@ -27,7 +28,7 @@
 
     onMount(async () => {
 
-        getSucursalePorCompany()
+        await getSucursalePorCompany()
         console.log(stores)
     })
   

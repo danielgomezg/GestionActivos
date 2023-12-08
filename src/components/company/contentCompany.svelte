@@ -16,7 +16,7 @@
     
 
     let openModal = false, backButton = false;
-    let modalTitle = ''
+    let modalTitle = '', previusModelTitle = []
     let modalContent;  
     let props;
     let previusComponent, previusProps;
@@ -28,6 +28,7 @@
         // if (modalContent === previusComponent) openModal = false;
         backButton = false
         modalContent = previusComponent
+        modalTitle = previusModelTitle
         props = { ...previusProps }
         // openModal = true
     })
@@ -57,11 +58,12 @@
     }
 
     const showStores = (company) => {
-        // Se guarda componente actual para boton back
+        // Se guarda componente actual para boton back 
         previusComponent = modalContent;
         previusProps = { ...props };
 
         modalTitle = `${company.name} - sucursales`
+        previusModelTitle = modalTitle
         modalContent = StoresInfo;
         props = { stores: company.sucursales, company_id:  company.id}
         backButton = false
@@ -87,7 +89,7 @@
         previusComponent = modalContent;
         previusProps = { ...props };
 
-        modalTitle = `Sucursal ${sucursal.numero}`
+        modalTitle = `Sucursal ${sucursal.number}`
         modalContent = FormSucursal;
         props = { sucursal }
         backButton = true

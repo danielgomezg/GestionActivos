@@ -1,7 +1,7 @@
 <script>
     // @ts-nocheck
     import { TextField, Button, Divider, IconButton, Select } from "$lib";
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { locationsChile } from "../../../helpers/locationsChile"
 
     import Api from "../../../helpers/ApiCall";
@@ -10,45 +10,12 @@
     export let sucursal = { }
 
     let message = ""
-    let token=""
 
     let addOffice = false
     let officeEdit = {}, editing = -1
-    let regiones = [
-            {
-                label: 'Bread, Cereal, Rice, and Pasta',
-                value: 'grains',
-                selected: false
-            },
-            {
-                label: 'Vegetables',
-                value: 'vegetables',
-                selected: false
-            },
-            {
-                label: 'Fruit',
-                value: 'fruit',
-                selected: false
-            }
-        ], comunas = [], regionSelected = ''
+    let comunas = [], regionSelected = ''
 
-    let offices = [
-        {
-            id: 1,
-            piso: 1,
-            descripcion: 'piso de tecnologia'
-        },
-        {
-            id: 2,
-            piso: 2,
-            descripcion: 'ropa de mujer'
-        },
-        {
-            id: 3,
-            piso: 3,
-            descripcion: 'ropa de hombre'
-        }
-    ]
+    let offices = []
 
     function toggleEdit(office, index) {
         if (editing == index) {
@@ -109,7 +76,7 @@
         // Peticion
         console.log(sucursal)   
         let body = JSON.stringify(sucursal)  
-        let response = (await Api.call('http://127.0.0.1:9000/sucursal', 'POST', { body }, token))
+        let response = (await Api.call('http://127.0.0.1:9000/sucursal', 'POST', { body }))
         console.log('RESPONSE SAVE SUCURSAL --> ', response)
         if (response.success) {
             if (response.data.code == 201) {
@@ -124,33 +91,28 @@
         //loading = false
     }
 
-    onMount(() => {
+
+    const getOffices = async (id_sucursal) => {
+        //loading = true;
+        let response = (await Api.call(`http://127.0.0.1:9000/officePorSucursal/${id_sucursal}`, 'GET', {}))
+        console.log('RESPONSE GET Offices --> ', response)
+        if (response.success) {
+            offices = response.data.result
+            console.log(offices) 
+        } 
+        //loading = false;
+    }
+
+    onMount(async () => {
         console.log('mount form sucursal')
-        // Peticion para buscar las oficinas de una sucursal
-        // regiones = locationsChile.map((location, index) => {
-        //     return {
-        //         id: index,
-        //         value: index + 1,
-        //         name: location.region
-        //     }
-        // })
-        // regiones = [
-        //     {
-        //         label: 'Bread, Cereal, Rice, and Pasta',
-        //         value: 'grains',
-        //         selected: false
-        //     },
-        //     {
-        //         label: 'Vegetables',
-        //         value: 'vegetables',
-        //         selected: false
-        //     },
-        //     {
-        //         label: 'Fruit',
-        //         value: 'fruit',
-        //         selected: false
-        //     }
-        // ]
+        console.log(sucursal.id)
+        if(sucursal.id > 0 ){
+            await getOffices(sucursal.id)
+        }
+    })
+
+    onDestroy(() => {
+        console.log('Destroy sucursal')
     })
 
 </script>
@@ -257,7 +219,7 @@
         <ul>
             {#each offices as office, index} 
             <tr>
-                <td style="width: 65%;"><li>{ office.piso  + ' ' + office.descripcion }</li></td>
+                <td style="width: 65%;"><li>{ office.floor  + ' ' + office.description }</li></td>
                 <td style="width: 65%;">
                     <IconButton icon="edit" on:click={ () => toggleEdit(office, index) } />
                     <IconButton icon="delete" on:click />
@@ -270,18 +232,20 @@
                         required 
                         type="text"
                         label="Número piso" 
-                        bind:value={officeEdit.piso}
+                        bind:value={officeEdit.floor}
                     />
                     <TextField 
                         version=2
                         required 
                         type="text"
                         label="Descripción" 
-                        bind:value={officeEdit.descripcion}
+                        bind:value={officeEdit.description}
                     />
                     <IconButton icon="save" />
                 </tr>
             {/if}
+            {:else}
+                <p> No se encontraron oficinas. </p>
             {/each}
         </ul>
     </table>
@@ -293,7 +257,7 @@
                 required 
                 type="text"
                 label="Número piso" 
-                bind:value={officeEdit.piso}
+                bind:value={officeEdit.floor}
             />
         <!-- </div> -->
         <!-- <div class="grid-col-span-1"> -->
@@ -302,7 +266,7 @@
                 required 
                 type="text"
                 label="Descripción" 
-                bind:value={officeEdit.descripcion}
+                bind:value={officeEdit.description}
             />
         <!-- </div> -->
             
@@ -313,7 +277,7 @@
             <Button 
                 label="Guardar"
                 on:click={ () => {
-                    officeEdit = { piso: '', descripcion: '' }
+                    officeEdit = { floor: '', description: '' }
                     addOffice = true
                     editing = -1
                 }}
@@ -322,7 +286,7 @@
             <Button 
                 label="Agregar"
                 on:click={ () => {
-                    officeEdit = { piso: '', descripcion: '' }
+                    officeEdit = { floor: '', description: '' }
                     addOffice = true
                     editing = -1
                 }}
