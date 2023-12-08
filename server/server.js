@@ -1,19 +1,52 @@
-// const express = require('express');
-// const path = require('path');
+import fetch from "node-fetch";
+// import { createServer, resolveConfig } from "vite";
+import { resolve } from "path";
+// import fs from "fs"
 
-import express from 'express';
-import path from 'path'
-import { dirname } from 'path';
+const serveStaticFiles = async (app) => {
+  app.use(async (req, res, next) => {
+    if (req.path.match(/\.\w+$/)) {
+      console.log('enter if')
+      const viteHost = "http://localhost:5173"
+      console.log({ viteHost });
+      fetch(`${viteHost}${req.path}`).then((response) => {
+        if (!response.ok) return next();
+        res.redirect(response.url);
+      });
+    } else {
+      console.log('enter else')
 
-const app = express();
+      next();
+    }
+  });
+};
 
-app.use(express.static(path.join(__dirname, 'public')));
+/** Muestra el layout del build o el de desarrollo */
+const handleRedirect = async (req, res, next) => {
+  res.sendHTML = (path) => {
+    console.log('send html > ', path)
+    let filePath = path.replace(viteConfig.distPath, viteConfig.rootPath)
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+    // const html = setInstanceVariables(req.session, filePath)
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+    res.setHeader("Content-Type", "text/html")
+    res.send(html);
+  };
+
+  next();
+};
+
+
+const listen = (app, port, callback) => {
+  console.log('listen')
+  return app.listen(port, async () => {
+    // if (environment === "development") {
+      await serveStaticFiles(app);
+      await startDevServer();
+    // }
+    callback === null || callback === void 0 ? void 0 : callback();
+  });
+};
+
+
+export default { listen, handleRedirect };

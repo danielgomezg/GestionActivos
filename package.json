@@ -8,12 +8,13 @@
     "build": "vite build",
     "preview": "vite preview",
     "node-server": "node server/server.js",
-    "start": "npm run dev & npm run node-server"
+    "start": "nodemon src/server/app.js"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
     "svelte": "^4.0.5",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "nodemon": "^2.0.20"
   },
   "dependencies": {
     "@material/button": "^14.0.0",
@@ -28,8 +29,10 @@
     "@material/top-app-bar": "^14.0.0",
     "@material/web": "^1.0.1",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "sass": "^1.69.5",
     "svelte-preprocess": "^5.1.0",
-    "svelte-routing": "^2.5.0"
+    "svelte-routing": "^2.5.0",
+    "node-fetch": "^2.0.0"
   }
 }
