@@ -10,6 +10,7 @@
 
     import UserAccount from "../../components/userAccount/userAccount.svelte";
     import ContentCompany from "../../components/company/contentCompany.svelte";
+    import ContentProfile from "../../components/profile/contentProfile.svelte";
     import ContentArticle from "../../components/articles/contentArticle.svelte";
     import ContentUsuarios from "../../components/usuarios/contentUsuarios.svelte";
 
@@ -50,6 +51,7 @@
                 <Route path="/empresas" component={ContentCompany} />
                 <Route path="/articulos" component={ContentArticle} />
                 <Route path="/usuarios" component={ContentUsuarios} />
+                <Route path="/perfiles" component={ContentProfile} />
             </Router>
         </div>
 </main>

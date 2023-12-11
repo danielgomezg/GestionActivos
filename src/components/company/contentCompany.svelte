@@ -9,6 +9,7 @@
     import FormCompany from "./formCompany.svelte";
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
+    import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
 
     import Api from "../../../helpers/ApiCall";
 
@@ -51,9 +52,9 @@
     }
 
     const editCompany = (company) => {
-        modalTitle = company.name
+        modalTitle = company.name + " - editando"
         modalContent = FormCompany;
-        props = { company }
+        props = { company, isEdit: true }
         openModal = true
     }
 
@@ -72,7 +73,7 @@
 
     const newStore = (company) => {
         modalTitle = `Nueva sucursal ${company.name}`
-        modalContent = FormSucursal;
+        modalContent = FormSucursalSave;
         props = { sucursal: {
             number: '',
             address: '',

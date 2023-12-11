@@ -3,10 +3,11 @@
     import { TextField, Button, Select } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
+    import Perfil from "../../views/perfil.svelte";
 
 
-    export let company = {}
-    let showSucursalesBtn = false, disabledSave = false, loading = false, message = 'Empresa agregada'
+    export let company = {}, isEdit = false;
+    let showSucursalesBtn = false, disabledSave = false, loading = false, message = 'Empresa agregada';
     let paises = [
         {
             label: 'Chile',
@@ -55,15 +56,19 @@
 
     let token = getTokenFromLocalStorage()
 
+    const editCompany = async () => {
+        console.log('edit company')
+        console.log(company)
+    }
+
     const saveCompany = async () => {
+        console.log('form company > save')
         // Validacion formulario
         let isValid = validForm();
         if (!isValid) return
         loading = true;
 
         // Peticion
-        console.log('SAVE')
-        console.log(company)    
         let body = JSON.stringify(company)  
         let response = (await Api.call('http://127.0.0.1:9000/company', 'POST', { body }, token))
         console.log('RESPONSE SAVE COMPANY --> ', response)
@@ -109,6 +114,7 @@
     <Select 
         label="País"
         options={paises}
+        selected={company.country}
         on:change={ (event) => company.country = event.detail }
     />
 
@@ -116,12 +122,23 @@
     <br>
     <br>
     <div class="company-actions grid-col-1">
-        <Button 
-            leading
-            label="Guardar"
-            {loading}
-            on:click={ saveCompany }
-        />
+        {#if !isEdit}
+            <Button 
+                leading
+                label="Guardar"
+                {loading}
+                on:click={ saveCompany }
+            />
+        {:else}
+
+            <Button 
+                leading
+                label="Guardar"
+                {loading}
+                on:click={ editCompany }
+            />
+
+        {/if}
         <!-- <Button 
             type="outlined"
             label="Cancelar"

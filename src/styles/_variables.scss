@@ -15,6 +15,10 @@
     font-weight: 600;
 }
 
+.capitalize {
+    text-transform: capitalize;
+}
+
 .card-header {
     display: flex;
     align-items: center;
@@ -73,3 +77,24 @@ h4 {
 .align-center {
     align-items: center;
 }
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.body-content {
+    display: grid;
+    // grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+}
+
+.grid-columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+

@@ -23,15 +23,30 @@ class Api {
             method,
             ...params
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            return { success: true, data: data }
+        .then(response => {
+
+            const statusCode = response.status
+
+            return response.json().then(data => {
+
+                if (statusCode == 401) {
+                    window.location.href = '/login'
+                    return;
+                }
+                else {
+                    return { success: true, statusCode, data }
+                }
+            });
         })
+        // .then(data => {
+        //     console.log(data)
+        //     return { success: true, data: data }
+        // })
         .catch(error => {
             console.error('Error:', error)
-            return { success: false }
+            return { success: false, statusCode: 500 }
         });
+
     }
 
 }

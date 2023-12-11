@@ -13,8 +13,7 @@
 
     let addOffice = false
     let officeEdit = {}, editing = -1
-    let comunas = [], regionSelected = ''
-
+    let comunas = []
     let offices = []
 
     function toggleEdit(office, index) {
@@ -91,6 +90,23 @@
         //loading = false
     }
 
+    const saveOffice = async () => {
+        // {
+        //     "description": "string",
+        //     "floor": 0,
+        //     "sucursal_id": 0
+        // }
+        console.log('save office: ' , officeEdit)
+        console.log('save office sucursal: ', sucursal)
+
+        let body = JSON.stringify({ ...officeEdit, sucursal_id: sucursal.id })  
+        let response = (await Api.call(`http://127.0.0.1:9000/office`, 'POST', { body }))
+        console.log('RESPONSE POST OFFICE --> ', response)
+        if (response.success) {
+            // offices = response.data.result
+            console.log(offices) 
+        } 
+    }
 
     const getOffices = async (id_sucursal) => {
         //loading = true;
@@ -152,7 +168,7 @@
                 }
             })
         }
-        bind:selected={ regionSelected }
+        selected={ sucursal.region }
         on:change={ (event) => {
             let r = locationsChile.find(rg => rg.region == event.detail)
             console.log(r)
@@ -169,28 +185,13 @@
     {#key comunas}
 
     <Select 
-        label="Comunas"
+        label="Comuna"
+        selected={ sucursal.commune }
         options={comunas}
         on:change={ (event) => setComuna(event.detail) }
     />
 
     {/key}
-
-    <!-- <TextField 
-        version=2
-        required 
-        type="text"
-        label="Ciudad" 
-        bind:value={sucursal.ciudad}
-    />
-
-    <TextField 
-        version=2
-        required 
-        type="text"
-        label="Comuna" 
-        bind:value={sucursal.comuna}
-    /> -->
 
     <br>
     <br>
@@ -200,12 +201,6 @@
             label="Guardar"
             on:click={ saveSucursal }
         />
-        <!-- <Button 
-            type="outlined"
-            label="Cancelar"
-            color=""
-            on:click={ () => openModal = false }
-        /> -->
     </div>
 
     <div class="grid-col-span-2">
@@ -219,7 +214,7 @@
         <ul>
             {#each offices as office, index} 
             <tr>
-                <td style="width: 65%;"><li>{ office.floor  + ' ' + office.description }</li></td>
+                <td style="width: 65%;"><li>{ "Piso " + office.floor  + ' - ' + office.description }</li></td>
                 <td style="width: 65%;">
                     <IconButton icon="edit" on:click={ () => toggleEdit(office, index) } />
                     <IconButton icon="delete" on:click />
@@ -280,8 +275,17 @@
                     officeEdit = { floor: '', description: '' }
                     addOffice = true
                     editing = -1
+                    saveOffice()
                 }}
             />
+        
+            <Button 
+                label="Cancelar"
+                type="outlined"
+                color=""
+                on:click={ () => addOffice = false}
+            />
+
         {:else}
             <Button 
                 label="Agregar"
@@ -293,13 +297,6 @@
             />
         {/if}
         
-        
-        <Button 
-            label="Cancelar"
-            type="outlined"
-            color=""
-            on:click={ () => addOffice = false}
-        />
     </div>
     
     

@@ -11,108 +11,15 @@ export const session = writable({
     company: {}
 })
 
-export const usuarios = writable([
-    {
-        id: 1,
-        nombre: "Mauricio",
-        segundoNombre: "Alejandro",
-        apellido: "Carvajal",
-        segundoApellido: "Díaz",
-        correo: "juan.perez@example.com",
-        ciudad: "Ciudad A",
-        comuna: "Comuna 1"
-    },
-    {
-        id: 2,
-        nombre: "Ana",
-        segundoNombre: "Isabel",
-        apellido: "Gómez",
-        segundoApellido: "Martínez",
-        correo: "ana.gomez@example.com",
-        ciudad: "Ciudad B",
-        comuna: "Comuna 2"
-    },
-    {
-        id: 3,
-        nombre: "Carlos",
-        segundoNombre: "Miguel",
-        apellido: "Rodríguez",
-        segundoApellido: "Sánchez",
-        correo: "carlos.rodriguez@example.com",
-        ciudad: "Ciudad C",
-        comuna: "Comuna 3"
-    },
-    {
-        id: 4,
-        nombre: "Liliana",
-        segundoNombre: "Lisbet",
-        apellido: "Huallcca",
-        segundoApellido: "Aniceto",
-        correo: "maria.lopez@example.com",
-        ciudad: "Ciudad A",
-        comuna: "Comuna 1"
-    },
-    {
-        id: 5,
-        nombre: "José",
-        segundoNombre: "Antonio",
-        apellido: "Martínez",
-        segundoApellido: "Gómez",
-        correo: "jose.martinez@example.com",
-        ciudad: "Ciudad B",
-        comuna: "Comuna 2"
-    },
-    {
-        id: 6,
-        nombre: "Daniel",
-        segundoNombre: "Antonio",
-        apellido: "Gomez",
-        segundoApellido: "Giraldo",
-        correo: "laura.hernandez@example.com",
-        ciudad: "Ciudad C",
-        comuna: "Comuna 3"
-    },
-    {
-        id: 7,
-        nombre: "Miguel",
-        segundoNombre: "Ángel",
-        apellido: "Sánchez",
-        segundoApellido: "Pérez",
-        correo: "miguel.sanchez@example.com",
-        ciudad: "Ciudad A",
-        comuna: "Comuna 1"
-    },
-    {
-        id: 8,
-        nombre: "Carmen",
-        segundoNombre: "María",
-        apellido: "Flores",
-        segundoApellido: "Gómez",
-        correo: "carmen.flores@example.com",
-        ciudad: "Ciudad B",
-        comuna: "Comuna 2"
-    },
-    {
-        id: 9,
-        nombre: "Pedro",
-        segundoNombre: "José",
-        apellido: "Díaz",
-        segundoApellido: "Martínez",
-        correo: "pedro.diaz@example.com",
-        ciudad: "Ciudad C",
-        comuna: "Comuna 3"
-    },
-    {
-        id: 10,
-        nombre: "Isabel",
-        segundoNombre: "Elena",
-        apellido: "Ruiz",
-        segundoApellido: "Sánchez",
-        correo: "isabel.ruiz@example.com",
-        ciudad: "Ciudad A",
-        comuna: "Comuna 1"
-    }
-]);
+export const usuarios = writable([]);
+export const modulos = writable([
+    "sucursal",
+    "oficina",
+    "activo",
+    "articulo",
+    "usuario",
+    "empresa",
+])
   
 export const sideNavigationLinks = writable([
     {

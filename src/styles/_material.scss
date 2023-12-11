@@ -43,6 +43,10 @@ $primary-color: #39404A;
 @use "@material/drawer";
 @use "@material/list";
 
+// Chip
+@use "@material/chips/styles" as chipset;
+@use "@material/chips";
+
 
 // **** Include
 @include card.core-styles;
@@ -51,6 +55,7 @@ $primary-color: #39404A;
 @include drawer.dismissible-core-styles;
 @include drawer.modal-core-styles;
 @include snackbar.core-styles;
+// @include chipset.core-styles;
 // @include button.core-styles;
 // @include list.core-styles;
 // @include icon.icon-core-styles;
@@ -67,6 +72,11 @@ $primary-color: #39404A;
     @include snackbar.z-index(600);
     top: 0;
     bottom: auto;
+}
+
+.chip-red {
+    @include chips.ripple-color(red);
+    @include chips.selected-container-color(red);
 }
 
 // .mdc-button-custom {

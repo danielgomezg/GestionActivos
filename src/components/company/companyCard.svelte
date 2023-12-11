@@ -6,6 +6,10 @@
     export let company = {}
     let dispath = createEventDispatcher();
 
+    const normalizeText = (text) => {
+        return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
     // $: console.log('company => ', company)
 
 </script>
@@ -17,9 +21,9 @@
             <IconButton icon="edit" on:click={ dispath("edit", company) } />
         </div>
         <div class="card-content">
-            <div>🆔 { company.rut }</div>
+            <div>{ company.rut }</div>
             <div>
-                <img src="/ChileFlag.png" style="width: 20px;" alt="flag" />
+                <img src={ '/flags/' + normalizeText(company.country) + '.png' } class="flag" alt="flag" />
                 { company.country }
             </div>
             <div class="store-info">
@@ -38,5 +42,10 @@
   .store-info {
     display: flex;
     align-items: center;
+  }
+
+  .flag {
+    width: 25px;
+    border-radius: 3px;
   }
 </style>

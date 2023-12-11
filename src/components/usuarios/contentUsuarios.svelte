@@ -117,14 +117,14 @@
 </script>
 
 <div style="padding-top: 20px;">
-    <div class="header-company">
+    <div class="header-content">
         <Button label="Nuevo usuario" on:click={ createUser } />
         <IconButton icon="tune" />
         <!-- <div class="title">Empresas</div> -->
     </div>
     <br>
 
-    <div class="usuarios-content">
+    <div class="body-content grid-columns-3">
         {#if loading}
             <Loading />
         {/if}
@@ -144,17 +144,3 @@
     {modalContent}
     bind:openModal={openModal}
 />
-
-<style>
-    .header-company {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .usuarios-content {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-gap: 10px;
-    }
-</style>

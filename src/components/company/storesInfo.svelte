@@ -6,19 +6,13 @@
     import Api from "../../../helpers/ApiCall";
 
     let editStore = getContext('editStore');
+    
     export let company_id = 0
     let stores = []
-    
-    function getTokenFromLocalStorage() {
-        return localStorage.getItem('accessToken');
-    }
-
-    let token = getTokenFromLocalStorage()
-
 
     const getSucursalePorCompany = async () => {
         //loading = true;
-        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${company_id}`, 'GET', {}, token))
+        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${company_id}`, 'GET'))
         console.log('RESPONSE GET Sucursales --> ', response)
         if (response.success) {
             stores = response.data.result 
@@ -77,14 +71,6 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-    }
-
-    .store-info__offices {
-
-    }
-
-    .store-info__address {
-        
     }
 
     .store-info__description {

@@ -18,6 +18,7 @@
   "dependencies": {
     "@material/button": "^14.0.0",
     "@material/card": "^14.0.0",
+    "@material/chips": "^14.0.0",
     "@material/drawer": "^14.0.0",
     "@material/icon-button": "^14.0.0",
     "@material/menu": "^14.0.0",
