@@ -25,11 +25,6 @@
     
     })
 
-    setContext('editStore', (store) => {
-
-    })
-
-
     const createUser = () => {
         modalTitle = 'Nuevo usuario'
         modalContent = FormUsuarios
@@ -92,19 +87,6 @@
             //formatCompanyForSelect()  
         } 
         //loading = false;
-    }
-
-
-    const showStores = (company) => {
-
-    }
-
-    const newStore = (company) => {
-        
-    }
-
-    const editStore = (sucursal) => {
-
     }
 
     onMount(async () => {

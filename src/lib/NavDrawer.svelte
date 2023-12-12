@@ -27,7 +27,13 @@
         <Router>
 
             {#each $sideNavigationLinks as navigation }
-                <Link to="/{navigation.link}" style="color: inherit; text-decoration: none;" on:click={() => selected = '/' + navigation.link }>
+                <Link 
+                    to="/{navigation.link}" 
+                    style="color: inherit; text-decoration: none;" 
+                    on:click={() => {
+                        props.open = false
+                        selected = '/' + navigation.link
+                    } }>
                     <div class="mdc-list-item" class:mdc-list-item--activated={ selected == '/' + navigation.link } >
                         <span class="mdc-list-item__ripple"></span>
                         <!-- <i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i> -->

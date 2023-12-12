@@ -1,31 +1,19 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { onDestroy, onMount } from "svelte";
     import { snackbar } from "../../stores/store";
     import { TextField, Button, Divider, Select } from "$lib";
-    import { locationsChile } from "../../../helpers/locationsChile"
+    import SelectCountryLocations from "../selectCountry/selectCountryLocations.svelte";
 
     // export let openModal
-    export let sucursal = { }
+    export let sucursal = { }, company = {}
 
     let message = ""
-    let comunas = [], regionSelected = ''
     let offices = [
         {
             floor: '', 
             description: ''
         }
     ]
-
-    const setComuna = (region) => {
-        console.log('set comunas > ', region)
-        sucursal.commune = region
-    }
-
-    const setRegion = (region) => {
-        console.log('set región > ', region)
-        sucursal.region = region
-    }
 
     function validForm() {
         if (sucursal.description == ''){
@@ -48,29 +36,34 @@
             message = "Falta agregar una comuna a la sucursal"
             return false; 
         }   
+        if (offices[0].floor == ''){
+            message = "Falta agregar al menos un piso"
+            return false; 
+        } 
+
         return true
     }
 
     const saveSucursal = async () => {
         // Validacion formulario
         let isValid = validForm();
-        if (!isValid) return console.log(message)
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return;
+        } 
         //loading = true;
         // Peticion
+        let clean = true
         console.log(sucursal)   
         let body = JSON.stringify(sucursal)  
         let response = (await Api.call('http://127.0.0.1:9000/sucursal', 'POST', { body }))
         console.log('RESPONSE SAVE SUCURSAL --> ', response)
         if (response.success) {
             if (response.data.code == 201) {
-                message = "Sucursal agregada"
-                sucursal.description = '',
-                sucursal.number = ''
-                sucursal.address = ''
-                sucursal.region = ''
-                regionSelected = ''
-                sucursal.commune = ''
-
                 //GUARDAR OFICINAS
                 let responseOffices = []; 
                 responseOffices = await saveOffice(response.data.result.id);
@@ -107,6 +100,7 @@
                     snk.message = "Error al crear sucursal."
                     return snk
                 })
+                clean = false
             }
         }
         else {
@@ -115,8 +109,23 @@
                 snk.message = "Error al crear sucursal."
                 return snk
             })
+            clean = false;
         }
-        //loading = false
+
+        if (clean) {
+            sucursal.number = ''
+            sucursal.description = '',
+            sucursal.address = ''
+            sucursal.region = ''
+            sucursal.commune = ''
+            offices = [ 
+                {
+                    floor: '', 
+                    description: ''
+                }
+            ]
+        }
+
     }
 
     const saveOffice = async (idSucursal) => {
@@ -128,7 +137,7 @@
             }
         });
         
-        let response = (await Promise.all( offices.map(of => {
+        let response = (await Promise.all(offices.map(of => {
             let body = JSON.stringify(of)
             return Api.call(`http://127.0.0.1:9000/office`, 'POST', { body })
         })));
@@ -167,40 +176,13 @@
         bind:value={sucursal.address}
     />
 
-    <Select 
-        label="Región"
-        options={ 
-            locationsChile.map((location, index) => {
-                return {
-                    value: location.region,
-                    label: location.region
-                }
-            })
-        }
-        bind:selected={ regionSelected }
-        on:change={ (event) => {
-            let r = locationsChile.find(rg => rg.region == event.detail)
-            console.log(r)
-            setRegion(r.region)
-            comunas = r.comunas.map(cm => {
-                return {
-                    label: cm,
-                    value: cm
-                }
-            })
-        } }
+    <SelectCountryLocations 
+        country={ company.country.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() }
+        selectedRegion={ sucursal.region }
+        selectedComuna={ sucursal.commune }
+        on:setRegion={ (event) => sucursal.region = event.detail }
+        on:setComuna={ (event) => sucursal.commune = event.detail }
     />
-
-    {#key comunas}
-
-    <Select 
-        label="Comuna"
-        options={comunas}
-        selected={ sucursal.commune }
-        on:change={ (event) => setComuna(event.detail) }
-    />
-
-    {/key}
 
     <div class="grid-col-span-2">
         <Divider />
@@ -219,7 +201,6 @@
 
         <TextField 
             version=2
-            required 
             type="text"
             label="Descripción" 
             bind:value={office.description}

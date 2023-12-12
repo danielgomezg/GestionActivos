@@ -34,10 +34,10 @@
         // openModal = true
     })
 
-    setContext('editStore', (store) => {
+    setContext('editStore', (store, company) => {
         // Esta funcion cambia el contenido del side sheets o bottom.
         // guardamos el componente que se esta mostrando
-        editStore(store)
+        editStore(store, company)
     })
 
     const createCompany = () => {
@@ -66,7 +66,7 @@
         modalTitle = `${company.name} - sucursales`
         previusModelTitle = modalTitle
         modalContent = StoresInfo;
-        props = { stores: company.sucursales, company_id:  company.id}
+        props = { stores: company.sucursales, company_id:  company.id, company}
         backButton = false
         openModal = true
     }
@@ -74,25 +74,29 @@
     const newStore = (company) => {
         modalTitle = `Nueva sucursal ${company.name}`
         modalContent = FormSucursalSave;
-        props = { sucursal: {
-            number: '',
-            address: '',
-            description: '',
-            commune: '',
-            region: '',
-            company_id: company.id
-        } }
+        props = { 
+            sucursal: {
+                number: '',
+                address: '',
+                description: '',
+                commune: '',
+                region: '',
+                company_id: company.id
+        
+            },
+            company 
+        }
         openModal = true
     }
 
-    const editStore = (sucursal) => {
+    const editStore = (sucursal, company) => {
         // Se guarda componente actual para boton back
         previusComponent = modalContent;
         previusProps = { ...props };
 
         modalTitle = `Sucursal ${sucursal.number}`
         modalContent = FormSucursal;
-        props = { sucursal }
+        props = { sucursal, company }
         backButton = true
         openModal = true
 

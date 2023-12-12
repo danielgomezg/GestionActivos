@@ -17,6 +17,8 @@
         console.log('select component > ', select)
         console.log('select update > ', selected);
         select.value = selected.toString();
+        dispatch("change", select.value)
+
         // selectedIndex = select.selectedIndex = options.findIndex(option => option.value == selectedValue);
     }
 
@@ -34,6 +36,8 @@
         select.listen('MDCSelect:change', setDispatch);
 
     })
+
+    $: updateValue(selected)
 
     onDestroy(() => {
         console.log('select destroy');
@@ -104,6 +108,6 @@
     }
 
     .mdc-list {
-        /* max-height: 250px; */
+        text-transform: capitalize;
     }
 </style>

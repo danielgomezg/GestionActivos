@@ -1,19 +1,15 @@
 <script>
-    // @ts-nocheck
-    import { TextField, Button, Divider, IconButton, Select } from "$lib";
-    import { onDestroy, onMount } from "svelte";
-    import { locationsChile } from "../../../helpers/locationsChile"
-
+    import { onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
+    import { TextField, Button, Divider, IconButton } from "$lib";
+    import SelectCountryLocations from "../selectCountry/selectCountryLocations.svelte";
 
-    // export let openModal
-    export let sucursal = { }
+    export let sucursal = { }, company = { }
 
     let message = ""
 
     let addOffice = false
     let officeEdit = {}, editing = -1
-    let comunas = []
     let offices = []
 
     function toggleEdit(office, index) {
@@ -25,22 +21,6 @@
         officeEdit = { ...office }
         addOffice = false
         editing = index
-    }
-
-    const setComuna = (region) => {
-        console.log('set comunas > ', region)
-        sucursal.commune = region
-        // comunas = locationsChile.find((location, index) => {
-        //     return {
-        //         index,
-        //         name: location.region
-        //     }
-        // })
-    }
-
-    const setRegion = (region) => {
-        console.log('set región > ', region)
-        sucursal.region = region
     }
 
     function validForm() {
@@ -91,44 +71,30 @@
     }
 
     const saveOffice = async () => {
-        // {
-        //     "description": "string",
-        //     "floor": 0,
-        //     "sucursal_id": 0
-        // }
-        console.log('save office: ' , officeEdit)
-        console.log('save office sucursal: ', sucursal)
 
         let body = JSON.stringify({ ...officeEdit, sucursal_id: sucursal.id })  
         let response = (await Api.call(`http://127.0.0.1:9000/office`, 'POST', { body }))
         console.log('RESPONSE POST OFFICE --> ', response)
         if (response.success) {
-            // offices = response.data.result
             console.log(offices) 
         } 
     }
 
     const getOffices = async (id_sucursal) => {
-        //loading = true;
+    
         let response = (await Api.call(`http://127.0.0.1:9000/officePorSucursal/${id_sucursal}`, 'GET', {}))
         console.log('RESPONSE GET Offices --> ', response)
         if (response.success) {
             offices = response.data.result
             console.log(offices) 
         } 
-        //loading = false;
     }
 
     onMount(async () => {
-        console.log('mount form sucursal')
-        console.log(sucursal.id)
+        
         if(sucursal.id > 0 ){
             await getOffices(sucursal.id)
         }
-    })
-
-    onDestroy(() => {
-        console.log('Destroy sucursal')
     })
 
 </script>
@@ -158,40 +124,13 @@
         bind:value={sucursal.address}
     />
 
-    <Select 
-        label="Región"
-        options={ 
-            locationsChile.map((location, index) => {
-                return {
-                    value: location.region,
-                    label: location.region
-                }
-            })
-        }
-        selected={ sucursal.region }
-        on:change={ (event) => {
-            let r = locationsChile.find(rg => rg.region == event.detail)
-            console.log(r)
-            setRegion(r.region)
-            comunas = r.comunas.map(cm => {
-                return {
-                    label: cm,
-                    value: cm
-                }
-            })
-        } }
+    <SelectCountryLocations 
+        country={ company.country.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() }
+        selectedRegion={ sucursal.region }
+        selectedComuna={ sucursal.commune }
+        on:setRegion={ (event) => sucursal.region = event.detail }
+        on:setComuna={ (event) => sucursal.commune = event.detail }
     />
-
-    {#key comunas}
-
-    <Select 
-        label="Comuna"
-        selected={ sucursal.commune }
-        options={comunas}
-        on:change={ (event) => setComuna(event.detail) }
-    />
-
-    {/key}
 
     <br>
     <br>
@@ -271,12 +210,7 @@
         {#if addOffice}
             <Button 
                 label="Guardar"
-                on:click={ () => {
-                    officeEdit = { floor: '', description: '' }
-                    addOffice = true
-                    editing = -1
-                    saveOffice()
-                }}
+                on:click={ saveOffice }
             />
         
             <Button 

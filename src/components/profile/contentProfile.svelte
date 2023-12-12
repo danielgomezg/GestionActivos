@@ -38,36 +38,6 @@
         }
     ]
 
-    const createUser = () => {
-       
-
-    }
-
-    const editUser = (usuario) => {
-
-    }
-
-    const getUsers = async () => {
-        // loading = true;
-        // let response = (await Api.call('http://127.0.0.1:9000/users', 'GET'))
-        // console.log('RESPONSE GET USERS --> ', response)
-        // if (response.success) {
-        //     usuarios = response.data 
-        // } 
-        // loading = false;
-    }
-
-    const showStores = (company) => {
-
-    }
-
-    const newStore = (company) => {
-        
-    }
-
-    const editStore = (sucursal) => {
-
-    }
 
     onMount(async () => {
 

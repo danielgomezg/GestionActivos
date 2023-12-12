@@ -7,7 +7,7 @@
 
     let editStore = getContext('editStore');
     
-    export let company_id = 0
+    export let company_id = 0, company = {}
     let stores = []
 
     const getSucursalePorCompany = async () => {
@@ -39,7 +39,7 @@
                     { ` (${store.count_offices} oficinas)` }
                 </div>
                 <div>
-                    <IconButton icon="edit" on:click={ editStore(store) } />
+                    <IconButton icon="edit" on:click={ editStore(store, company) } />
                     <IconButton icon="delete" />
                 </div>
 
