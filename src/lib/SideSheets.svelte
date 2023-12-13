@@ -42,6 +42,7 @@
         align-items: center;
         padding: 24px 24px 0 16px;
         justify-content: space-between;
+        color: black;
     }
 
     .side-sheets__content {

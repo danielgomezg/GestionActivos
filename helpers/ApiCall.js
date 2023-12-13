@@ -17,7 +17,6 @@ class Api {
             ...body
         }
 
-        console.log('params > ', params)
 
         return fetch(url, {
             method,
@@ -28,12 +27,17 @@ class Api {
             const statusCode = response.status
 
             return response.json().then(data => {
-
+                
+                
                 if (statusCode == 401) {
                     window.location.href = '/login'
                     return;
                 }
                 else {
+                    if (data.code == '401') {
+                        window.location.href = '/login'
+                        return;
+                    }
                     return { success: true, statusCode, data }
                 }
             });

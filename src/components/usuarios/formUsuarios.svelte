@@ -6,11 +6,12 @@
     import FormCompany from "../company/formCompany.svelte";
     import { snackbar } from "../../stores/store";
     
-    export let usuario = {}, companies = {}, accion = ''
+    export let usuario = {}, companies = {}, accion = '', showPassword = false
     let message= '', token = ''
     let disabledSave = false
     let accionBtn = ''
     let perfilUser = ''
+    let password = ''
 
     let perfil = [
         {
@@ -210,10 +211,7 @@
 
     })
 
-    console.log(usuario)
-
     $: usuario.rut = formatRut(usuario.rut)
-    $: console.log(usuario.profile_id)
 
 </script>
 
@@ -261,6 +259,16 @@
         bind:value={usuario.email}
     />
 
+    {#if showPassword}
+        <TextField 
+            version=2
+            required 
+            type="password"
+            label="contraseña" 
+            bind:value={ password }
+        />
+    {/if}
+
     {#if accion == 'create'}
         <TextField 
             version=2
@@ -285,8 +293,6 @@
         on:change={ (event) => usuario.company_id = event.detail }
     />
 
-    <br>
-    <br>
     <br>
     <div class="grid-col-span-1">
         <Button 

@@ -6,6 +6,7 @@
     import { Button, IconButton, Loading } from "$lib";
     import FormSucursalSave from "./formSucursalSave.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
+    import { user } from "../../stores/store";
         
     let openModal = false, backButton = false;
     let modalTitle = '', previusModelTitle = []
@@ -62,7 +63,7 @@
 
     const getStores = async () => {
 
-        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/13`, 'GET'))
+        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${$user.company_id}`, 'GET'))
         console.log('RESPONSE GET Sucursales --> ', response)
         if (response.success) {
             stores = response.data.result 
@@ -95,6 +96,8 @@
                 on:newStore={ (event) => editStore(event.detail) } 
                 on:showStores={ (event) => editStore(event.detail) } 
             />
+        {:else}
+            <p>No hay sucursales</p>
         {/each}
     </div>
 </div>

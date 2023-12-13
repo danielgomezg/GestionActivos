@@ -39,17 +39,12 @@
     ]
 
 
-    onMount(async () => {
-
-    })
-
-
 </script>
 
 <div style="padding-top: 20px;">
     <div class="header-content">
-        <Button label="Nuevo perfil" on:click={ () => alert('En construcción.') } />
-        <IconButton icon="tune" />
+        <!-- <Button label="Nuevo perfil" on:click={ () => alert('En construcción.') } /> -->
+        <!-- <IconButton icon="tune" /> -->
     </div>
     <br>
 

@@ -13,9 +13,7 @@
     const updateValue = (selected) => {
         if (options.length  == 0) return;
         if (!select) return;
-
-        console.log('select component > ', select)
-        console.log('select update > ', selected);
+        
         select.value = selected.toString();
         dispatch("change", select.value)
 
@@ -28,7 +26,7 @@
     }
 
     onMount(() => {
-        console.log('select mount');
+        
         select = new MDCSelect(selectComponent);
         if (selected != '') updateValue(selected)
        
@@ -39,7 +37,7 @@
     $: updateValue(selected)
 
     onDestroy(() => {
-        console.log('select destroy');
+        
         if (select != undefined) {
             select.unlisten("MDCSelect:change", setDispatch)
         }

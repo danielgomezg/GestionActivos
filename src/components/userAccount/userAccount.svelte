@@ -1,10 +1,37 @@
 <script>
-    // @ts-nocheck
-    import { IconButton, Button } from "$lib"
-    import { onMount, onDestroy } from "svelte";
+    import { IconButton, Button } from "$lib";
     import { user } from "../../stores/store";
+    import { navigate } from "svelte-routing";
+    import Api from "../../../helpers/ApiCall";
+    import { onMount, onDestroy } from "svelte";
+    import FormUsuarios from "../usuarios/formUsuarios.svelte";
+    import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
-    let openOptions = false 
+    let openOptions = false, openModal = false, modalTitle = '', props = {}, modalContent;
+    let companiesDB = [], companiesSelect = []
+    
+    const editUser = () => {
+        modalTitle = 'Editar usuario'
+        modalContent = FormUsuarios;
+
+        props = { 
+            usuario: $user,
+            companies: companiesSelect,
+            accion: 'edit',
+            showPassword: true
+        }
+
+        openModal = true
+    }
+
+    const logout = () => {
+    
+        localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
+
+        navigate("/login", {replace: true})
+        return;
+    }
 
     const handleAccountOptions = (event) => {
         if (openOptions && !event.target.closest('.account-container')){
@@ -12,7 +39,29 @@
         }
     }
 
+    //Se obtiene las companias con el id y nombre solamente
+    const getCompanyNameId= async () => {
+        //loading = true;
+        let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET'))
+        console.log('RESPONSE GET COMPANIES --> ', response)
+        if (response.success) {
+            companiesDB = response.data.result
+            for (let i = 0; i < companiesDB.length; i++) {
+                let company = {
+                    label: companiesDB[i].name,
+                    value: companiesDB[i].id
+                };
+                companiesSelect.push(company);
+            }
+            console.log(companiesSelect)
+
+            //formatCompanyForSelect()  
+        } 
+        //loading = false;
+    }
+
     onMount(() => {
+        getCompanyNameId(); 
         window.addEventListener('click', handleAccountOptions)
     })
 
@@ -24,17 +73,23 @@
 </script>
 
 
-<div style="text-align: right;">{ $user.name + ' ' + $user.lastName }</div>
+<div style="text-align: right;">{ $user.firstName + ' ' + $user.lastName }</div>
 <div class="account-container">
     <IconButton on:click={() => { openOptions=!openOptions }} icon="account_circle" />
     {#if openOptions}
     <div class="account-options">
-        <Button type="text" label="Editar" color="" />
-        <Button type="text" label="Cerrar Sesión" color="" />
+        <Button type="text" label="Editar" color="" on:click={ editUser } />
+        <Button type="text" label="Cerrar Sesión" color="" on:click={ logout } />
     </div>  
     {/if}
-    
 </div>
+
+<SheetHandler
+    {props}
+    {modalTitle}
+    {modalContent}
+    bind:openModal={openModal}
+/>
 
 <style>
     .account-container {

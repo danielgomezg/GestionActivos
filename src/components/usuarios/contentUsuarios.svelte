@@ -54,15 +54,9 @@
         openModal = true
     }
 
-    function getTokenFromLocalStorage() {
-        return localStorage.getItem('accessToken');
-    }
-
-    let token = getTokenFromLocalStorage()
-
     const getUsers = async () => {
         loading = true;
-        let response = (await Api.call('http://127.0.0.1:9000/users', 'GET', {}, token))
+        let response = (await Api.call('http://127.0.0.1:9000/users', 'GET'))
         console.log('RESPONSE GET USERS --> ', response)
         if (response.success) {
             usuarios = response.data 
@@ -73,7 +67,7 @@
     //Se obtiene las companias con el id y nombre solamente
     const getCompanyNameId= async () => {
         //loading = true;
-        let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET', {}, token))
+        let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
         if (response.success) {
             companiesDB = response.data.result

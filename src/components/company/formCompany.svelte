@@ -59,12 +59,6 @@
         return true
     }
 
-    function getTokenFromLocalStorage() {
-        return localStorage.getItem('accessToken');
-    }
-
-    let token = getTokenFromLocalStorage()
-
     const editCompany = async () => {
         console.log('edit company')
         console.log(company)
@@ -85,7 +79,7 @@
 
         // Peticion
         let body = JSON.stringify(company)  
-        let response = (await Api.call('http://127.0.0.1:9000/company', 'POST', { body }, token))
+        let response = (await Api.call('http://127.0.0.1:9000/company', 'POST', { body }))
         console.log('RESPONSE SAVE COMPANY --> ', response)
         if (response.success) {
             if (response.data.code == 201) {

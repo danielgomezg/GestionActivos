@@ -11,13 +11,9 @@
     let id = $user.id
 
     let oculto = true
-    $: console.log("oculto: " + oculto)
     function checkear(){
         oculto = !oculto
     }
-
-    $: console.log(username + " " + password + " " + fullname)
-    $: console.log("$: " + $user.username + " " + $user.password + " " + $user.fullname + " " + $user.id)
 
     async function editarUser(){
     //console.log("movie: " + pelicula.id)

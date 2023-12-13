@@ -5,7 +5,7 @@
     // @ts-nocheck
     import { SideSheets, BottomSheets } from "$lib";
 
-    export let modalContent, openModal = false, modalTitle = '', props = { }, backButton
+    export let modalContent, openModal = false, modalTitle = '', props = { }, backButton = false
     let isMobile = false;
 
     onMount(() => {

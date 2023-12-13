@@ -36,10 +36,6 @@
         return true;
     }
 
-    function saveTokenToLocalStorage(token) {
-        localStorage.setItem('accessToken', token);
-    }
-
     async function iniciarSesion(e){
         e.preventDefault()
 
@@ -61,8 +57,14 @@
                         ...response.data.result.user
                     })
                     localStorage.setItem("user",  JSON.stringify($user))
-                    saveTokenToLocalStorage(response.data.result.access_token)
-                    navigate("/empresas", {replace: true})
+                    localStorage.setItem('accessToken', response.data.result.access_token);
+
+                    if ($user.profile_id == 1) {
+                        navigate("/empresas", {replace: true})
+                    }
+                    else {
+                        navigate("/sucursales", {replace: true})
+                    }
                 }
             } 
         

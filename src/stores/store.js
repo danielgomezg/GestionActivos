@@ -24,23 +24,25 @@ export const modulos = writable([
 export const sideNavigationLinks = writable([
     {
         link: 'empresas',
-        profile_sca: 1
+        profile: 1
     },
     {
-        link: 'sucursales'
+        link: 'sucursales',
+        profile: 2
     },
     {
         link: 'articulos',
-        profile_sca: [0, 1]
     },
     {
-        link: 'usuarios'
+        link: 'usuarios',
+        profile: 1
     },
     {
-        link: 'perfiles'
+        link: 'perfiles',
+        profile: 1
     },
     {
-        link: 'reportes'
+        link: 'reportes',
     }
 ]);
 

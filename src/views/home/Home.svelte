@@ -23,15 +23,13 @@
         isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         open = !isMobile
 
-
         let userSession = localStorage.getItem("user")
-        console.log('local storage user: ', JSON.parse(userSession))
         if (user != null) {
             user.set(JSON.parse(userSession))
         }
     })
 
-    $: console.log('usuario > ', $user)
+    // $: console.log('usuario > ', $user)
     
 </script>
 
@@ -52,11 +50,20 @@
             <Snackbar />
             <Router>  
                 <Route path="/login" component={Login} />
+                
+                {#if $user?.profile_id == 1}
                 <Route path="/empresas" component={ContentCompany}  />
-                <Route path="/articulos" component={ContentArticle} />
                 <Route path="/usuarios" component={ContentUsuarios} />
                 <Route path="/perfiles" component={ContentProfile}  />
+                {/if}
+                
+                {#if $user?.profile_id == 2}
                 <Route path="/sucursales" component={ContentSucursal} />
+                {/if}
+                
+                
+                
+                <Route path="/articulos" component={ContentArticle} />
                 <Route path="*" component={NotFound} />
             </Router>
         </div>

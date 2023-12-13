@@ -27,6 +27,7 @@
         <Router>
 
             {#each $sideNavigationLinks as navigation }
+                {#if $user.profile_id == navigation.profile || navigation?.profile == null }
                 <Link 
                     to="/{navigation.link}" 
                     style="color: inherit; text-decoration: none;" 
@@ -40,6 +41,7 @@
                         <span class="mdc-list-item__text">{navigation.link}</span>
                     </div>
                 </Link>
+                {/if}
             {/each}
 
         </Router>   
@@ -63,6 +65,7 @@
     .mdc-drawer--modal{
         box-shadow: none;
         /* top: 64px; */
+        z-index: 1;
     }
 
     .mobile {
