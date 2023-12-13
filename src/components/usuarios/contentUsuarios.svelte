@@ -39,7 +39,8 @@
             company_id: '',
             profile_id: ''
         }, 
-        companies: companiesSelect}
+        companies: companiesSelect,
+        accion: 'create' }
         openModal = true
 
     }
@@ -48,7 +49,8 @@
         modalTitle = 'Editar usuario'
         modalContent = FormUsuarios
         props = { usuario,
-                companies: companiesSelect }
+                companies: companiesSelect,
+                accion: 'edit' }
         openModal = true
     }
 

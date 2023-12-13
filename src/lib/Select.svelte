@@ -29,7 +29,6 @@
 
     onMount(() => {
         console.log('select mount');
-
         select = new MDCSelect(selectComponent);
         if (selected != '') updateValue(selected)
        

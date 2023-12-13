@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
     import { TextField, Button, Divider, IconButton } from "$lib";
+    import { snackbar } from "../../stores/store";
     import SelectCountryLocations from "../selectCountry/selectCountryLocations.svelte";
 
     export let sucursal = { }, company = { }
@@ -76,7 +77,20 @@
         let response = (await Api.call(`http://127.0.0.1:9000/office`, 'POST', { body }))
         console.log('RESPONSE POST OFFICE --> ', response)
         if (response.success) {
-            console.log(offices) 
+            console.log(offices)
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Oficina creada con éxito."
+                return snk
+            }) 
+        }else{
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al crear oficina."
+                return snk
+                })
         } 
     }
 

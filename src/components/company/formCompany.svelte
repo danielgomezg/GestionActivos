@@ -43,9 +43,18 @@
     }
 
     function validForm() {
-        if (company.name == '') return false;
-        if (company.rut == '') return false;
-        if (company.country == '') return false;
+        if (company.name == ''){
+            message = "Falta agregar el nombre a la empresa."
+            return false;
+        } 
+        if (company.rut == ''){
+            message = "Falta agregar un rut a la empresa."
+            return false
+        }
+        if (company.country == ''){
+            message = "Falta agregar el país a la empresa."
+            return false
+        }
         
         return true
     }
@@ -62,10 +71,16 @@
     }
 
     const saveCompany = async () => {
-        console.log('form company > save')
         // Validacion formulario
         let isValid = validForm();
-        if (!isValid) return
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return console.log(message)
+        }
         loading = true;
 
         // Peticion
@@ -74,18 +89,32 @@
         console.log('RESPONSE SAVE COMPANY --> ', response)
         if (response.success) {
             if (response.data.code == 201) {
-                message = "Empresa agregada"
                 company.name = '',
                 company.rut = ''
                 company.country = ''
 
                 snackbar.update(snk => {
                     snk.open = true;
-                    snk.message = "Empresa agregada"
+                    snk.message = "Empresa creada con éxito."
+                    return snk
+                })
+            }else{
+                //aviso
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.message = "Error al crear empresa."
                     return snk
                 })
             }
+        }else{
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al crear empresa."
+                return snk
+            })
         }
+        
         loading = false
     }
 
