@@ -1,20 +1,13 @@
 <script>
-// @ts-nocheck
-
-    // @ts-ignore
-    import { Button, IconButton, Loading } from "$lib"
+    import Api from "../../../helpers/ApiCall";
+    import { onMount, setContext } from "svelte";
     import StoresInfo from "./storesInfo.svelte";
-    // import { empresas } from "../../stores/store";
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
+    import { Button, IconButton, Loading } from "$lib";
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
-
-    import Api from "../../../helpers/ApiCall";
-
-    import { onMount, setContext } from "svelte";
-    
 
     let openModal = false, backButton = false;
     let modalTitle = '', previusModelTitle = []
@@ -102,16 +95,9 @@
 
     }
 
-    function getTokenFromLocalStorage() {
-        return localStorage.getItem('accessToken');
-    }
-
-    let token = getTokenFromLocalStorage()
-
-
     const getCompanies = async () => {
         loading = true;
-        let response = (await Api.call('http://127.0.0.1:9000/companies', 'GET', {}, token))
+        let response = (await Api.call('http://127.0.0.1:9000/companies', 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
         if (response.success) {
             empresas = response.data.result //empresas.set(response.data)
@@ -122,8 +108,6 @@
     onMount(async () => {
         getCompanies() 
     })
-
-    $: console.log('open modal: ', openModal)
 
 </script>
 

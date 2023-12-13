@@ -23,10 +23,15 @@ export const modulos = writable([
   
 export const sideNavigationLinks = writable([
     {
-        link: 'empresas'
+        link: 'empresas',
+        profile_sca: 1
     },
     {
-        link: 'articulos'
+        link: 'sucursales'
+    },
+    {
+        link: 'articulos',
+        profile_sca: [0, 1]
     },
     {
         link: 'usuarios'

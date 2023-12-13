@@ -31,7 +31,7 @@
                     to="/{navigation.link}" 
                     style="color: inherit; text-decoration: none;" 
                     on:click={() => {
-                        props.open = false
+                        // props.open = false
                         selected = '/' + navigation.link
                     } }>
                     <div class="mdc-list-item" class:mdc-list-item--activated={ selected == '/' + navigation.link } >

@@ -8,11 +8,14 @@
     // @ts-ignore
     import { TopAppBar, NavigationDrawer, Snackbar } from "$lib";
 
+    import NotFound from "../../components/notFound/notFound.svelte";
     import UserAccount from "../../components/userAccount/userAccount.svelte";
     import ContentCompany from "../../components/company/contentCompany.svelte";
     import ContentProfile from "../../components/profile/contentProfile.svelte";
     import ContentArticle from "../../components/articles/contentArticle.svelte";
     import ContentUsuarios from "../../components/usuarios/contentUsuarios.svelte";
+    import ContentSucursal from "../../components/sucursal/contentSucursal.svelte";
+
 
     let isMobile = false, open = true;
 
@@ -26,9 +29,10 @@
         if (user != null) {
             user.set(JSON.parse(userSession))
         }
-        console.log($user)
     })
 
+    $: console.log('usuario > ', $user)
+    
 </script>
 
 {#if $user}
@@ -48,10 +52,12 @@
             <Snackbar />
             <Router>  
                 <Route path="/login" component={Login} />
-                <Route path="/empresas" component={ContentCompany} />
+                <Route path="/empresas" component={ContentCompany}  />
                 <Route path="/articulos" component={ContentArticle} />
                 <Route path="/usuarios" component={ContentUsuarios} />
-                <Route path="/perfiles" component={ContentProfile} />
+                <Route path="/perfiles" component={ContentProfile}  />
+                <Route path="/sucursales" component={ContentSucursal} />
+                <Route path="*" component={NotFound} />
             </Router>
         </div>
 </main>
