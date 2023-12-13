@@ -3,11 +3,14 @@
     import { TextField, Button, Select } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import { onMount } from "svelte";
-  import FormCompany from "../company/formCompany.svelte";
+    import FormCompany from "../company/formCompany.svelte";
+    import { snackbar } from "../../stores/store";
     
-    export let usuario = {}, companies = {}
+    export let usuario = {}, companies = {}, accion = ''
     let message= '', token = ''
     let disabledSave = false
+    let accionBtn = ''
+    let perfilUser = ''
 
     let perfil = [
         {
@@ -19,6 +22,7 @@
             value: 2
         }
     ]
+
 
     function formatRut(code) {
         if (code == undefined) return ''
@@ -53,23 +57,23 @@
 
     function validForm() {
         if (usuario.firstName == ''){
-            message = "Falta agregar el nombre al usuario"
+            message = "Falta agregar el nombre al usuario."
             return false;
         }
         if (usuario.lastName == ''){
-            message = "Falta agregar el apellido al usuario"
+            message = "Falta agregar el apellido al usuario."
             return false;
         } 
         if (usuario.email == ''){
-            message = "Falta agregar el correo al usuario"
+            message = "Falta agregar el correo al usuario."
             return false; 
         }
         if (usuario.rut == ''){
-            message = "Falta agregar el rut al usuario"
+            message = "Falta agregar el rut al usuario."
             return false; 
         } 
         if (usuario.profile_id == ''){
-            message = "Falta agregarle un perfil al usuario"
+            message = "Falta agregarle un perfil al usuario."
             return false; 
         }   
         return true
@@ -85,7 +89,15 @@
     const saveUser = async () => {
         // Validacion formulario
         let isValid = validForm();
-        if (!isValid) return console.log(message)
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return console.log(message)
+        }
+        
         //loading = true;
 
         usuario.password = obtenerRut(usuario.rut)
@@ -108,12 +120,94 @@
                 usuario.rut = ''
                 usuario.company_id = ''
                 usuario.profile_id = ''
+
+                //aviso
+                snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Usuario creado con éxito."
+                return snk
+                })
+            }else{
+                //aviso
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.message = "Error al crear usuario."
+                    return snk
+                })
             }
+        }else{
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al crear usuario."
+                return snk
+            })
         }
         //loading = false
     }
+
+    const editUser = async () => {
+        // Validacion formulario
+        let isValid = validForm();
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return console.log(message)
+        }
+
+        //usuario.password = obtenerRut(usuario.rut)
+        usuario.company_id = parseInt(usuario.company_id, 10)
+        usuario.profile_id = parseInt(usuario.profile_id, 10)
+        // Peticion
+        console.log(usuario)   
+        let body = JSON.stringify({
+            firstName: usuario.firstName,
+            secondName: usuario.secondName,
+            lastName: usuario.lastName,
+            secondLastName: usuario.secondLastName,
+            email: usuario.email
+        })  
+        let response = (await Api.call(`http://127.0.0.1:9000/user/${usuario.id}`, 'PUT', { body }, token))
+        console.log('RESPONSE EDIT USER --> ', response)
+        if (response.success) {
+            if (response.data.code == 201) {
+                //aviso
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.message = "Usuario actualizado con éxito."
+                    return snk
+                })
+            }else{
+                //aviso
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.message = "Error al editar usuario."
+                    return snk
+                })
+            }
+        }else{
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al editar usuario."
+                return snk
+            })
+        }
+    }
     
     onMount(async () => {
+        //funcion que determina que accion se hara, crear o editar;
+        if(accion == 'create'){
+            accionBtn = saveUser
+        }else{
+            accionBtn = editUser
+            perfilUser = usuario.profile_id 
+            
+        }
+
     })
 
     console.log(usuario)
@@ -167,22 +261,26 @@
         bind:value={usuario.email}
     />
 
-    <TextField 
-        version=2
-        required 
-        type="text"
-        label="Rut" 
-        bind:value={usuario.rut}
-    />
+    {#if accion == 'create'}
+        <TextField 
+            version=2
+            required 
+            type="text"
+            label="Rut" 
+            bind:value={usuario.rut}
+        />
+    {/if}
 
     <Select 
         label="Perfil"
+        selected={ usuario.profile_id }
         options={perfil}
         on:change={ (event) => usuario.profile_id = event.detail }
     />
 
     <Select 
         label="Compañias"
+        selected={ usuario.company_id }
         options={companies}
         on:change={ (event) => usuario.company_id = event.detail }
     />
@@ -196,7 +294,7 @@
             disabled={disabledSave}
             icon="save"
             label="Guardar"
-            on:click={ saveUser }
+            on:click={ accionBtn }
         />
         <!-- <Button 
             type="outlined"

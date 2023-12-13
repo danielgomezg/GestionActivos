@@ -17,27 +17,27 @@
 
     function validForm() {
         if (sucursal.description == ''){
-            message = "Falta agregar una descripción a la sucursal"
+            message = "Falta agregar una descripción a la sucursal."
             return false;
         }
         if (sucursal.number == ''){
-            message = "Falta agregar un numero a la sucursal"
+            message = "Falta agregar un numero a la sucursal."
             return false;
         } 
         if (sucursal.address == ''){
-            message = "Falta agregar una dirección a la sucursal"
+            message = "Falta agregar una dirección a la sucursal."
             return false; 
         }
         if (sucursal.region == ''){
-            message = "Falta agregar una región a la sucursal"
+            message = "Falta agregar una región a la sucursal."
             return false; 
         } 
         if (sucursal.commune == ''){
-            message = "Falta agregar una comuna a la sucursal"
+            message = "Falta agregar una comuna a la sucursal."
             return false; 
         }   
         if (offices[0].floor == ''){
-            message = "Falta agregar al menos un piso"
+            message = "Falta agregar al menos un piso."
             return false; 
         } 
 
@@ -89,7 +89,7 @@
                     // Todo guardado.
                     snackbar.update(snk => {
                         snk.open = true;
-                        snk.message = "Sucursal creada con exito."
+                        snk.message = "Sucursal creada con éxito."
                         return snk
                     })
                 }

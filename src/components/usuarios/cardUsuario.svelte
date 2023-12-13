@@ -1,6 +1,7 @@
 <script>
     import { Card, IconButton, Divider } from "$lib"
     import { createEventDispatcher } from "svelte";
+    import { snackbar } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
 
     export let usuario = {}
@@ -18,7 +19,18 @@
         console.log('RESPONSE DELETE USER --> ', response)
         if (response.success) {
             console.log(response.data.message)
-        } 
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Usuario eliminado con éxito."
+                return snk
+            })
+        } else{
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al eliminar usuario."
+                return snk
+            })
+        }
         //loading = false;
     }
 
