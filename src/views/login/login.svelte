@@ -53,6 +53,7 @@
                     message = "Usuario ingresado correctamente"
                     usuario.email = '',
                     usuario.password = ''
+                    console.log(response.data.result.user)
                     user.set({
                         ...response.data.result.user
                     })
