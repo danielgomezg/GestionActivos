@@ -13,6 +13,9 @@
     let perfilUser = ''
     let password = ''
 
+    //variables para que el select guarde eñ valor
+    let usuarioCompanyId, usuarioProfileId
+
     let perfil = [
         {
             label: 'Admin',
@@ -102,8 +105,8 @@
         //loading = true;
 
         usuario.password = obtenerRut(usuario.rut)
-        usuario.company_id = parseInt(usuario.company_id, 10)
-        usuario.profile_id = parseInt(usuario.profile_id, 10)
+        usuario.company_id = parseInt(usuarioCompanyId, 10)
+        usuario.profile_id = parseInt(usuarioProfileId, 10)
         // Peticion
         console.log(usuario)   
         let body = JSON.stringify(usuario)  
@@ -160,17 +163,35 @@
         }
 
         //usuario.password = obtenerRut(usuario.rut)
-        usuario.company_id = parseInt(usuario.company_id, 10)
-        usuario.profile_id = parseInt(usuario.profile_id, 10)
+        usuario.company_id = parseInt(usuarioCompanyId, 10)
+        usuario.profile_id = parseInt(usuarioProfileId, 10)
         // Peticion
-        console.log(usuario)   
-        let body = JSON.stringify({
+        console.log(usuario)
+        console.log(usuarioProfileId)
+        console.log(usuarioCompanyId)
+        let body;
+        if(password == ""){
+            body = JSON.stringify({
             firstName: usuario.firstName,
             secondName: usuario.secondName,
             lastName: usuario.lastName,
             secondLastName: usuario.secondLastName,
-            email: usuario.email
-        })  
+            email: usuario.email,
+            company_id : usuario.company_id,
+            profile_id : usuario.profile_id
+            }) 
+        }else{
+            body = JSON.stringify({
+            firstName: usuario.firstName,
+            secondName: usuario.secondName,
+            lastName: usuario.lastName,
+            secondLastName: usuario.secondLastName,
+            email: usuario.email,
+            company_id : usuario.company_id,
+            profile_id : usuario.profile_id
+            }) 
+        }   
+         
         let response = (await Api.call(`http://127.0.0.1:9000/user/${usuario.id}`, 'PUT', { body }, token))
         console.log('RESPONSE EDIT USER --> ', response)
         if (response.success) {
@@ -212,6 +233,8 @@
     })
 
     $: usuario.rut = formatRut(usuario.rut)
+    $: console.log(usuario.company_id)
+    $: console.log(usuario.profile_id)
 
 </script>
 
@@ -283,14 +306,14 @@
         label="Perfil"
         selected={ usuario.profile_id }
         options={perfil}
-        on:change={ (event) => usuario.profile_id = event.detail }
+        on:change={ (event) => usuarioProfileId = event.detail }
     />
 
     <Select 
         label="Compañias"
         selected={ usuario.company_id }
         options={companies}
-        on:change={ (event) => usuario.company_id = event.detail }
+        on:change={ (event) => usuarioCompanyId = event.detail }
     />
 
     <br>
