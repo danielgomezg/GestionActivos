@@ -27,6 +27,18 @@
         // openModal = true
     })
 
+    setContext('addSucursalCount', (companyId) => {
+        let empresa = empresas.find(emp => emp.id == companyId);
+        empresa.count_sucursal++;
+        console.log('empresa found > ', empresa)
+        empresas = [...empresas]
+    })
+
+    setContext('addCompany', (company) => {
+        console.log('in add company')
+        empresas = [company, ...empresas]
+    })
+
     setContext('editStore', (store, company) => {
         // Esta funcion cambia el contenido del side sheets o bottom.
         // guardamos el componente que se esta mostrando
@@ -99,7 +111,7 @@
         loading = true;
         let response = (await Api.call('http://127.0.0.1:9000/companies', 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
-        if (response.success) {
+        if (response.success && response.statusCode == "200") {
             empresas = response.data.result //empresas.set(response.data)
         } 
         loading = false;

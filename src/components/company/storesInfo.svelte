@@ -23,11 +23,9 @@
     onMount(async () => {
 
         await getSucursalePorCompany()
-        console.log(stores)
+        
     })
   
-
-    
 </script>
 
 <div class="store-info__container">

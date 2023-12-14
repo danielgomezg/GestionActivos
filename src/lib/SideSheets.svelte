@@ -25,10 +25,7 @@
                 {/if}
                 <div class="title">{title}</div>
             </div>
-            <IconButton icon="close" on:click={ () => {
-                console.log('aaaaaaaaaaaaaaaaaaaaaaaa')
-                open = false
-            } }/>
+            <IconButton icon="close" on:click={ () => open = false }/>
         </div>
         <div class="side-sheets__content">
             <slot />
@@ -46,9 +43,10 @@
     }
 
     .side-sheets__content {
-        margin: 24px 24px 0 16px;
+        /* margin: 24px 24px 0 16px; */
         overflow-y: auto;
         flex: 1;
+        padding: 24px 24px 0px 16px;
     }
 
     .container {

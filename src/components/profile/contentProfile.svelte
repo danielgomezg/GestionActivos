@@ -11,32 +11,47 @@
     let loading = false;
     let openModal = false; 
     let backButton = false;
-
     let profiles = [
-        {
-            id: 1,
-            name: 'Admin',
-            actions: [
-                "create-sucursal",
-                "update-sucursal",
-                "delete-sucursal",
-                "create-oficina",
-                "create-activo",
-                "update-activo",
-                "delete-activo",
-                "delete-articulo",
-                "create-usuario",
-                "update-usuario",
-                "delete-usuario",
-                "delete-empresa"
-            ]
-        },
-        {
-            id: 1,
-            name: 'Empresa',
-            actions: []
-        }
+        // {
+        //     id: 1,
+        //     name: 'Admin',
+        //     actions: [
+        //         "create-sucursal",
+        //         "update-sucursal",
+        //         "delete-sucursal",
+        //         "create-oficina",
+        //         "create-activo",
+        //         "update-activo",
+        //         "delete-activo",
+        //         "delete-articulo",
+        //         "create-usuario",
+        //         "update-usuario",
+        //         "delete-usuario",
+        //         "delete-empresa"
+        //     ]
+        // },
+        // {
+        //     id: 1,
+        //     name: 'Empresa',
+        //     actions: []
+        // }
     ]
+
+    const getProfiles = async () => {
+        loading = true;
+        let response = (await Api.call('http://127.0.0.1:9000/profiles', 'GET'))
+        console.log('RESPONSE GET PROFILES --> ', response)
+        if (response.success && response.statusCode == "200") {
+            profiles = response.data.result //empresas.set(response.data)
+        } 
+        loading = false;
+    }
+
+    
+
+    onMount(async () => {
+        await getProfiles();
+    })
 
 
 </script>

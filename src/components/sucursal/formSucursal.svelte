@@ -76,7 +76,7 @@
         let body = JSON.stringify({ ...officeEdit, sucursal_id: sucursal.id })  
         let response = (await Api.call(`http://127.0.0.1:9000/office`, 'POST', { body }))
         console.log('RESPONSE POST OFFICE --> ', response)
-        if (response.success) {
+        if (response.success, response.statusCode == "201") {
             console.log(offices)
             //aviso
             snackbar.update(snk => {
@@ -84,13 +84,17 @@
                 snk.message = "Oficina creada con éxito."
                 return snk
             }) 
-        }else{
+
+            offices = [response.data.result, ...offices]
+            officeEdit = { floor: '', description: '' }
+            addOffice = false
+        } else {
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
                 snk.message = "Error al crear oficina."
                 return snk
-                })
+            })
         } 
     }
 
@@ -167,7 +171,7 @@
         <ul>
             {#each offices as office, index} 
             <tr>
-                <td style="width: 65%;"><li>{ "Piso " + office.floor  + ' - ' + office.description }</li></td>
+                <td style="width: 65%;"><li>{ office.floor  + ' - ' + office.description }</li></td>
                 <td style="width: 65%;">
                     <IconButton icon="edit" on:click={ () => toggleEdit(office, index) } />
                     <IconButton icon="delete" on:click />

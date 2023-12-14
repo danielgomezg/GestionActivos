@@ -1,15 +1,19 @@
 <script>
     import { Card, Divider, Chip } from "$lib"
-    import { modulos } from "../../stores/store";
-  import BtnAccion from "../btnAccion.svelte";
-    
+    import { modulos } from "../../stores/store";  
 
     export let profile = {}
 
     let tablesActions = {}
+    let translate = {
+        get: 'lectura',
+        create: 'crear',
+        update: 'actualizar',
+        delete: 'eliminar'
+    }
 
     const hasAction = (module, action) => {
-        return profile.actions.includes(action + '-' + module)
+        return profile.profileActions.map(pa => pa.name).includes(action + '-' + module)
     }
 
     const getTables = (actions) => {
@@ -36,6 +40,7 @@
         <div class="card-header">
             <div>
                 <div class="card-title capitalize">{ profile.name }</div>
+                <p>{ profile.description }</p>
             </div>
         </div>
         <Divider />
@@ -60,12 +65,12 @@
                 {#each $modulos as modulo }
                     <tr>
                         <td colSpan="2"><li>{ modulo }</li></td>
-                        {#each ['create', 'update', 'delete'] as action, index }
+                        {#each ['get', 'create', 'update', 'delete'] as action, index }
                             <td>
                                 {#if hasAction(modulo, action)}
-                                    <Chip chip={ { id: index, label: action, color: action } } />
+                                    <Chip chip={ { id: index, label: translate[action], color: action } } />
                                 {:else}
-                                    <Chip chip={ { id: index, label: action } } />
+                                    <Chip chip={ { id: index, label: translate[action] } } />
                                 {/if}
                             </td>   
                         {:else}
@@ -77,3 +82,9 @@
         </table>
     </div>
 </Card>
+
+<style>
+    p {
+        margin: 0;
+    }
+</style>

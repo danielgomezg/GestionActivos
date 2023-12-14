@@ -51,4 +51,9 @@
         background-color: #81d4fa; 
         color: #000;
     }
+
+    .get {
+      background-color: #7fdc8a; 
+      color: #000;
+    }
 </style>

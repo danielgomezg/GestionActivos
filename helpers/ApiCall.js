@@ -24,7 +24,7 @@ class Api {
         })
         .then(response => {
 
-            const statusCode = response.status
+            let statusCode = response.status
 
             return response.json().then(data => {
                 
@@ -38,7 +38,7 @@ class Api {
                         window.location.href = '/login'
                         return;
                     }
-                    return { success: true, statusCode, data }
+                    return { success: true, statusCode: data.code, data }
                 }
             });
         })

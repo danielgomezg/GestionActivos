@@ -1,13 +1,11 @@
 <script>
-    // @ts-nocheck
-    import { TextField, Button, Select } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
-    import Perfil from "../../views/perfil.svelte";
-
-
+    import { getContext } from "svelte";
+    import { TextField, Button, Select } from "$lib";
+    
     export let company = {}, isEdit = false;
-    let showSucursalesBtn = false, disabledSave = false, loading = false, message = 'Empresa agregada';
+    let showSucursalesBtn = false, loading = false, message = 'Empresa agregada';
     let paises = [
         {
             label: 'Chile',
@@ -18,6 +16,7 @@
             value: 'Perú'
         }
     ]
+    let addCompany = getContext('addCompany');
 
     function formatRut(code) {
         if (code == undefined) return ''
@@ -39,7 +38,6 @@
 
         return rut
         
-        // return code
     }
 
     function validForm() {
@@ -92,6 +90,9 @@
                     snk.message = "Empresa creada con éxito."
                     return snk
                 })
+
+                addCompany(response.data.result)
+
             }else{
                 //aviso
                 snackbar.update(snk => {

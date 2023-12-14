@@ -1,12 +1,14 @@
 <script>
+    import { getContext } from "svelte";
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
-    import { TextField, Button, Divider, Select } from "$lib";
+    import { TextField, Button, Divider } from "$lib";
     import SelectCountryLocations from "../selectCountry/selectCountryLocations.svelte";
 
     // export let openModal
     export let sucursal = { }, company = {}
 
+    let addSucursalCount = getContext('addSucursalCount')
     let message = ""
     let offices = [
         {
@@ -86,12 +88,13 @@
                     }
                 }
                 else {
-                    // Todo guardado.
+                    // TODO GUARDADO CORRECTAMENTE.
                     snackbar.update(snk => {
                         snk.open = true;
                         snk.message = "Sucursal creada con éxito."
                         return snk
                     })
+                    addSucursalCount(company.id)
                 }
             }
             else {

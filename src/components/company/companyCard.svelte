@@ -28,7 +28,8 @@
             </div>
             <div class="store-info">
                 <span class="material-symbols-outlined">store</span>
-                <div> { company.count_sucursal } sucursales</div>
+                <!-- Muestra la cantidad de sucursales -->
+                <div>{ company.count_sucursal || 0 } sucursales</div>
             </div>
         </div>
         <div class="card-actions">
