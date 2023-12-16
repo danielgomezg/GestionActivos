@@ -2,30 +2,23 @@
     // @ts-nocheck
     import { TextField, Button, Select } from "$lib";
     import Api from "../../../helpers/ApiCall";
-    import { onMount } from "svelte";
+    import { getContext, onMount } from "svelte";
     import FormCompany from "../company/formCompany.svelte";
     import { snackbar } from "../../stores/store";
     
-    export let usuario = {}, companies = {}, accion = '', showPassword = false
+    export let usuario = {}, companies = {}, accion = '', showPassword = false, perfiles = {}
     let message= '', token = ''
     let disabledSave = false
     let accionBtn = ''
     let perfilUser = ''
     let password = ''
 
+    //Contexto para actualizar users
+    let addUsuario = getContext('addUsuario')
+    let editUsuario = getContext('editUsuario')
+
     //variables para que el select guarde eñ valor
     let usuarioCompanyId, usuarioProfileId
-
-    let perfil = [
-        {
-            label: 'Admin',
-            value: 1
-        },
-        {
-            label: 'Empresa',
-            value: 2
-        }
-    ]
 
 
     function formatRut(code) {
@@ -55,7 +48,7 @@
     // Elimina guiones y puntos usando expresiones regulares
         const soloDigitos = cadena.replace(/[-.]/g, '');
         const sinUltimoDigito = soloDigitos.slice(0, -1);
-        console.log(sinUltimoDigito)
+        //console.log(sinUltimoDigito)
         return sinUltimoDigito;
     }
 
@@ -91,6 +84,11 @@
 
 
     const saveUser = async () => {
+
+        usuario.password = obtenerRut(usuario.rut)
+        usuario.company_id = parseInt(usuarioCompanyId, 10)
+        usuario.profile_id = parseInt(usuarioProfileId, 10)
+
         // Validacion formulario
         let isValid = validForm();
         if (!isValid) {
@@ -102,11 +100,6 @@
             return console.log(message)
         }
         
-        //loading = true;
-
-        usuario.password = obtenerRut(usuario.rut)
-        usuario.company_id = parseInt(usuarioCompanyId, 10)
-        usuario.profile_id = parseInt(usuarioProfileId, 10)
         // Peticion
         console.log(usuario)   
         let body = JSON.stringify(usuario)  
@@ -125,12 +118,16 @@
                 usuario.company_id = ''
                 usuario.profile_id = ''
 
+                //Actualizar lista de users
+                addUsuario(response.data.result)
+
                 //aviso
                 snackbar.update(snk => {
                 snk.open = true;
                 snk.message = "Usuario creado con éxito."
                 return snk
                 })
+
             }else{
                 //aviso
                 snackbar.update(snk => {
@@ -166,9 +163,9 @@
         usuario.company_id = parseInt(usuarioCompanyId, 10)
         usuario.profile_id = parseInt(usuarioProfileId, 10)
         // Peticion
-        console.log(usuario)
-        console.log(usuarioProfileId)
-        console.log(usuarioCompanyId)
+        //console.log(usuario)
+        //console.log(usuarioProfileId)
+        //console.log(usuarioCompanyId)
         let body;
         if(password == ""){
             body = JSON.stringify({
@@ -196,6 +193,10 @@
         console.log('RESPONSE EDIT USER --> ', response)
         if (response.success) {
             if (response.data.code == 201) {
+
+                //Actualizar lista de users
+                editUsuario(response.data.result)
+
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
@@ -233,8 +234,8 @@
     })
 
     $: usuario.rut = formatRut(usuario.rut)
-    $: console.log(usuario.company_id)
-    $: console.log(usuario.profile_id)
+    //$: console.log(usuario.company_id)
+    //$: console.log(usuario.profile_id)
 
 </script>
 
@@ -305,7 +306,7 @@
     <Select 
         label="Perfil"
         selected={ usuario.profile_id }
-        options={perfil}
+        options={perfiles}
         on:change={ (event) => usuarioProfileId = event.detail }
     />
 

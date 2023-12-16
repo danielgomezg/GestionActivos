@@ -23,6 +23,8 @@ class Api {
             ...params
         })
         .then(response => {
+            console.log("logggg")
+            console.log(response)
 
             let statusCode = response.status
 

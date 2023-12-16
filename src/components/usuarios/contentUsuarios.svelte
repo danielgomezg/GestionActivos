@@ -19,10 +19,27 @@
 
     //companies recibe id y name del getcompany, y en company se guardan los datos como label y value para usarlos en el select  
     let companiesDB= [], companiesSelect = []
+    let perfilesDB = [], perfilesSelect = []
 
     setContext('backModalContent', (e) => {
         e.preventDefault();
     
+    })
+
+    setContext('addUsuario', (usuario) => {
+        console.log('in add User')
+        usuarios = [usuario, ...usuarios]
+    })
+
+    setContext('editUsuario', (usuario) => {
+        console.log('in edit User')
+        const index = usuarios.findIndex(user => user.id === usuario.id);
+        usuarios = [...usuarios.slice(0, index), usuario, ...usuarios.slice(index + 1)];
+    })
+
+    setContext('removeUsuario', (usuarioId) => {
+        console.log('in remove User')
+        usuarios = usuarios.filter(usuario => usuario.id !== usuarioId);
     })
 
     const createUser = () => {
@@ -40,6 +57,7 @@
             profile_id: ''
         }, 
         companies: companiesSelect,
+        perfiles: perfilesSelect,
         accion: 'create' }
         openModal = true
 
@@ -66,7 +84,6 @@
 
     //Se obtiene las companias con el id y nombre solamente
     const getCompanyNameId= async () => {
-        //loading = true;
         let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
         if (response.success) {
@@ -79,15 +96,31 @@
                 companiesSelect.push(company);
             }
             console.log(companiesSelect)
-
-            //formatCompanyForSelect()  
         } 
-        //loading = false;
     }
+
+    //Se obtiene las companias con el id y nombre solamente
+    const getPerfiles= async () => {
+        let response = (await Api.call('http://127.0.0.1:9000/profiles', 'GET'))
+        console.log('RESPONSE GET PROFILES --> ', response)
+        if (response.success) {
+            perfilesDB = response.data.result
+            for (let i = 0; i < perfilesDB.length; i++) {
+                let perfil = {
+                    label: perfilesDB[i].name,
+                    value: perfilesDB[i].id
+                };
+                perfilesSelect.push(perfil);
+            }
+            console.log(perfilesSelect)
+        } 
+    }
+
 
     onMount(async () => {
         getUsers()
         getCompanyNameId()
+        getPerfiles()
     })
 
     $: console.log('open modal: ', openModal)

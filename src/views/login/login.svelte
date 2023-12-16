@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { navigate } from "svelte-routing";
     import { user } from "../../stores/store";
+    import { snackbar } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     // @ts-ignore
     import { Card, Button, TextField, Snackbar } from "$lib";
@@ -14,20 +15,20 @@
 
     const validData = () => {
 
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuario.email)) {
-            message = "Correo invalido"
-            error = true
-            return false;
-        }
-
         if (usuario.email == "") {
-            message = "Falta ingresar un correo"
+            message = "Falta ingresar un correo."
             error = true;
             return false;
         }
 
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuario.email)) {
+            message = "Correo invalido."
+            error = true
+            return false;
+        }
+
         if (usuario.password == "") {
-            message = "Falta ingresar constraseña"
+            message = "Falta ingresar constraseña."
             error = true;
             return false;
         }
@@ -41,35 +42,66 @@
 
         console.log("email: " + usuario.email + " password: " + usuario.password)
 
-        let valid = validData()
+        //let valid = validData()
 
-        if(valid){
-            let body = JSON.stringify(usuario) 
-            let response = (await Api.call('http://127.0.0.1:9000/login', 'POST', { body }))
-            console.log('RESPONSE LOGIN --> ', response)
-            if (response.success) {
-                // @ts-ignore
-                if (response.data.code == 201) {
-                    message = "Usuario ingresado correctamente"
-                    usuario.email = '',
-                    usuario.password = ''
-                    console.log(response.data.result.user)
-                    user.set({
-                        ...response.data.result.user
-                    })
-                    localStorage.setItem("user",  JSON.stringify($user))
-                    localStorage.setItem('accessToken', response.data.result.access_token);
-
-                    if ($user.profile_id == 1) {
-                        navigate("/empresas", {replace: true})
-                    }
-                    else {
-                        navigate("/sucursales", {replace: true})
-                    }
-                }
-            } 
-        
+        // Validacion formulario
+        let isValid = validData();
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return console.log(message)
         }
+
+        let body = JSON.stringify(usuario) 
+        let response = (await Api.call('http://127.0.0.1:9000/login', 'POST', { body }))
+        console.log('RESPONSE LOGIN --> ', response)
+        
+        //cuando el usuario o la contraseña son incorrecto responde undefined
+        if(response == undefined){
+            snackbar.update(snk => {
+                    snk.open = true;
+                    snk.message = "Error al iniciar sesión."
+                    return snk
+            })
+        }
+        if (response.success) {
+            // @ts-ignore
+            if (response.data.code == 201) {
+                message = "Usuario ingresado correctamente"
+                usuario.email = '',
+                usuario.password = ''
+                console.log(response.data.result.user)
+                user.set({
+                    ...response.data.result.user
+                })
+                localStorage.setItem("user",  JSON.stringify($user))
+                localStorage.setItem('accessToken', response.data.result.access_token);
+
+                if ($user.profile_id == 1 || $user.profile_id == 3) {
+                    navigate("/empresas", {replace: true})
+                }
+                else {
+                    navigate("/sucursales", {replace: true})
+                }
+            }else{
+                //aviso
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.message = "Error al iniciar sesión."
+                    return snk
+                })
+            }
+        }else{
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al iniciar sesión."
+                return snk
+            })
+        } 
     }
 
     onMount(() => {
