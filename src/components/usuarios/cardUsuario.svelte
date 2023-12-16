@@ -2,9 +2,14 @@
     import { Card, IconButton, Divider } from "$lib"
     import { createEventDispatcher } from "svelte";
     import { snackbar } from "../../stores/store";
+    import { getContext } from "svelte";
     import Api from "../../../helpers/ApiCall";
 
     export let usuario = {}
+
+    //Contexto para actualizar users
+    let removeUsuario = getContext('removeUsuario')
+
     let dispath = createEventDispatcher();
 
     function getTokenFromLocalStorage() {
@@ -19,6 +24,10 @@
         console.log('RESPONSE DELETE USER --> ', response)
         if (response.success) {
             console.log(response.data.message)
+
+            //Actualizar lista de users
+            removeUsuario(usuario.id)
+
             snackbar.update(snk => {
                 snk.open = true;
                 snk.message = "Usuario eliminado con éxito."

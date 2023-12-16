@@ -51,10 +51,10 @@
             <Router>  
                 <Route path="/login" component={Login} />
                 
-                {#if $user?.profile_id == 1}
-                    <Route path="/empresas" component={ContentCompany}  />
-                    <Route path="/usuarios" component={ContentUsuarios} />
-                    <Route path="/perfiles" component={ContentProfile}  />
+                {#if $user?.profile_id == 1 || $user?.profile_id == 3}
+                <Route path="/empresas" component={ContentCompany}  />
+                <Route path="/usuarios" component={ContentUsuarios} />
+                <Route path="/perfiles" component={ContentProfile}  />
                 {/if}
                 
                 {#if $user?.profile_id == 2}

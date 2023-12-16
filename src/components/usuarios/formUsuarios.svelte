@@ -2,7 +2,7 @@
     // @ts-nocheck
     import { TextField, Button, Select } from "$lib";
     import Api from "../../../helpers/ApiCall";
-    import { onMount } from "svelte";
+    import { getContext, onMount } from "svelte";
     import FormCompany from "../company/formCompany.svelte";
     import { snackbar } from "../../stores/store";
     
@@ -12,6 +12,10 @@
     let accionBtn = ''
     let perfilUser = ''
     let password = ''
+
+    //Contexto para actualizar users
+    let addUsuario = getContext('addUsuario')
+    let editUsuario = getContext('editUsuario')
 
     let profiles = []
 
@@ -52,7 +56,7 @@
     // Elimina guiones y puntos usando expresiones regulares
         const soloDigitos = cadena.replace(/[-.]/g, '');
         const sinUltimoDigito = soloDigitos.slice(0, -1);
-        console.log(sinUltimoDigito)
+        //console.log(sinUltimoDigito)
         return sinUltimoDigito;
     }
 
@@ -81,6 +85,11 @@
     }
 
     const saveUser = async () => {
+
+        usuario.password = obtenerRut(usuario.rut)
+        usuario.company_id = parseInt(usuarioCompanyId, 10)
+        usuario.profile_id = parseInt(usuarioProfileId, 10)
+
         // Validacion formulario
         let isValid = validForm();
         if (!isValid) {
@@ -116,12 +125,16 @@
                 usuario.company_id = ''
                 usuario.profile_id = ''
 
+                //Actualizar lista de users
+                addUsuario(response.data.result)
+
                 //aviso
                 snackbar.update(snk => {
                 snk.open = true;
                 snk.message = "Usuario creado con éxito."
                 return snk
                 })
+
             }else{
                 //aviso
                 snackbar.update(snk => {
@@ -183,6 +196,10 @@
         console.log('RESPONSE EDIT USER --> ', response)
         if (response.success) {
             if (response.data.code == 201) {
+
+                //Actualizar lista de users
+                editUsuario(response.data.result)
+
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
