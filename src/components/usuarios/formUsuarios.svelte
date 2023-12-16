@@ -7,26 +7,23 @@
     import { snackbar } from "../../stores/store";
     
     export let usuario = {}, companies = {}, accion = '', showPassword = false
-    let message= '', token = ''
+    let message= ''
     let disabledSave = false
     let accionBtn = ''
     let perfilUser = ''
     let password = ''
 
-    //variables para que el select guarde eñ valor
-    let usuarioCompanyId, usuarioProfileId
+    let profiles = []
 
-    let perfil = [
-        {
-            label: 'Admin',
-            value: 1
-        },
-        {
-            label: 'Empresa',
-            value: 2
+    const getProfiles = async () => {
+        
+        let response = (await Api.call('http://127.0.0.1:9000/profiles', 'GET'))
+        console.log('RESPONSE GET PROFILES --> ', response)
+        if (response.success && response.statusCode == "200") {
+            profiles = response.data.result //empresas.set(response.data)
         }
-    ]
 
+    }
 
     function formatRut(code) {
         if (code == undefined) return ''
@@ -83,13 +80,6 @@
         return true
     }
 
-    function getTokenFromLocalStorage() {
-        return localStorage.getItem('accessToken');
-    }
-
-    token = getTokenFromLocalStorage()
-
-
     const saveUser = async () => {
         // Validacion formulario
         let isValid = validForm();
@@ -105,12 +95,13 @@
         //loading = true;
 
         usuario.password = obtenerRut(usuario.rut)
-        usuario.company_id = parseInt(usuarioCompanyId, 10)
-        usuario.profile_id = parseInt(usuarioProfileId, 10)
+        usuario.company_id = parseInt(usuario.company_id, 10)
+        usuario.profile_id = parseInt(usuario.profile_id, 10)
+
         // Peticion
         console.log(usuario)   
         let body = JSON.stringify(usuario)  
-        let response = (await Api.call('http://127.0.0.1:9000/user', 'POST', { body }, token))
+        let response = (await Api.call('http://127.0.0.1:9000/user', 'POST', { body }))
         console.log('RESPONSE SAVE USER --> ', response)
         if (response.success) {
             if (response.data.code == 201) {
@@ -151,6 +142,7 @@
     }
 
     const editUser = async () => {
+        
         // Validacion formulario
         let isValid = validForm();
         if (!isValid) {
@@ -162,37 +154,32 @@
             return console.log(message)
         }
 
-        //usuario.password = obtenerRut(usuario.rut)
-        usuario.company_id = parseInt(usuarioCompanyId, 10)
-        usuario.profile_id = parseInt(usuarioProfileId, 10)
+        
         // Peticion
-        console.log(usuario)
-        console.log(usuarioProfileId)
-        console.log(usuarioCompanyId)
         let body;
         if(password == ""){
             body = JSON.stringify({
-            firstName: usuario.firstName,
-            secondName: usuario.secondName,
-            lastName: usuario.lastName,
-            secondLastName: usuario.secondLastName,
-            email: usuario.email,
-            company_id : usuario.company_id,
-            profile_id : usuario.profile_id
+                firstName: usuario.firstName,
+                secondName: usuario.secondName,
+                lastName: usuario.lastName,
+                secondLastName: usuario.secondLastName,
+                email: usuario.email,
+                company_id : parseInt(usuario.company_id),
+                profile_id : parseInt(usuario.profile_id)
             }) 
         }else{
             body = JSON.stringify({
-            firstName: usuario.firstName,
-            secondName: usuario.secondName,
-            lastName: usuario.lastName,
-            secondLastName: usuario.secondLastName,
-            email: usuario.email,
-            company_id : usuario.company_id,
-            profile_id : usuario.profile_id
+                firstName: usuario.firstName,
+                secondName: usuario.secondName,
+                lastName: usuario.lastName,
+                secondLastName: usuario.secondLastName,
+                email: usuario.email,
+                company_id : parseInt(usuario.company_id),
+                profile_id : parseInt(usuario.profile_id)
             }) 
         }   
          
-        let response = (await Api.call(`http://127.0.0.1:9000/user/${usuario.id}`, 'PUT', { body }, token))
+        let response = (await Api.call(`http://127.0.0.1:9000/user/${usuario.id}`, 'PUT', { body }))
         console.log('RESPONSE EDIT USER --> ', response)
         if (response.success) {
             if (response.data.code == 201) {
@@ -221,6 +208,9 @@
     }
     
     onMount(async () => {
+
+        await getProfiles();
+
         //funcion que determina que accion se hara, crear o editar;
         if(accion == 'create'){
             accionBtn = saveUser
@@ -233,8 +223,7 @@
     })
 
     $: usuario.rut = formatRut(usuario.rut)
-    $: console.log(usuario.company_id)
-    $: console.log(usuario.profile_id)
+    $: console.log('usuario > ', usuario)
 
 </script>
 
@@ -302,18 +291,20 @@
         />
     {/if}
 
+    {#key profiles}
     <Select 
         label="Perfil"
         selected={ usuario.profile_id }
-        options={perfil}
-        on:change={ (event) => usuarioProfileId = event.detail }
+        options={ profiles.map(p => { return { label: p.name, value: p.id } }) }
+        on:change={ (event) => usuario.profile_id = event.detail }
     />
+    {/key}
 
     <Select 
         label="Compañias"
         selected={ usuario.company_id }
         options={companies}
-        on:change={ (event) => usuarioCompanyId = event.detail }
+        on:change={ (event) => usuario.company_id = event.detail }
     />
 
     <br>

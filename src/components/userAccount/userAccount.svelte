@@ -53,11 +53,7 @@
                 };
                 companiesSelect.push(company);
             }
-            console.log(companiesSelect)
-
-            //formatCompanyForSelect()  
         } 
-        //loading = false;
     }
 
     onMount(() => {

@@ -52,19 +52,19 @@
                 <Route path="/login" component={Login} />
                 
                 {#if $user?.profile_id == 1}
-                <Route path="/empresas" component={ContentCompany}  />
-                <Route path="/usuarios" component={ContentUsuarios} />
-                <Route path="/perfiles" component={ContentProfile}  />
+                    <Route path="/empresas" component={ContentCompany}  />
+                    <Route path="/usuarios" component={ContentUsuarios} />
+                    <Route path="/perfiles" component={ContentProfile}  />
                 {/if}
                 
                 {#if $user?.profile_id == 2}
-                <Route path="/sucursales" component={ContentSucursal} />
+                    <Route path="/sucursales" component={ContentSucursal} />
                 {/if}
                 
                 
                 
                 <Route path="/articulos" component={ContentArticle} />
-                <Route path="*" component={NotFound} />
+                <Route path="/*" component={NotFound} />
             </Router>
         </div>
 </main>
