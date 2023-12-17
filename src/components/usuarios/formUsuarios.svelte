@@ -1,10 +1,9 @@
 <script>
-    // @ts-nocheck
-    import { TextField, Button, Select } from "$lib";
+    import { user } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     import { getContext, onMount } from "svelte";
-    import FormCompany from "../company/formCompany.svelte";
     import { snackbar } from "../../stores/store";
+    import { TextField, Button, Select } from "$lib";
     
     export let usuario = {}, companies = {}, accion = '', showPassword = false
     let message= ''
@@ -240,7 +239,6 @@
     })
 
     $: usuario.rut = formatRut(usuario.rut)
-    $: console.log('usuario > ', usuario)
 
 </script>
 
@@ -308,6 +306,8 @@
         />
     {/if}
 
+    {#if $user.profileActions.includes('create-perfil')}
+
     {#key profiles}
     <Select 
         label="Perfil"
@@ -317,12 +317,18 @@
     />
     {/key}
 
+    {/if}
+
+    {#if $user.profileActions.includes('create-empresa')}
+
     <Select 
         label="Compañias"
         selected={ usuario.company_id }
         options={companies}
         on:change={ (event) => usuario.company_id = event.detail }
     />
+
+    {/if}
 
     <br>
     <div class="grid-col-span-1">
@@ -333,12 +339,6 @@
             label="Guardar"
             on:click={ accionBtn }
         />
-        <!-- <Button 
-            type="outlined"
-            label="Cancelar"
-            color=""
-            on:click={ () => openModal = false }
-        /> -->
     </div>
 
 

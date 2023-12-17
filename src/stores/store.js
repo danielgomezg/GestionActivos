@@ -5,7 +5,7 @@ export const snackbar = writable({
     message: ''
 })
 
-export const user = writable(null) //createUser()
+export const user = writable({}) //createUser()
 export const session = writable({
     user: {},
     company: {}
@@ -20,29 +20,77 @@ export const modulos = writable([
     "usuario",
     "empresa",
 ])
+
+export const menu = writable([
+    {
+        id: 1,
+        name: 'Empresas',
+        path: '/empresas',
+        profiles: [
+            1
+        ]
+    },
+    {
+        id: 2,
+        name: 'Sucursales',
+        path: '/sucursales',
+        profiles: [
+            2
+        ]
+    },
+    {
+        id: 1,
+        name: 'Articulos',
+        path: '/articulos',
+        profiles: [
+            1,
+            2,
+            3
+        ]
+    },
+    {
+        id: 1,
+        name: 'Usuarios',
+        path: '/usuarios',
+        profiles: [
+            1
+        ]
+    },
+    {
+        id: 1,
+        name: 'Perfiles',
+        path: '/perfiles',
+        profiles: [
+            1
+        ]
+    },
+])
   
 export const sideNavigationLinks = writable([
     {
         link: 'empresas',
-        profile: 1
+        action: 'create-empresa',
+        profile: [1, 3]
     },
     {
         link: 'sucursales',
-        profile: 2
+        action: 'create-sucursal',
+        profile: [2]
     },
     {
         link: 'articulos',
+        action: 'get-articulo',
+        profile: [1, 2, 3]
     },
     {
         link: 'usuarios',
-        profile: 1
+        action: 'get-usuario',
+        profile: [1, 2, 3]
     },
     {
         link: 'perfiles',
-        profile: 1
-    },
-    {
-        link: 'reportes',
+        action: 'get-perfil',
+        profile: [1]
     }
 ]);
 

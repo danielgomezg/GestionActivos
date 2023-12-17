@@ -1,8 +1,9 @@
 <script>
     import { onMount } from "svelte";
     import Login from "../login/login.svelte";
-    import { Router, Route } from "svelte-routing";
+    import { navigate } from "svelte-routing";
     import { user } from "../../stores/store";
+    import { Router, Route } from "svelte-routing";
 
 
     // @ts-ignore
@@ -20,12 +21,20 @@
     let isMobile = false, open = true;
 
     onMount(() => {
+        console.log('MOUNT HOME')
         isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         open = !isMobile
 
         let userSession = localStorage.getItem("user")
-        if (user != null) {
+        let token = localStorage.getItem("accessToken")
+        console.log(userSession)
+        console.log(token)
+        if (user != null && token != null) {
             user.set(JSON.parse(userSession))
+        }
+        else {
+            navigate("/login", {replace: true})
+            return;
         }
     })
 
@@ -33,41 +42,41 @@
     
 </script>
 
-{#if $user}
-    <TopAppBar {isMobile} on:openNav={ () => open = !open }  >
-        <div slot="account" class="flex-row align-center">
-            <UserAccount />
-        </div>
-    </TopAppBar>
+{#if Object.keys($user).length != 0 }
+<TopAppBar {isMobile} on:openNav={ () => open = !open }  >
+    <div slot="account" class="flex-row align-center">
+        <UserAccount />
+    </div>
+</TopAppBar>
 {/if}
 <main class="main" class:main-mobile={isMobile}>
-        {#if $user}
+        {#if Object.keys($user).length != 0 }
             <NavigationDrawer     
                 props={ { open, isMobile } } 
             />
         {/if}
         <div class="main-content" >
             <Snackbar />
+            <!-- <svelte:component this={ContentCompany} /> -->
             <Router>  
                 <Route path="/login" component={Login} />
                 
-                {#if $user?.profile_id == 1 || $user?.profile_id == 3}
+                <!-- {#if $user?.profile_id == 1 || $user?.profile_id == 3} -->
                 <Route path="/empresas" component={ContentCompany}  />
                 <Route path="/usuarios" component={ContentUsuarios} />
                 <Route path="/perfiles" component={ContentProfile}  />
-                {/if}
+                <!-- {/if} -->
                 
-                {#if $user?.profile_id == 2}
+                <!-- {#if $user?.profile_id == 2} -->
                     <Route path="/sucursales" component={ContentSucursal} />
-                {/if}
-                
-                
-                
+                <!-- {/if} -->
+                                
                 <Route path="/articulos" component={ContentArticle} />
                 <Route path="/*" component={NotFound} />
             </Router>
         </div>
 </main>
+
 
 <style>
     .main {

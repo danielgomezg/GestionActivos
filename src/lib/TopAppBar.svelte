@@ -18,7 +18,7 @@
 
 </script>
 
-{#if $user}
+<!-- {#if $user} -->
 <header bind:this={topAppBarComponent} class="mdc-top-app-bar mdc-top-app-bar--fixed">
     <div class="mdc-top-app-bar__row">
       <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
@@ -43,7 +43,7 @@
       </section>
     </div>
 </header>
-{/if}
+<!-- {/if} -->
 
 <style>
   .img-container {

@@ -25,9 +25,9 @@
     }
 
     const logout = () => {
-    
         localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
+        user.set({})
 
         navigate("/login", {replace: true})
         return;
@@ -40,7 +40,8 @@
     }
 
     //Se obtiene las companias con el id y nombre solamente
-    const getCompanyNameId= async () => {
+    const getCompanyNameId = async () => {
+        if (!$user.profileActions.includes('get-empresa')) return
         //loading = true;
         let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET', {}))
         console.log('RESPONSE GET COMPANIES --> ', response)

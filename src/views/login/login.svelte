@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import { navigate } from "svelte-routing";
     import { user } from "../../stores/store";
     import { snackbar } from "../../stores/store";
@@ -7,6 +7,7 @@
     // @ts-ignore
     import { Card, Button, TextField, Snackbar } from "$lib";
     
+    let dispatch = createEventDispatcher();
     let usuario = {
         email: "",
         password: ""
@@ -35,6 +36,17 @@
 
         error = false;
         return true;
+    }
+
+    async function getProfile(id) {
+        let response = (await Api.call(`http://127.0.0.1:9000/profile/${id}`))
+        console.log('RESPONSE PROFILE --> ', response)
+        if (response.success && response.statusCode == "200") {
+            return response.data.result[0]
+        }
+        else {
+            return []
+        }
     }
 
     async function iniciarSesion(e){
@@ -73,15 +85,28 @@
                 message = "Usuario ingresado correctamente"
                 usuario.email = '',
                 usuario.password = ''
-                console.log(response.data.result.user)
-                user.set({
-                    ...response.data.result.user
-                })
-                localStorage.setItem("user",  JSON.stringify($user))
+                let _userLogged = response.data.result.user
+                
                 localStorage.setItem('accessToken', response.data.result.access_token);
+                let profile = (await getProfile(_userLogged.profile_id))
+                _userLogged.profileActions = profile.profileActions.map(pa => pa.name)
+                
+                user.set({
+                    ..._userLogged
+                })
 
-                if ($user.profile_id == 1 || $user.profile_id == 3) {
+                localStorage.setItem("user",  JSON.stringify(_userLogged))
+               
+
+                // dispatch('login')
+                // return;
+                console.log($user)
+
+                if ($user.profile_id == 1) {
                     navigate("/empresas", {replace: true})
+                }
+                else if ($user.profile_id == 3){
+                    navigate("/articulos", {replace: true})
                 }
                 else {
                     navigate("/sucursales", {replace: true})
@@ -105,8 +130,12 @@
     }
 
     onMount(() => {
-        localStorage.removeItem("user")
-        user.set(null)
+        console.log('On mount login')
+        let user  = localStorage.getItem("user")
+        let token = localStorage.getItem("token")
+        if (user == null) {
+            // navigate('/login')
+        }
     })
 
     $: console.log('user store > ', $user)
