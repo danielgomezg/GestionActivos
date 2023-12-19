@@ -84,7 +84,7 @@
             <tbody>
                 {#each $modulos as modulo }
                     <tr>
-                        <td colSpan="2"><li>{ modulo }</li></td>
+                        <td colSpan="2">{ modulo }</td>
                         {#each ['get', 'create', 'update', 'delete'] as action, index }
                             <td colspan="{index + 3}" style="text-align: center;">
                                 {#if hasAction(modulo, action)}

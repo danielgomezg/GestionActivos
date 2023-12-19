@@ -13,6 +13,7 @@
     const updateValue = (selected) => {
         if (options.length  == 0) return;
         if (!select) return;
+        if(selected == null) return;
         
         select.value = selected.toString();
         dispatch("change", select.value)

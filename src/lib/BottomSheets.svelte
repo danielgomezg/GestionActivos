@@ -79,7 +79,7 @@
     
     <style>
         body.noscroll{
-            overflow: hidden;
+            overflow-y: hidden !important;
         }
     
         .bottom-sheet.open {
@@ -117,6 +117,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 12px;
+            color: black;
         }
     
         .bottom-sheet .drag {

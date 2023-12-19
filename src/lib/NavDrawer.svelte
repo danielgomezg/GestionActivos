@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-    import { user, sideNavigationLinks, menu } from "../stores/store";
+    import { user, menu } from "../stores/store";
     import { Link, Router } from "svelte-routing";
 
     export let props = {}
@@ -8,12 +8,6 @@
     let menuProfile = []
     let drawerList, selected = '';
 
-    const checkPermisionMenu = (user) => {
-        if (user?.profileActions == undefined) return false
-       
-        menu = $sideNavigationLinks.filter(navLink => user.profileActions.includes(navLink.action))
-        
-    }
 
     const displayMenu = (menu) => {
         if (user == null) return
@@ -27,7 +21,6 @@
         selected = window.location.pathname
     })
 
-    // $: checkPermisionMenu($user);
     $: if($user != {}) displayMenu($menu)
 
 </script>

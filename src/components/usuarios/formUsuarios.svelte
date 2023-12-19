@@ -335,7 +335,6 @@
         <Button 
             trailing
             disabled={disabledSave}
-            icon="save"
             label="Guardar"
             on:click={ accionBtn }
         />

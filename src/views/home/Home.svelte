@@ -1,5 +1,5 @@
 <script>
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import Login from "../login/login.svelte";
     import { navigate } from "svelte-routing";
     import { user } from "../../stores/store";
@@ -20,10 +20,19 @@
 
     let isMobile = false, open = true;
 
+    let windowWidth = window.innerWidth;
+    let windowHeight = window.innerHeight;
+    function handleResize() {
+        windowWidth = window.innerWidth;
+        windowHeight = window.innerHeight;
+    }
+
     onMount(() => {
         console.log('MOUNT HOME')
         isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         open = !isMobile
+
+        window.addEventListener('resize', handleResize);
 
         let userSession = localStorage.getItem("user")
         let token = localStorage.getItem("accessToken")
@@ -38,12 +47,19 @@
         }
     })
 
+    onDestroy(() => {
+        window.removeEventListener('resize', handleResize);
+    });
+
+
+    $: isMobile = windowWidth < 500 
+
     // $: console.log('usuario > ', $user)
     
 </script>
 
 {#if Object.keys($user).length != 0 }
-<TopAppBar {isMobile} on:openNav={ () => open = !open }  >
+<TopAppBar bind:isMobile={isMobile} on:openNav={ () => open = !open }  >
     <div slot="account" class="flex-row align-center">
         <UserAccount />
     </div>
@@ -60,16 +76,18 @@
             <!-- <svelte:component this={ContentCompany} /> -->
             <Router>  
                 <Route path="/login" component={Login} />
+                {#if $user?.profile_id == 1}
+                     <Route path="/empresas" component={ContentCompany}  />
+                {/if}
                 
-                <!-- {#if $user?.profile_id == 1 || $user?.profile_id == 3} -->
-                <Route path="/empresas" component={ContentCompany}  />
+                {#if $user?.profile_id == 1 || $user?.profile_id == 3} 
                 <Route path="/usuarios" component={ContentUsuarios} />
                 <Route path="/perfiles" component={ContentProfile}  />
-                <!-- {/if} -->
+                {/if} 
                 
-                <!-- {#if $user?.profile_id == 2} -->
+                {#if $user?.profile_id == 2} 
                     <Route path="/sucursales" component={ContentSucursal} />
-                <!-- {/if} -->
+                {/if} 
                                 
                 <Route path="/articulos" component={ContentArticle} />
                 <Route path="/*" component={NotFound} />
