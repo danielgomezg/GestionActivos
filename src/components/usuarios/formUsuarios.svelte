@@ -1,11 +1,11 @@
 <script>
-    import { user } from "../../stores/store";
+    import { user, usuarios } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     import { getContext, onMount } from "svelte";
     import { snackbar } from "../../stores/store";
     import { TextField, Button, Select } from "$lib";
     
-    export let usuario = {}, companies = {}, accion = '', showPassword = false
+    export let usuario = {}, companies = {}, accion = '', showPassword = false, editself = false
     let message= ''
     let disabledSave = false
     let accionBtn = ''
@@ -79,15 +79,27 @@
         if (usuario.profile_id == ''){
             message = "Falta agregarle un perfil al usuario."
             return false; 
+        }
+        if (usuario.profile_id == 2 && usuario.company_id == ''){
+            console.log("wwww")
+            console.log(usuario.company_id)
+            message = "Falta agregarle una compañia al usuario cliente."
+            return false; 
         }   
         return true
     }
 
     const saveUser = async () => {
-
+        //console.log("-----")
+        //console.log(usuario.profile_id)
+        //console.log(usuario.company_id)
         usuario.password = obtenerRut(usuario.rut)
-        usuario.company_id = parseInt(usuarioCompanyId, 10)
-        usuario.profile_id = parseInt(usuarioProfileId, 10)
+        //usuario.profile_id = parseInt(usuarioProfileId, 10)
+        
+        //if(usuario.profile_id != 1) {
+          //  console.log(usuarioCompanyId)
+            //usuario.company_id = parseInt(usuarioCompanyId, 10)
+        //}
 
         // Validacion formulario
         let isValid = validForm();
@@ -186,6 +198,7 @@
                 lastName: usuario.lastName,
                 secondLastName: usuario.secondLastName,
                 email: usuario.email,
+                password: password,
                 company_id : parseInt(usuario.company_id),
                 profile_id : parseInt(usuario.profile_id)
             }) 
@@ -196,8 +209,23 @@
         if (response.success) {
             if (response.data.code == 201) {
 
-                //Actualizar lista de users
-                editUsuario(response.data.result)
+                //actualizar $user 
+                if(editself){
+                    console.log("id")
+                    console.log($user)
+                    console.log(response.data.result)
+                    let userEdited = {...response.data.result, ...$user}
+                    console.log(userEdited)
+                    user.set(userEdited)
+                    localStorage.setItem("user",  JSON.stringify(userEdited))
+
+
+                }else{
+                   //Actualizar lista de users
+                    editUsuario(response.data.result) 
+                }
+
+                
 
                 //aviso
                 snackbar.update(snk => {

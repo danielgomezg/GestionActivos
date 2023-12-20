@@ -31,12 +31,12 @@ class Api {
             return response.json().then(data => {
                 
                 
-                if (statusCode == 401) {
+                if (statusCode == 401 && data.message == 'token-exp') {
                     window.location.href = '/login'
                     return;
                 }
                 else {
-                    if (data.code == '401') {
+                    if (data.code == '401' && data.message == 'token-exp') {
                         window.location.href = '/login'
                         return;
                     }

@@ -10,10 +10,13 @@
 
 
     const displayMenu = (menu) => {
+        console.log(menu)
+        console.log($user)
         if (user == null) return
 
-        let mnu_filter = menu.filter(mnu => mnu.profiles.includes($user.profile_id))
+        let mnu_filter = menu.filter(mnu => mnu.profiles.includes(parseInt($user.profile_id)))
         menuProfile = [...mnu_filter]
+        
     }
 
     onMount(() => {
@@ -21,7 +24,7 @@
         selected = window.location.pathname
     })
 
-    $: if($user != {}) displayMenu($menu)
+    $: if($user != {}) displayMenu($menu) 
 
 </script>
 <aside class="mdc-drawer mdc-drawer--modal" class:open={ props.open } class:mobile={ props.isMobile }>

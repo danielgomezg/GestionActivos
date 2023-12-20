@@ -36,6 +36,7 @@
 
     setContext('addCompany', (company) => {
         console.log('in add company')
+        console.log(company)
         empresas = [company, ...empresas]
     })
 

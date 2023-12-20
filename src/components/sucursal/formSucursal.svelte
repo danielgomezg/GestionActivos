@@ -70,8 +70,27 @@
         }
         //loading = false
     }
+    
+    function validFormOficce() {
+        if (officeEdit.floor == ''){
+            message = "Falta agregar un piso a la oficina."
+            return false; 
+        }
+        return true
+    }
 
     const saveOffice = async () => {
+
+        let  isValid = validFormOficce()
+        if (!isValid){
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return
+        }
+        console.log(isValid)
 
         let body = JSON.stringify({ ...officeEdit, sucursal_id: sucursal.id })  
         let response = (await Api.call(`http://127.0.0.1:9000/office`, 'POST', { body }))

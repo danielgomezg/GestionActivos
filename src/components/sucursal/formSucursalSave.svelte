@@ -74,7 +74,7 @@
                         // Error al crear algunas oficinas
                         snackbar.update(snk => {
                             snk.open = true;
-                            snk.message = "Error al crear algunas oficinas, pueden volver a intentar en edicion sucursal."
+                            snk.message = "Error al crear algunas oficinas, pueden volver a intentar en edicion sucursal. 1"
                             return snk
                         })
                     }
@@ -82,7 +82,7 @@
                         // Error al crear las oficinas
                         snackbar.update(snk => {
                             snk.open = true;
-                            snk.message = "Error al crear las oficinas, pueden volver a intentar en edicion sucursal."
+                            snk.message = "Error al crear las oficinas, pueden volver a intentar en edicion sucursal. 2"
                             return snk
                         })
                     }

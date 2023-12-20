@@ -18,7 +18,8 @@
             usuario: $user,
             companies: companiesSelect,
             accion: 'edit',
-            showPassword: true
+            showPassword: true, 
+            editself: true
         }
 
         openModal = true
@@ -57,8 +58,8 @@
         } 
     }
 
-    onMount(() => {
-        getCompanyNameId(); 
+    onMount(async () => {
+        await getCompanyNameId(); 
         window.addEventListener('click', handleAccountOptions)
     })
 

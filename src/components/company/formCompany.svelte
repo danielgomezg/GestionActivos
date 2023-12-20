@@ -20,6 +20,7 @@
 
     function formatRut(code) {
         if (code == undefined) return ''
+        if (company.country != 'Chile') return code.replace(/[.-]/g, '');
         if (code.length >= 13) return code.slice(0, -1);
         
         let rut = code.replace(/[^\dkK]/g, '')
@@ -126,20 +127,20 @@
         label="Nombre" 
         bind:value={company.name}
     />
-    
-    <TextField 
-        version=2
-        required 
-        type="text"
-        label="Rut" 
-        bind:value={company.rut}
-    />
 
     <Select 
         label="País"
         options={paises}
         selected={company.country}
         on:change={ (event) => company.country = event.detail }
+    />
+
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label={ company.country == 'Chile'? 'RUT': 'DNI' } 
+        bind:value={company.rut}
     />
 
     <br>
