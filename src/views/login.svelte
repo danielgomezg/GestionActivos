@@ -3,7 +3,7 @@
   import Entrada from '../components/input.svelte'
   import Btn from '../components/btn.svelte'
   import { navigate } from "svelte-routing";
-  import { user } from '../stores/user';
+  import { user } from '../stores/store';
   import RegisterCard from '../components/registerCard.svelte';
   
   let username = "", password = "", id = "", fullname = "" 
@@ -74,7 +74,7 @@
 
   //Guarda en el store el user
   $:if(inicioSesion){
-    user.setUser({
+    user.set({
         username, password, id, fullname
     })
     localStorage.setItem('user', JSON.stringify({
