@@ -46,7 +46,7 @@
         //loading = true;
         let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET', {}))
         console.log('RESPONSE GET COMPANIES --> ', response)
-        if (response.success) {
+        if (response.success && response.statusCode == "200") {
             companiesDB = response.data.result
             for (let i = 0; i < companiesDB.length; i++) {
                 let company = {

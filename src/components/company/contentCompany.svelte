@@ -10,7 +10,7 @@
     import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
 
     let openModal = false, backButton = false;
-    let modalTitle = '', previusModelTitle = []
+    let modalTitle = '', previusModelTitle = ''
     let modalContent;  
     let props;
     let previusComponent, previusProps;
@@ -41,8 +41,6 @@
     })
 
     setContext('editStore', (store, company) => {
-        // Esta funcion cambia el contenido del side sheets o bottom.
-        // guardamos el componente que se esta mostrando
         editStore(store, company)
     })
 
@@ -55,6 +53,7 @@
             country: ''
         } }
         openModal = true
+        backButton = false;
     }
 
     const editCompany = (company) => {
@@ -62,13 +61,14 @@
         modalContent = FormCompany;
         props = { company, isEdit: true }
         openModal = true
+        backButton = false;
     }
 
     const showStores = (company) => {
         // Se guarda componente actual para boton back 
         previusComponent = modalContent;
         previusProps = { ...props };
-
+        
         modalTitle = `${company.name} - sucursales`
         previusModelTitle = modalTitle
         modalContent = StoresInfo;

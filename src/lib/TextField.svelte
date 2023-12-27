@@ -4,7 +4,13 @@
     import '@material/web/textfield/outlined-text-field.js';
 
     export let version = 2
-    export let placeholder = '', required = false, type = 'text', value, label = "", id = ''
+    export let placeholder = ''
+    export let required = false
+    export let type = 'text'
+    export let value
+    export let label = ""
+    export let id = ''
+    export let trailing = ''
 
     let textfield
 
@@ -27,7 +33,11 @@
 </script>
 
 {#if version == 2}
-<label bind:this={textfield} class="mdc-text-field mdc-text-field--outlined textfield-custom">
+<label 
+    bind:this={textfield} 
+    class="mdc-text-field mdc-text-field--outlined textfield-custom"
+    class:mdc-text-field--with-trailing-icon={trailing != ''}
+    >
     <span class="mdc-notched-outline">
         <span class="mdc-notched-outline__leading"></span>
         <span class="mdc-notched-outline__notch">
@@ -44,6 +54,14 @@
         class="mdc-text-field__input" 
         aria-labelledby="my-label-id" 
         >
+        {#if trailing != ''}
+            <span style="margin: auto; padding: 10px">
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <i class="material-symbols-outlined" on:click>{trailing}</i>
+            </span>
+        {/if}
+        
 </label>
 {:else}
 
