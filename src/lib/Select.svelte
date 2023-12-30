@@ -2,7 +2,10 @@
     import { onMount, createEventDispatcher, onDestroy  } from 'svelte';
     import { MDCSelect } from '@material/select';
 
-    export let label = '', options = [], selected = ''
+    export let label = ''
+    export let options = []
+    export let selected = ''
+    export let customHeight = false
 
     let dispatch = createEventDispatcher()
 
@@ -46,7 +49,7 @@
 
 </script>
 <div bind:this={selectComponent} class="mdc-select mdc-select--outlined">
-    <div class="mdc-select__anchor" aria-labelledby="outlined-select-label">
+    <div class="mdc-select__anchor" aria-labelledby="outlined-select-label" class:custom-height={customHeight}>
         <span class="mdc-notched-outline">
             <span class="mdc-notched-outline__leading"></span>
             <span class="mdc-notched-outline__notch">
@@ -107,5 +110,9 @@
 
     .mdc-list {
         text-transform: capitalize;
+    }
+    
+    .custom-height {
+        height: 40px;
     }
 </style>

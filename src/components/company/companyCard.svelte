@@ -1,16 +1,43 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-    // @ts-ignore
+    import Api from "../../../helpers/ApiCall";
+    import { snackbar } from "../../stores/store";
     import { Card, IconButton, Button } from "$lib";
+    import { createEventDispatcher, getContext } from "svelte";
 
     export let company = {}
     let dispath = createEventDispatcher();
+    let removeCompany = getContext('removeCompany');
 
     const normalizeText = (text) => {
         return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
-    // $: console.log('company => ', company)
+    const deleteCompany = async () => {
+
+        let confirmacion = confirm('Esta seguro que desea eliminar la empresa ', company.name)
+
+        if (!confirmacion) return;
+        
+        let response = (await Api.call(`http://127.0.0.1:9000/company/${company.id}`, 'DELETE'));
+        console.log('RESPONSE DELETE COMPANY -> ', response)
+        if (response.success && response.statusCode == '201') {
+
+            removeCompany(company.id)
+
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Empresa eliminada con éxito."
+                return snk
+            })
+
+        } else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al eliminar empresa."
+                return snk
+            })
+        }
+    }
 
 </script>
 
@@ -18,7 +45,10 @@
     <div class="card-container">
         <div class="card-header">
             <div class="card-title">{ company.name }</div>
-            <IconButton icon="edit" on:click={ dispath("edit", company) } />
+            <div>
+                <IconButton icon="edit" on:click={ dispath("edit", company) } />
+                <IconButton icon="delete" on:click={ deleteCompany } />
+            </div>
         </div>
         <div class="card-content">
             <div>{ company.rut }</div>
@@ -27,7 +57,7 @@
                 { company.country }
             </div>
             <div class="store-info">
-                <span class="material-symbols-outlined">store</span>
+                <span class="material-symbols-rounded">store</span>
                 <!-- Muestra la cantidad de sucursales -->
                 <div>{ company.count_sucursal || 0 } sucursales</div>
             </div>

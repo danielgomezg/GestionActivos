@@ -19,14 +19,6 @@
                 <strong>{ `${sucursal.commune}, ${sucursal.region}` }</strong>
             </div>
             <div>{ sucursal.description }</div>
-            <!-- <div>
-                <img src={ '/flags/' + normalizeText(company.country) + '.png' } class="flag" alt="flag" />
-                { company.country }
-            </div>
-            <div class="store-info">
-                <span class="material-symbols-outlined">store</span>
-                <div> { company.count_sucursal } sucursales</div>
-            </div> -->
         </div>
         <div class="card-actions">
             <Button label="ver oficinas" type="outlined" color="" on:click={ dispath("showStores", sucursal) } />

@@ -1,11 +1,12 @@
 <script>
+    import { setContext } from "svelte";
+    import { Button, Loading, Search } from "$lib";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
-    import { Button, IconButton, Loading } from "$lib";
     import ActivoForm from "../activos/activoForm.svelte";
     import ActivoInfo from "../activos/activoInfo.svelte";
+    import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-    import { setContext } from "svelte";
 
     let props;
     let modalContent;
@@ -13,25 +14,11 @@
     let loading = false;
     let openModal = false;
     let backButton = false;
+    let newArticleDisabled = true;
 
     let previusComponent, previusProps, previusModelTitle = '';
 
-    let articles = [
-        {
-            name: 'Samsung S23',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            addDate: '20/12/2023',
-            countActivos: 3,
-            imageUrl: "https://images.samsung.com/is/image/samsung/p6pim/cl/2302/gallery/cl-galaxy-s23-s911-sm-s911bzgjltl-thumb-534841692?imwidth=480"
-        },
-        {
-            name: 'iphone 15',
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            addDate: '21/12/2023',
-            countActivos: 3,
-            imageUrl: "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-compare-iphone-15-pro-202309?wid=384&hei=512&fmt=jpeg&qlt=90&.v=1692827834790"
-        }
-    ]
+    let articles = []
 
     setContext('backModalContent', (e) => {
         e.preventDefault();
@@ -75,7 +62,7 @@
                 barcode: '',
                 serie: '',
                 model: '',
-                description: '',
+                comment: '',
                 purchase: '',
                 numRegister: '',
                 nameInCharge: '',
@@ -113,15 +100,51 @@
         backButton = false;
     }
 
+    const findArticles = (companyId) => {
+        newArticleDisabled = true;
+
+        setTimeout(() => {
+
+            articles = [
+                {
+                    name: 'Samsung S23',
+                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                    addDate: '20/12/2023',
+                    countActivos: 3,
+                    imageUrl: "https://images.samsung.com/is/image/samsung/p6pim/cl/2302/gallery/cl-galaxy-s23-s911-sm-s911bzgjltl-thumb-534841692?imwidth=480"
+                },
+                {
+                    name: 'iphone 15',
+                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                    addDate: '21/12/2023',
+                    countActivos: 3,
+                    imageUrl: "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-compare-iphone-15-pro-202309?wid=384&hei=512&fmt=jpeg&qlt=90&.v=1692827834790"
+                }
+            ]
+        
+            newArticleDisabled = false;
+        }, 500)
+
+    }
+
 </script>
 
 <div style="padding-top: 20px;">
-    <div class="header-article">
-        <Button label="Nuevo articulo" on:click={ createArticle } />
-        <IconButton icon="tune" />
+    <div class="flex-row space-between flex-end mb-8">
+        <div class="flex-row gap-8 flex-end">
+            <CompanySelect 
+                on:change={ (event) => findArticles(event.detail)  }
+            />
+            <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ createArticle } />
+        </div>
+        
+        <div class="">
+            <Search value="" />
+        </div>
+        <!-- <IconButton icon="tune" /> -->
         <!-- <div class="title">Empresas</div> -->
     </div>
-    <br>
+    <!-- <br> -->
 
     <div class="flex-column gap-8">
         {#if loading}
@@ -134,6 +157,8 @@
                 on:newActivo={ (event) => newActivo(event.detail) } 
                 on:showActivos={ (event) => showActivos(event.detail) } 
             />
+        {:else}
+            <p>Selecciona una empresa para obtener sus articulos.</p>
         {/each}
     </div>
 
@@ -147,12 +172,3 @@
     {modalContent}
     bind:openModal={openModal}
 />
-
-<style>
-    .header-article {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-</style>

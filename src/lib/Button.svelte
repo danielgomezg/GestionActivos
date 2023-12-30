@@ -7,11 +7,12 @@
     export let label
     export let color = '#107acc'//'#39404A'
     export let icon = ''
-    export let type = 'raised'
+    export let type = 'unelevated'
     export let trailing = false
     export let leading = false
     export let disabled = false
     export let loading = false
+    export let custom = false
 
     let button 
     let style = `background-color: ${color}`
@@ -27,19 +28,22 @@
 <div bind:this={button} class="mdc-touch-target-wrapper">
     <button 
         class="mdc-button"
+        class:mdc-button--unelevated={type === 'unelevated'}
         class:mdc-button--raised={type === 'raised'}
         class:mdc-button--icon-leading={leading}
         class:mdc-button--icon-trailing={trailing}
         class:mdc-button--outlined={type === 'outlined'}
         class:disabled={disabled}
+        class:mdc-button-custom={custom}
         on:click
         {style}
+        {disabled}
     >
     
         <span class="mdc-button__ripple"></span>
         <span class="mdc-button__touch"></span>
         {#if leading}
-            <i class="material-symbols-outlined">{icon}</i>
+            <i class="material-symbols-rounded">{icon}</i>
         {/if}
         <span class="mdc-button__label">
             {#if loading}
@@ -50,7 +54,7 @@
         
         </span>
         {#if trailing}
-            <i class="material-symbols-outlined">{icon}</i>
+            <i class="material-symbols-rounded">{icon}</i>
         {/if}
         
     </button>

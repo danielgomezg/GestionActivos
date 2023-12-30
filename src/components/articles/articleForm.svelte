@@ -1,10 +1,12 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { TextField, Button, Select, TextArea } from "$lib";
+    import { TextField, Button, FileInput } from "$lib";
 
     export let article = {}, isEdit = false;
-    let inputImage;
-    let images = []
+
+    const saveArticle = () => {
+
+    }
 
 </script>
 
@@ -28,15 +30,17 @@
         bind:value={ article.description }
     />
 
-    <input bind:this={inputImage} type="file" id="seleccionarImagen" style="display:none">
-
-    <Button 
-        label="agregar imagen"
-        on:click={ () => inputImage.click() }
+    <FileInput 
+        label="Imagen"
+        accept={ ['png', 'jpg'] }
+        trailing="image"
+        helperText="Imagen con formato png o jpg"
     />
 
-    <!-- <TextArea
-        label="Descripción"
-    /> -->
+    <br>
+    <Button 
+        label="Guardar"
+        on:click={ saveArticle }
+    />
 
 </div>

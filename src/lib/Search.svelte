@@ -3,48 +3,53 @@
     import { MDCTextField } from '@material/textfield';
     import '@material/web/textfield/outlined-text-field.js';
 
-    export let version = 2
     export let placeholder = ''
     export let required = false
     export let type = 'text'
     export let value
-    export let label = ""
     export let id = ''
     export let trailing = ''
+    export let leading = 'search'
 
     let textfield
 
     onMount(() => {
-        if (version == 2) {   
-            new MDCTextField(textfield) 
-            textfield.addEventListener('input', function() {
-                // Acceder al valor del input
-                // console.log(textfield)
-                var valorInput = textfield.querySelector('input') //textfield.value;
+        new MDCTextField(textfield) 
+        textfield.addEventListener('input', function() {
+            // Acceder al valor del input
+            // console.log(textfield)
+            var valorInput = textfield.querySelector('input') //textfield.value;
 
-                // Hacer algo con el valor, como imprimirlo en la consola
-                // console.log('Texto ingresado:', valorInput.value);
-                value = valorInput.value
-            });
-        }
+            // Hacer algo con el valor, como imprimirlo en la consola
+            // console.log('Texto ingresado:', valorInput.value);
+            value = valorInput.value
+        });
+        
     })
 
-
 </script>
-
-{#if version == 2}
 <label 
     bind:this={textfield} 
-    class="mdc-text-field mdc-text-field--outlined mdc-text-field--custom"
+    class="mdc-text-field mdc-text-field--outlined mdc-text-field--search mdc-text-field--no-label"
     class:mdc-text-field--with-trailing-icon={trailing != ''}
     >
     <span class="mdc-notched-outline">
         <span class="mdc-notched-outline__leading"></span>
         <span class="mdc-notched-outline__notch">
-            <span class="mdc-floating-label" id="my-label-id">{label}</span>
+            <!-- <span class="mdc-floating-label" id="my-label-id">{label}</span> -->
         </span>
         <span class="mdc-notched-outline__trailing"></span>
     </span>
+
+    {#if leading.trim()}
+      <i
+        class="material-symbols-rounded mdc-text-field__icon mdc-text-field__icon--leading"
+        tabindex="0"
+        role="button"
+      >
+        {leading}
+      </i>
+    {/if}
     <input 
         {id}
         {type} 
@@ -63,13 +68,9 @@
         {/if}
         
 </label>
-{:else}
 
-    <md-outlined-text-field 
-        {label} 
-        {value}
-        {required}
-        {type} 
-    >
-    </md-outlined-text-field>
-{/if}
+<style>
+    .mdc-text-field__icon--leading {
+        margin-left: auto;
+    }
+</style>

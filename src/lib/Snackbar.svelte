@@ -29,7 +29,7 @@
       <button type="button" class="mdc-button mdc-snackbar__dismiss">
         <div class="mdc-button__ripple"></div>
         <span class="mdc-button__label"></span>
-        <span class="material-symbols-outlined" style="color: #FFF;">close</span>
+        <span class="material-symbols-rounded" style="color: #FFF;">close</span>
 
       </button>
     </div>

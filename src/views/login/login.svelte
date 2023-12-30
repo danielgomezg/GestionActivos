@@ -130,12 +130,7 @@
     }
 
     onMount(() => {
-        console.log('On mount login')
-        let user  = localStorage.getItem("user")
-        let token = localStorage.getItem("token")
-        if (user == null) {
-            // navigate('/login')
-        }
+        
     })
 
     $: console.log('user store > ', $user)

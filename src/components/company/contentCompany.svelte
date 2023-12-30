@@ -4,7 +4,7 @@
     import StoresInfo from "./storesInfo.svelte";
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
-    import { Button, IconButton, Loading } from "$lib";
+    import { Button, Loading, Search } from "$lib";
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
@@ -44,13 +44,20 @@
         editStore(store, company)
     })
 
+    setContext('removeCompany', (companyId) => {
+        empresas = empresas.filter(emp => companyId !== emp.id);
+    })
+
     const createCompany = () => {
         modalTitle = 'Crear empresa'
         modalContent = FormCompany;
         props = { company: {
             name: '',
             rut: '',
-            country: ''
+            country: '',
+            nameInCharge: '',
+            phoneInCharge: '',
+            emailInCharge: ''
         } }
         openModal = true
         backButton = false;
@@ -127,7 +134,8 @@
 <div style="padding-top: 20px;">
     <div class="header-company">
         <Button label="Nueva empresa" on:click={ createCompany } />
-        <IconButton icon="tune" />
+        <Search value="" />
+        <!-- <IconButton icon="tune" /> -->
         <!-- <div class="title">Empresas</div> -->
     </div>
     <br>

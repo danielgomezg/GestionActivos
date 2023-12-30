@@ -6,6 +6,61 @@
  * comunas -> corresponde a las comunas de las regiones
  */
 
+export const locationsChileCity = {
+  "Arica y Parinacota": [
+    "Arica", 
+    "Parinacota"
+  ],
+  "Tarapacá": [
+    "Iquique", 
+    "Tamarugal"
+  ],
+  "Antofagasta": ["Antofagasta", "El Loa", "Tocopilla"],
+  "Atacama": ["Copiapó", "Huasco", "Chañaral"],
+  "Coquimbo": ["Elqui", "Limarí", "Choapa"],
+  "Valparaíso": [
+    "Valparaíso",
+    "Quillota",
+    "San Antonio",
+    "Petorca",
+    "Los Andes",
+    "San Felipe de Aconcagua",
+    "Marga Marga",
+    "Isla de Pascua",
+  ],
+  "O'Higgins": [
+    "Cachapoal",
+    "Colchagua",
+    "Cardenal Caro",
+  ],
+  "Maule": ["Talca", "Cauquenes", "Curicó", "Linares"],
+  "Ñuble": ["Diguillín", "Itata", "Punilla"],
+  "Biobío": ["Concepción", "Arauco", "Biobío"],
+  "La Araucanía": ["Cautín", "Malleco"],
+  "Los Ríos": ["Valdivia", "Ranco"],
+  "Los Lagos": ["Llanquihue", "Osorno", "Chiloé", "Palena"],
+  "Aysén": [
+    "Aysén",
+    "Capitán Prat",
+    "Coyhaique",
+    "General Carrera",
+  ],
+  "Magallanes y de la Antártica Chilena": [
+    "Magallanes",
+    "Antártica Chilena",
+    "Tierra del Fuego",
+    "Última Esperanza",
+  ],
+  "Metropolitana": [
+    "Santiago",
+    "Cordillera",
+    "Maipo",
+    "Talagante",
+    "Melipilla",
+    "Chacabuco",
+  ],
+};
+
 export const locationsChile = {
     "Arica y Parinacota": [
       "Arica",

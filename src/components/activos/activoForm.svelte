@@ -1,9 +1,38 @@
 <script>
-    import { TextField, Button, DatePicker } from "$lib";
+    import { TextField, Button, Select, FileInput } from "$lib";
 
     export let activo = {}
     let inputDate;
-
+    let estadosActivo = [
+        {
+            label: 'Reparación',
+            value: 'repare'
+        },
+        {
+            label: 'Nuevo',
+            value: 'new'
+        },
+        {
+            label: 'Operativo',
+            value: 'operativo'
+        },
+        {
+            label: 'Perdida o Robo',
+            value: 'lost'
+        },
+        {
+            label: 'Dañado',
+            value: 'damage'
+        },
+        {
+            label: 'Obsoleto',
+            value: 'deprecated'
+        },
+        {
+            label: 'Otro',
+            value: 'other'
+        }
+    ]
     const saveActivo = () => {
 
     }
@@ -34,14 +63,6 @@
         bind:value={activo.model}
     />
 
-    <TextField 
-        version=2
-        required 
-        type="text"
-        label="Descripción" 
-        bind:value={activo.description}
-    />
-
     <input bind:this={ inputDate } type="date" readonly style="display: none;">
 
     <TextField 
@@ -54,12 +75,17 @@
         bind:value={activo.purchase}
     />
 
+    <Select 
+        label="Estado"
+        options={estadosActivo}
+    />
+
     <TextField 
         version=2
         required 
         type="text"
-        label="N° registro contable" 
-        bind:value={activo.numRegister}
+        label="Comentario" 
+        bind:value={activo.comment}
     />
 
     <TextField 
@@ -76,6 +102,32 @@
         type="text"
         label="Rut del encargado" 
         bind:value={activo.rutInCharge}
+    />
+
+    <Select 
+        label="Sucursal"
+        options={ [] }
+    />
+
+    <Select 
+        label="Oficina"
+        options={[]}
+    />
+
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="N° registro contable" 
+        bind:value={activo.numRegister}
+    />
+
+    <FileInput 
+        label="Documento contable" 
+        required 
+        accept={ ['pdf', 'png', 'jpg'] }
+        trailing="upload_file"
+        helperText="Documento con formato pdf, png o jpg"
     />
 
     <Button 

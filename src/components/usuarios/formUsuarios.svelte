@@ -1,11 +1,12 @@
 <script>
-    import { user, usuarios } from "../../stores/store";
+    import { user} from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     import { getContext, onMount } from "svelte";
     import { snackbar } from "../../stores/store";
     import { TextField, Button, Select } from "$lib";
+    import CompanySelect from "../company/companySelect.svelte";
     
-    export let usuario = {}, companies = {}, accion = '', showPassword = false, editself = false
+    export let usuario = {}, accion = '', showPassword = false, editself = false
     let message= ''
     let disabledSave = false
     let accionBtn = ''
@@ -349,12 +350,17 @@
 
     {#if $user.profileActions.includes('create-empresa')}
 
-    <Select 
+    <!-- <Select 
         label="Compañias"
         selected={ usuario.company_id }
         options={companies}
         on:change={ (event) => usuario.company_id = event.detail }
+    /> -->
+    <CompanySelect 
+        selected={ usuario.company_id }
+        on:change={ (event) => usuario.company_id = event.detail }
     />
+
 
     {/if}
 

@@ -25,6 +25,13 @@
         }}
     />
 
+    <Select 
+        label="Ciudad"
+        selected=""
+        on:change={ (event) => {
+        }}
+    />
+
 {:else}
 
     <Select 

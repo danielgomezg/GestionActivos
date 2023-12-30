@@ -143,9 +143,30 @@
         bind:value={company.rut}
     />
 
-    <br>
-    <br>
-    <br>
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Nombre responsable"
+        bind:value={company.contact_name}
+    />
+
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Teléfono responsable"
+        bind:value={company.contact_phone}
+    />
+
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Correo responsable"
+        bind:value={company.contact_email}
+    />
+
     <div class="company-actions grid-col-1">
         {#if !isEdit}
             <Button 

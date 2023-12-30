@@ -32,11 +32,15 @@ class Api {
                 
                 
                 if (statusCode == 401 && data.message == 'token-exp') {
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('accessToken');
                     window.location.href = '/login'
                     return;
                 }
                 else {
                     if (data.code == '401' && data.message == 'token-exp') {
+                        localStorage.removeItem('user');
+                        localStorage.removeItem('accessToken');
                         window.location.href = '/login'
                         return;
                     }

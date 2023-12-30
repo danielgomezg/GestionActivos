@@ -127,6 +127,38 @@
         } 
     }
 
+    const formatOfficeInfo = (office) => {
+        let name = office.nameInCharge == undefined ? '' : " - " + office.nameInCharge
+        return office.floor  + ' - ' + office.description + name
+    }
+
+    const deleteOffice = async (office) => {
+        console.log(office)
+        let confirmacion = confirm(`Esta seguro que desea eliminar la Oficina ${office.floor} ${office.description}`)
+
+        if (!confirmacion) return;
+
+        let response = (await Api.call(`http://127.0.0.1:9000/office/${office.id}`, 'DELETE'));
+        console.log('RESPONSE DELETE OFFICE -> ', response)
+        if (response.success && response.statusCode == '201') {
+
+            offices = offices.filter(of => of.id !== office.id);
+
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Oficina eliminada con éxito."
+                return snk
+            })
+
+        } else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al eliminar Oficina."
+                return snk
+            })
+        }
+    }
+
     onMount(async () => {
         
         if(sucursal.id > 0 ){
@@ -190,14 +222,14 @@
         <ul>
             {#each offices as office, index} 
             <tr>
-                <td style="width: 65%;"><li>{ office.floor  + ' - ' + office.description }</li></td>
+                <td style="width: 65%;"><li>{ formatOfficeInfo(office) }</li></td>
                 <td style="width: 65%;">
                     <IconButton icon="edit" on:click={ () => toggleEdit(office, index) } />
-                    <IconButton icon="delete" on:click />
+                    <IconButton icon="delete" on:click={ deleteOffice(office) } />
                 </td>    
             </tr>
             {#if editing == index}
-                <tr style="display: block;">
+                <tr class="form-office-edit">
                     <TextField 
                         version=2
                         required 
@@ -211,6 +243,12 @@
                         type="text"
                         label="Descripción" 
                         bind:value={officeEdit.description}
+                    />
+                    <TextField 
+                        version=2
+                        type="text"
+                        label="Responsable" 
+                        bind:value={officeEdit.name_in_charge}
                     />
                     <IconButton icon="save" />
                 </tr>
@@ -239,6 +277,13 @@
                 label="Descripción" 
                 bind:value={officeEdit.description}
             />
+
+            <TextField 
+                version=2
+                type="text"
+                label="Responsable" 
+                bind:value={officeEdit.nameInCharge}
+            />
         <!-- </div> -->
             
     {/if}
@@ -261,7 +306,7 @@
             <Button 
                 label="Agregar"
                 on:click={ () => {
-                    officeEdit = { floor: '', description: '' }
+                    officeEdit = { floor: '', description: '', nameInCharge: '' }
                     addOffice = true
                     editing = -1
                 }}
@@ -282,5 +327,10 @@
         grid-column: 1;
     }
 
+    .form-office-edit {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+    }
 
 </style>

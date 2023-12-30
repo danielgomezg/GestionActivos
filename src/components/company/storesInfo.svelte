@@ -1,9 +1,8 @@
 <script>
-    import { setContext } from 'svelte';
-    // @ts-ignore
     import { Divider, IconButton } from "$lib";
-    import { onMount, getContext } from "svelte";
     import Api from "../../../helpers/ApiCall";
+    import { onMount, getContext } from "svelte";
+    import { snackbar } from "../../stores/store";
 
     let editStore = getContext('editStore');
     
@@ -18,6 +17,34 @@
             stores = response.data.result 
         } 
         //loading = false;
+    }
+
+    const deleteStore = async (store) => {
+
+        let confirmacion = confirm('Esta seguro que desea eliminar la sucursal ', store.number)
+
+        if (!confirmacion) return;
+        
+        let response = (await Api.call(`http://127.0.0.1:9000/sucursal/${store.id}`, 'DELETE'));
+        console.log('RESPONSE DELETE SUCURSAL -> ', response)
+        if (response.success && response.statusCode == '201') {
+
+            stores = stores.filter(st => store.id !== st.id);
+
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Sucursal eliminada con éxito."
+                return snk
+            })
+
+        } else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al eliminar sucursal."
+                return snk
+            })
+        }
+
     }
 
     onMount(async () => {
@@ -38,7 +65,7 @@
                 </div>
                 <div>
                     <IconButton icon="edit" on:click={ editStore(store, company) } />
-                    <IconButton icon="delete" />
+                    <IconButton icon="delete" on:click={ deleteStore(store) } />
                 </div>
 
             </div>

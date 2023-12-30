@@ -19,6 +19,10 @@
     let token = getTokenFromLocalStorage()
 
     const deleteUsuario = async () => {
+
+        let confirmacion = confirm(`Esta seguro que desea eliminar el usuario ${usuario.firstName} ${usuario.lastName}`)
+        if (!confirmacion) return;
+
         //loading = true;
         let response = (await Api.call(`http://127.0.0.1:9000/user/${usuario.id}`, 'DELETE', {}, token))
         console.log('RESPONSE DELETE USER --> ', response)

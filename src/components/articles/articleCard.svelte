@@ -9,8 +9,6 @@
         return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
-    // $: console.log('article => ', article)
-
 </script>
 
 <Card>
@@ -29,18 +27,8 @@
             <IconButton icon="edit" on:click={ dispath("edit", article) } />
         </div>
         <div class="card-content">
-            <!-- <div>{ article.rut }</div> -->
             <div class="contenedor">
                 <p>{ article.description }</p>
-            </div>
-            <div>
-                <!-- <img src={ '/flags/' + normalizeText(article.country) + '.png' } class="flag" alt="flag" /> -->
-                <!-- { article.country } -->
-            </div>
-            <div class="store-info">
-                <!-- <span class="material-symbols-outlined">store</span> -->
-                <!-- Muestra la cantidad de sucursales -->
-                <!-- <div>{ article.count_sucursal || 0 } sucursales</div> -->
             </div>
         </div>
         <div class="card-actions">
@@ -51,11 +39,6 @@
 </Card>
 
 <style>
-    .store-info {
-        display: flex;
-        align-items: center;
-    }
-
     .article-image {
         width: 100%;
         height: auto;

@@ -13,7 +13,8 @@
     let offices = [
         {
             floor: '', 
-            description: ''
+            description: '',
+            nameInCharge: ''
         }
     ]
 
@@ -124,7 +125,8 @@
             offices = [ 
                 {
                     floor: '', 
-                    description: ''
+                    description: '',
+                    nameInCharge: ''
                 }
             ]
         }
@@ -194,20 +196,29 @@
     <div></div>
 
     {#each offices as office }
-        <TextField 
-            version=2
-            required 
-            type="text"
-            label="Número piso" 
-            bind:value={office.floor}
-        />
+        <div class="grid-col-span-2 container-office" >
+            <TextField 
+                version=2
+                required 
+                type="text"
+                label="Número piso" 
+                bind:value={office.floor}
+            />
 
-        <TextField 
-            version=2
-            type="text"
-            label="Descripción" 
-            bind:value={office.description}
-        />
+            <TextField 
+                version=2
+                type="text"
+                label="Descripción" 
+                bind:value={office.description}
+            />
+
+            <TextField 
+                version=2
+                type="text"
+                label="Responsable" 
+                bind:value={office.nameInCharge}
+            />
+        </div>  
     {/each}
 
     <div class="company-actions grid-col-span-1">
@@ -215,7 +226,7 @@
         <Button 
             label="Agregar oficina"
             on:click={ () => {
-                offices = [ ...offices, { floor: '', description: '' } ]
+                offices = [ ...offices, { floor: '', description: '', nameInCharge: '' } ]
             }}
         />
         {#if offices.length != 1}
@@ -251,5 +262,10 @@
         grid-column: 1;
     }
 
+    .container-office {
+        display: grid;
+        grid-template-columns: .5fr 1fr 1fr;
+        grid-gap: 8px;
+    }
 
 </style>
