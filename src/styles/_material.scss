@@ -90,6 +90,7 @@ $primary-color: #39404A;
 
 .mdc-button-custom {
     @include button.height(40px);
+    @include button.shape-radius(12px);
     text-transform: none;
 }
 

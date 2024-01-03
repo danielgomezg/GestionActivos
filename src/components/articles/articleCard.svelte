@@ -32,8 +32,8 @@
             </div>
         </div>
         <div class="card-actions">
-            <Button label="ver activos" type="outlined" color="" on:click={ dispath("showActivos", article) } />
-            <Button label="agregar activo" on:click={ dispath("newActivo", article) } />
+            <Button label="ver activos" custom type="outlined" color="" on:click={ dispath("showActivos", article) } />
+            <Button label="agregar activo" custom on:click={ dispath("newActivo", article) } />
         </div>
     </div>
 </Card>

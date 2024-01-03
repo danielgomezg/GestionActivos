@@ -48,27 +48,31 @@
         return true
     }
 
-    const saveSucursal = async () => {
+    const editSucursal = async () => {
         // Validacion formulario
         let isValid = validForm();
         if (!isValid) return console.log(message)
-        //loading = true;
-        // Peticion
+       
         console.log(sucursal)   
         let body = JSON.stringify(sucursal)  
-        let response = (await Api.call('http://127.0.0.1:9000/sucursal', 'POST', { body }))
-        console.log('RESPONSE SAVE SUCURSAL --> ', response)
-        if (response.success) {
-            if (response.data.code == 201) {
-                message = "Sucursal agregada"
-                sucursal.desciption = '',
-                sucursal.number = ''
-                sucursal.address = ''
-                sucursal.region = ''
-                sucursal.commune= ''
-            }
+        let response = (await Api.call(`http://127.0.0.1:9000/sucursal/${sucursal.id}`, 'PUT', { body }))
+        console.log('RESPONSE EDIT SUCURSAL --> ', response)
+        if (response.success && response.statusCode == '201') {
+            
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Sucursal editada con exito"
+                return snk
+            })      
+        
+        } else {
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al editar sucursal"
+                return snk
+            })
         }
-        //loading = false
     }
     
     function validFormOficce() {
@@ -128,7 +132,8 @@
     }
 
     const formatOfficeInfo = (office) => {
-        let name = office.nameInCharge == undefined ? '' : " - " + office.nameInCharge
+        console.log(office)
+        let name = office.name_in_charge == undefined ? '' : " - " + office.name_in_charge
         return office.floor  + ' - ' + office.description + name
     }
 
@@ -157,6 +162,39 @@
                 return snk
             })
         }
+    }
+
+    const editOffice = async () => {
+
+        let body = JSON.stringify(officeEdit)  
+        let response = (await Api.call(`http://127.0.0.1:9000/office/${officeEdit.id}`, 'PUT', { body }))
+        console.log('RESPONSE EDIT OFFICE --> ', response)
+        if (response.success && response.statusCode == '201') {
+            
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Oficina editada con exito"
+                return snk
+            })      
+
+            offices = offices.map(of => {
+                if (of.id == officeEdit.id) {
+                    return { ...officeEdit }
+                }
+                return of
+            })  
+
+            editing = -1
+        
+        } else {
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al editar oficina"
+                return snk
+            })
+        }
+
     }
 
     onMount(async () => {
@@ -195,6 +233,9 @@
 
     <SelectCountryLocations 
         country={ company.country.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() }
+        disabledComuna
+        disabledRegion
+        disabledCity
         selectedRegion={ sucursal.region }
         selectedComuna={ sucursal.commune }
         on:setRegion={ (event) => sucursal.region = event.detail }
@@ -202,12 +243,11 @@
     />
 
     <br>
-    <br>
-    <br>
     <div class="company-actions grid-col-span-1">
         <Button 
             label="Guardar"
-            on:click={ saveSucursal }
+            custom 
+            on:click={ editSucursal }
         />
     </div>
 
@@ -250,7 +290,7 @@
                         label="Responsable" 
                         bind:value={officeEdit.name_in_charge}
                     />
-                    <IconButton icon="save" />
+                    <IconButton icon="save" on:click={ editOffice } />
                 </tr>
             {/if}
             {:else}
@@ -260,7 +300,6 @@
     </table>
 
     {#if addOffice}
-        <!-- <div class="grid-col-span-1"> -->
             <TextField 
                 version=2
                 required 
@@ -268,8 +307,6 @@
                 label="Número piso" 
                 bind:value={officeEdit.floor}
             />
-        <!-- </div> -->
-        <!-- <div class="grid-col-span-1"> -->
             <TextField 
                 version=2
                 required 
@@ -284,8 +321,6 @@
                 label="Responsable" 
                 bind:value={officeEdit.nameInCharge}
             />
-        <!-- </div> -->
-            
     {/if}
     
     <div class="company-actions grid-col-span-1">
@@ -305,6 +340,7 @@
         {:else}
             <Button 
                 label="Agregar"
+                custom
                 on:click={ () => {
                     officeEdit = { floor: '', description: '', nameInCharge: '' }
                     addOffice = true

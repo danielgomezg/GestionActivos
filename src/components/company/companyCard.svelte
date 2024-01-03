@@ -63,8 +63,8 @@
             </div>
         </div>
         <div class="card-actions">
-            <Button label="ver sucursales" type="outlined" color="" on:click={ dispath("showStores", company) } />
-            <Button label="agregar sucursal" on:click={ dispath("newStore", company) } />
+            <Button label="ver sucursales" custom type="outlined" color="" on:click={ dispath("showStores", company) } />
+            <Button label="agregar sucursal" custom on:click={ dispath("newStore", company) } />
         </div>
     </div>
 </Card>

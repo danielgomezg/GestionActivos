@@ -129,7 +129,7 @@
 
 <div style="padding-top: 20px;">
     <div class="header-content">
-        <Button label="Nuevo usuario" on:click={ createUser } />
+        <Button label="Nuevo usuario" custom on:click={ createUser } />
         <IconButton icon="tune" />
         <!-- <div class="title">Empresas</div> -->
     </div>

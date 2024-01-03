@@ -1,10 +1,7 @@
 <script>
-        import { getContext } from "svelte";
-
-        // @ts-nocheck
-        import { fade, fly } from 'svelte/transition';
-        // @ts-ignore
         import { IconButton } from "$lib";
+        import { getContext } from "svelte";
+        import { fade, fly } from 'svelte/transition';
         
         
         export let open = false, persistance = false, height = '90%', drag = false, title = '', backButton = false
@@ -13,8 +10,6 @@
         let resize = false;
         let backModalContent = getContext('backModalContent');
         
-        
-        // @ts-ignore
         function dragging(event) {
             const touch = event.touches[0];
             if (!drag) return;

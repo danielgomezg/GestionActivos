@@ -5,6 +5,7 @@
     export let label = ''
     export let options = []
     export let selected = ''
+    export let disabled = false
     export let customHeight = false
 
     let dispatch = createEventDispatcher()
@@ -48,7 +49,9 @@
     })
 
 </script>
-<div bind:this={selectComponent} class="mdc-select mdc-select--outlined">
+<div bind:this={selectComponent} class="mdc-select mdc-select--outlined"
+    class:mdc-select--disabled={disabled}
+    >
     <div class="mdc-select__anchor" aria-labelledby="outlined-select-label" class:custom-height={customHeight}>
         <span class="mdc-notched-outline">
             <span class="mdc-notched-outline__leading"></span>

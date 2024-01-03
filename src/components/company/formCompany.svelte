@@ -3,6 +3,7 @@
     import { snackbar } from "../../stores/store";
     import { getContext } from "svelte";
     import { TextField, Button, Select } from "$lib";
+    import Company from "../../views/company/company.svelte";
     
     export let company = {}, isEdit = false;
     let showSucursalesBtn = false, loading = false, message = 'Empresa agregada';
@@ -17,6 +18,7 @@
         }
     ]
     let addCompany = getContext('addCompany');
+    let replaceCompany = getContext('replaceCompany');
 
     function formatRut(code) {
         if (code == undefined) return ''
@@ -61,6 +63,39 @@
     const editCompany = async () => {
         console.log('edit company')
         console.log(company)
+
+        let isValid = validForm();
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return console.log(message)
+        }
+
+        // Peticion
+        let body = JSON.stringify(company)  
+        let response = (await Api.call(`http://127.0.0.1:9000/company/${company.id}`, 'PUT', { body }))
+        console.log('RESPONSE EDIT COMPANY --> ', response)
+        if (response.success && response.statusCode == "201") {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Empresa editada con éxito."
+                return snk
+            })
+
+            replaceCompany(response.data.result)
+
+        }
+        else {
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al editar empresa."
+                return snk
+            })
+        }
     }
 
     const saveCompany = async () => {
@@ -131,12 +166,14 @@
     <Select 
         label="País"
         options={paises}
+        disabled={isEdit}
         selected={company.country}
         on:change={ (event) => company.country = event.detail }
     />
 
     <TextField 
         version=2
+        disabled={isEdit}
         required 
         type="text"
         label={ company.country == 'Chile'? 'RUT': 'DNI' } 
@@ -167,7 +204,7 @@
         bind:value={company.contact_email}
     />
 
-    <div class="company-actions grid-col-1">
+    <div class="company-actions ">
         {#if !isEdit}
             <Button 
                 leading
@@ -194,12 +231,12 @@
     </div>
 
     {#if showSucursalesBtn}
-        <div class="grid-col-1">
+        <!-- <div class="grid-col-1"> -->
             <Button 
                 label="Agregar Sucursales"
                 color="#4F5DDB"
             />
-        </div>
+        <!-- </div> -->
 
     {/if}
 </div>

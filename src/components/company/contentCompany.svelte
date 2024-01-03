@@ -8,7 +8,7 @@
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
-
+ 
     let openModal = false, backButton = false;
     let modalTitle = '', previusModelTitle = ''
     let modalContent;  
@@ -27,6 +27,13 @@
         // openModal = true
     })
 
+    setContext('replaceCompany', (company) => {
+        let index = empresas.findIndex(emp => emp.id == company.id);
+        empresas[index] = company;
+        empresas = [...empresas]
+        openModal = false;
+    })
+
     setContext('addSucursalCount', (companyId) => {
         let empresa = empresas.find(emp => emp.id == companyId);
         empresa.count_sucursal++;
@@ -35,8 +42,6 @@
     })
 
     setContext('addCompany', (company) => {
-        console.log('in add company')
-        console.log(company)
         empresas = [company, ...empresas]
     })
 
@@ -55,9 +60,9 @@
             name: '',
             rut: '',
             country: '',
-            nameInCharge: '',
-            phoneInCharge: '',
-            emailInCharge: ''
+            contact_name: '',
+            contact_phone: '',
+            contact_email: ''
         } }
         openModal = true
         backButton = false;
@@ -133,10 +138,8 @@
 
 <div style="padding-top: 20px;">
     <div class="header-company">
-        <Button label="Nueva empresa" on:click={ createCompany } />
+        <Button label="Nueva empresa" custom on:click={ createCompany } />
         <Search value="" />
-        <!-- <IconButton icon="tune" /> -->
-        <!-- <div class="title">Empresas</div> -->
     </div>
     <br>
 

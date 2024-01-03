@@ -11,6 +11,7 @@
     export let label = ""
     export let id = ''
     export let trailing = ''
+    export let disabled = false
 
     let textfield
 
@@ -37,6 +38,7 @@
     bind:this={textfield} 
     class="mdc-text-field mdc-text-field--outlined mdc-text-field--custom"
     class:mdc-text-field--with-trailing-icon={trailing != ''}
+    class:mdc-text-field--disabled={disabled}
     >
     <span class="mdc-notched-outline">
         <span class="mdc-notched-outline__leading"></span>
@@ -51,6 +53,7 @@
         {value}
         {required}
         {placeholder}
+        {disabled}
         class="mdc-text-field__input" 
         aria-labelledby="my-label-id" 
         >

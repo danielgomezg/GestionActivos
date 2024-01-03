@@ -4,7 +4,13 @@
     import { locationsPeru } from "../../../helpers/locations/peru.js";
     import { locationsChile } from "../../../helpers/locations/chile.js";
 
-    export let country = "chile", selectedRegion = "", selectedComuna = ""
+    export let country = "chile";
+    export let selectedRegion = "";
+    export let selectedComuna = "";
+
+    export let disabledCity = false;
+    export let disabledRegion = false;
+    export let disabledComuna = false;
 
     let dispatch = createEventDispatcher()
 
@@ -16,6 +22,7 @@
 
     <Select 
         label="Región"
+        disabled={ disabledRegion }
         selected={ selectedRegion }
         options={ Object.keys(locationsChile).map(region => { return { label: region, value: region }})}
         on:change={ (event) => {
@@ -27,6 +34,7 @@
 
     <Select 
         label="Ciudad"
+        disabled={ disabledCity }
         selected=""
         on:change={ (event) => {
         }}
@@ -36,6 +44,7 @@
 
     <Select 
         label="Provincia"
+        disabled={ disabledRegion }
         selected={ selectedRegion }
         options={ Object.keys(locationsPeru).map(region => { return { label: region, value: region }})}
         on:change={ (event) => {
@@ -53,6 +62,7 @@
 
 <Select 
     label="Comuna"
+    disabled={ disabledComuna }
     selected={ selectedComuna }
     options={ comunas }
     on:change={ (event) =>  dispatch("setComuna", event.detail) }
