@@ -93,7 +93,7 @@
         required 
         type="text"
         label="Nombre del encargado" 
-        bind:value={activo.nameInCharge}
+        bind:value={activo.name_in_charge}
     />
 
     <TextField 
@@ -101,7 +101,7 @@
         required 
         type="text"
         label="Rut del encargado" 
-        bind:value={activo.rutInCharge}
+        bind:value={activo.rut_in_charge}
     />
 
     <Select 

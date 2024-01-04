@@ -1,10 +1,11 @@
 <script>
     import { Select } from "$lib";
-    import { createEventDispatcher, onMount } from "svelte";
+    import { createEventDispatcher } from "svelte";
     import { locationsPeru } from "../../../helpers/locations/peru.js";
-    import { locationsChile } from "../../../helpers/locations/chile.js";
+    import { regionCiudades, ciudadComunas } from "../../../helpers/locations/chile.js";
 
     export let country = "chile";
+    export let selectedCity = "";
     export let selectedRegion = "";
     export let selectedComuna = "";
 
@@ -15,6 +16,7 @@
     let dispatch = createEventDispatcher()
 
     let comunas = []
+    let ciudades = []
 
 </script>
 
@@ -24,21 +26,29 @@
         label="Región"
         disabled={ disabledRegion }
         selected={ selectedRegion }
-        options={ Object.keys(locationsChile).map(region => { return { label: region, value: region }})}
+        options={ Object.keys(regionCiudades).map(region => { return { label: region, value: region }})}
         on:change={ (event) => {
             dispatch("setRegion", event.detail);
             if (event.detail == "") return;
-            comunas = locationsChile[event.detail].map(comuna => { return { label: comuna, value: comuna } })
+            ciudades = regionCiudades[event.detail].map(ciudad => { return { label: ciudad, value: ciudad } })
         }}
     />
+
+    {#key ciudades}
 
     <Select 
         label="Ciudad"
         disabled={ disabledCity }
-        selected=""
+        selected={ selectedCity }
+        options={ ciudades }
         on:change={ (event) => {
+            dispatch("setCity", event.detail);
+            if (event.detail == "") return;
+            comunas = ciudadComunas[event.detail].map(comuna => { return { label: comuna, value: comuna } })
         }}
     />
+
+    {/key}
 
 {:else}
 

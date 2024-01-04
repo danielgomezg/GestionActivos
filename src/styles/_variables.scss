@@ -13,6 +13,7 @@
 .card-title {
     font-size: 24px;
     font-weight: 600;
+    line-height: normal;
 }
 
 .capitalize {
@@ -87,12 +88,6 @@ h4, h5 {
     align-items: center;
 }
 
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
 .body-content {
     display: grid;
     // grid-template-columns: repeat(3, 1fr);
@@ -127,7 +122,26 @@ h4, h5 {
     margin-bottom: 8px;
 }
 
+.mt-8 {
+    margin-top: 8px;
+}
+
 p {
     margin: 0;
 }
 
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+// Media queries para mobile class .header-content display: flex column
+@media only screen and (max-width: 600px) {
+    .header-content {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: normal;
+    }
+}

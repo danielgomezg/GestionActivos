@@ -2,7 +2,7 @@
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
     import { Card, IconButton, Button } from "$lib";
-    import { createEventDispatcher, getContext } from "svelte";
+    import { createEventDispatcher, getContext, setContext } from "svelte";
 
     export let company = {}
     let dispath = createEventDispatcher();
@@ -12,9 +12,24 @@
         return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
+    // Funcion que obtenga la confirmacion del click desde snackbar.svelte
+    setContext('confirmAction', (action) => {
+        console.log('ACTION -> ', action)
+        // if (action.id == 'deleteCompany') deleteCompany()
+    })
+
+
     const deleteCompany = async () => {
 
         let confirmacion = confirm('Esta seguro que desea eliminar la empresa ', company.name)
+        // snackbar.update(snk => {
+        //     snk.open = true;
+        //     snk.message = "Eliminando empresa..."
+        //     snk.type = 'confirm'
+        //     snk.confirm.id = 'deleteCompany'
+        //     snk.context = 'confirmAction'
+        //     return snk
+        // })
 
         if (!confirmacion) return;
         

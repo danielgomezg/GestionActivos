@@ -6,7 +6,7 @@
  * comunas -> corresponde a las comunas de las regiones
  */
 
-export const chile = {
+export const regionCiudades = {
   "Arica y Parinacota": ["Arica", "Parinacota"],
   Tarapacá: ["Iquique", "Tamarugal"],
   Antofagasta: ["Antofagasta", "El Loa", "Tocopilla"],
@@ -22,30 +22,30 @@ export const chile = {
     "San Felipe de Aconcagua",
     "Marga Marga",
   ],
-  "Región del Libertador General Bernardo O’Higgins": [
+  "Libertador General Bernardo O’Higgins": [
     "Cachapoal",
     "Cardenal Caro",
     "Colchagua",
   ],
-  "Región del Maule": ["Talca", "Cauquenes", "Curicó", "Linares"],
-  "Región de Ñuble": ["Diguillín", "Itata", "Punilla"],
-  "Región del Biobío": ["Concepción", "Arauco", "Biobío", "Ñuble"],
-  "Región de La Araucanía": ["Cautín", "Malleco"],
-  "Región de Los Ríos": ["Valdivia", "Ranco"],
-  "Región de Los Lagos": ["Llanquihue", "Chiloé", "Osorno", "Palena"],
-  "Región Aysén del General Carlos Ibáñez del Campo": [
+  "Maule": ["Talca", "Cauquenes", "Curicó", "Linares"],
+  "Ñuble": ["Diguillín", "Itata", "Punilla"],
+  "Biobío": ["Concepción", "Arauco", "Biobío", "Ñuble"],
+  "La Araucanía": ["Cautín", "Malleco"],
+  "Los Ríos": ["Valdivia", "Ranco"],
+  "Los Lagos": ["Llanquihue", "Chiloé", "Osorno", "Palena"],
+  "Aysén del General Carlos Ibáñez del Campo": [
     "Aysén",
     "Capitán Prat",
     "Coyhaique",
     "General Carrera",
   ],
-  "Región de Magallanes y de la Antártica Chilena": [
+  "Magallanes y de la Antártica Chilena": [
     "Magallanes",
     "Antártica Chilena",
     "Tierra del Fuego",
     "Última Esperanza",
   ],
-  "Región Metropolitana de Santiago": [
+  "Metropolitana de Santiago": [
     "Santiago",
     "Cordillera",
     "Chacabuco",
@@ -55,7 +55,7 @@ export const chile = {
   ],
 };
 
-export const provincesChile = {
+export const ciudadComunas = {
   Arica: ["Arica", "Camarones"],
   Parinacota: ["Putre", "General Lagos"],
   Iquique: ["Iquique", "Alto Hospicio"],

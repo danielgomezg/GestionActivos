@@ -14,7 +14,7 @@
         {
             floor: '', 
             description: '',
-            nameInCharge: ''
+            name_in_charge: ''
         }
     ]
 
@@ -126,7 +126,7 @@
                 {
                     floor: '', 
                     description: '',
-                    nameInCharge: ''
+                    name_in_charge: ''
                 }
             ]
         }
@@ -187,6 +187,7 @@
         selectedComuna={ sucursal.commune }
         on:setRegion={ (event) => sucursal.region = event.detail }
         on:setComuna={ (event) => sucursal.commune = event.detail }
+        on:setCity={ (event) => sucursal.city = event.detail }
     />
 
     <div class="grid-col-span-2">
@@ -216,7 +217,7 @@
                 version=2
                 type="text"
                 label="Responsable" 
-                bind:value={office.nameInCharge}
+                bind:value={office.name_in_charge}
             />
         </div>  
     {/each}
@@ -226,7 +227,7 @@
         <Button 
             label="Agregar oficina"
             on:click={ () => {
-                offices = [ ...offices, { floor: '', description: '', nameInCharge: '' } ]
+                offices = [ ...offices, { floor: '', description: '', name_in_charge: '' } ]
             }}
         />
         {#if offices.length != 1}

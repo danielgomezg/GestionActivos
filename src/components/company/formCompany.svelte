@@ -204,11 +204,12 @@
         bind:value={company.contact_email}
     />
 
-    <div class="company-actions ">
+    <div>
         {#if !isEdit}
             <Button 
                 leading
                 label="Guardar"
+                custom 
                 {loading}
                 on:click={ saveCompany }
             />
@@ -217,17 +218,12 @@
             <Button 
                 leading
                 label="Guardar"
+                custom
                 {loading}
                 on:click={ editCompany }
             />
 
         {/if}
-        <!-- <Button 
-            type="outlined"
-            label="Cancelar"
-            color=""
-            on:click={ () => openModal = false }
-        /> -->
     </div>
 
     {#if showSucursalesBtn}
@@ -240,16 +236,3 @@
 
     {/if}
 </div>
-
-<style>
-    .company-actions {
-        display: flex;
-        gap: 8px;
-        grid-column: 1;
-    }
-
-    .grid-col-1 {
-        grid-column: 1;
-    }
-
-</style>

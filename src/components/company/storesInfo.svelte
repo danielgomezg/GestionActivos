@@ -74,7 +74,17 @@
             </div>
             <div class="store-info__address">
                 { `${store.address}.` }
-                <strong>{ `${store.commune}, ${store.region}` }</strong>
+                <!-- Condicion para mostrar la region, ciudad y comuna cuando company es chile -->
+                {#if company.country == 'Chile'}
+                    <!-- Condicion si city es null -->
+                    {#if store.city}
+                        <strong>{ `${store.commune}, ${store.city}. ${store.region}` }</strong>
+                    {:else}
+                        <strong>{ `${store.commune}. ${store.region}` }</strong>
+                    {/if}
+                {:else}
+                    <strong>{ `${store.commune}, ${store.region}` }</strong>
+                {/if}
             </div>
             <div class="store-info__description">
                 {store.description}

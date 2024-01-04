@@ -1,5 +1,6 @@
 <script>
     import { setContext } from "svelte";
+    import Api from "../../../helpers/ApiCall";
     import { Button, Loading, Search } from "$lib";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
@@ -9,6 +10,7 @@
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
     let props;
+    let company_id = 0;
     let modalContent;
     let modalTitle = '';
     let loading = false;
@@ -65,8 +67,8 @@
                 comment: '',
                 purchase: '',
                 numRegister: '',
-                nameInCharge: '',
-                rutInCharge: ''
+                name_in_charge: '',
+                rut_in_charge: ''
             }
         }
 
@@ -86,67 +88,80 @@
         openModal = true;
     }
 
-    const createArticle = () => {
+    const createArticle = (companyId) => {
+        console.log(companyId)
         modalTitle = `Nuevo articulo`
         modalContent = FormArticle;
         props = {
             article: {
                 name: '',
                 description: ''
-            }
+            },
+            companyId
         }
 
         openModal = true;
         backButton = false;
     }
 
-    const findArticles = (companyId) => {
+    const findArticles = async (companyId) => {
+        console.log(companyId)
         newArticleDisabled = true;
+        company_id = companyId;
 
-        setTimeout(() => {
+        let response = (await Api.call(`http://127.0.0.1:9000/articlesPorCompany/${companyId}`, 'GET'));
+        console.log(response)
+        if (response.success && response.statusCode == "200") {
+            articles = response.data.result;
+        }
+        else {
+            articles = []
+        }
 
-            articles = [
-                {
-                    name: 'Samsung S23',
-                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    addDate: '20/12/2023',
-                    countActivos: 3,
-                    imageUrl: "https://images.samsung.com/is/image/samsung/p6pim/cl/2302/gallery/cl-galaxy-s23-s911-sm-s911bzgjltl-thumb-534841692?imwidth=480"
-                },
-                {
-                    name: 'iphone 15',
-                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                    addDate: '21/12/2023',
-                    countActivos: 3,
-                    imageUrl: "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-compare-iphone-15-pro-202309?wid=384&hei=512&fmt=jpeg&qlt=90&.v=1692827834790"
-                }
-            ]
+        // setTimeout(() => {
+
+        //     articles = [
+        //         {
+        //             name: 'Samsung S23',
+        //             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        //             creation_date: '20/12/2023',
+        //             countActivos: 3,
+        //             photo: "https://images.samsung.com/is/image/samsung/p6pim/cl/2302/gallery/cl-galaxy-s23-s911-sm-s911bzgjltl-thumb-534841692?imwidth=480"
+        //         },
+        //         {
+        //             name: 'iphone 15',
+        //             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        //             creation_date: '21/12/2023',
+        //             countActivos: 3,
+        //             photo: "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-compare-iphone-15-pro-202309?wid=384&hei=512&fmt=jpeg&qlt=90&.v=1692827834790"
+        //         }
+        //     ]
         
-            newArticleDisabled = false;
-        }, 500)
+        // }, 500)
+        newArticleDisabled = false;
 
     }
 
 </script>
 
 <div style="padding-top: 20px;">
-    <div class="flex-row space-between flex-end mb-8">
-        <div class="flex-row gap-8 flex-end">
+    <div class="header-content">
+        <div class="flex-row gap-8 space-between">
             <CompanySelect 
                 on:change={ (event) => findArticles(event.detail)  }
             />
-            <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ createArticle } />
+            <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(company_id) } />
         </div>
         
-        <div class="">
-            <Search value="" />
-        </div>
+        <Search value="" />
+        <!-- <div class="">
+        </div> -->
         <!-- <IconButton icon="tune" /> -->
         <!-- <div class="title">Empresas</div> -->
     </div>
     <!-- <br> -->
 
-    <div class="flex-column gap-8">
+    <div class="flex-column gap-8 mt-8">
         {#if loading}
             <Loading />
         {/if}

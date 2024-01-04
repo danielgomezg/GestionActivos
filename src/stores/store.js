@@ -2,7 +2,13 @@ import { writable } from 'svelte/store'
 
 export const snackbar = writable({
     open: false,
-    message: ''
+    message: '',
+    type: 'dismiss',
+    confirm: {
+        id: '',
+        action: false
+    },
+    context: ''
 })
 
 export const user = writable({}) //createUser()

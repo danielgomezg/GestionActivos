@@ -137,7 +137,7 @@
 </script>
 
 <div style="padding-top: 20px;">
-    <div class="header-company">
+    <div class="header-content">
         <Button label="Nueva empresa" custom on:click={ createCompany } />
         <Search value="" />
     </div>
@@ -167,11 +167,6 @@
 />
 
 <style>
-    .header-company {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
 
     .companies-content {
         display: flex;

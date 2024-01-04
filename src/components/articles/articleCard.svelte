@@ -16,12 +16,16 @@
         <div class="card-header align-start">
             <div class="flex-row gap-8 ">
                 <div class="content-image">
-                    <img src={ article.imageUrl } class="article-image" alt={article.name} />
+                    {#if article.photo == ''}
+                        <img src="https://via.placeholder.com/150" class="article-image" alt={article.name} />
+                    {:else}
+                        <img src={ article.photo } class="article-image" alt={article.name} />
+                    {/if}
                 </div>
                 <div class="flex-column">
                     <div class="card-title">{ article.name }</div>
-                    <p> Agregado el { article.addDate }</p>
-                    <p> { article.countActivos } activos</p>
+                    <p> Agregado el { article.creation_date }</p>
+                    <p> { article.count_actives } activos</p>
                 </div>
             </div>
             <IconButton icon="edit" on:click={ dispath("edit", article) } />

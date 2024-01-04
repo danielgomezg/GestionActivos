@@ -238,12 +238,14 @@
         disabledCity
         selectedRegion={ sucursal.region }
         selectedComuna={ sucursal.commune }
+        selectedCity={ sucursal.city }
         on:setRegion={ (event) => sucursal.region = event.detail }
         on:setComuna={ (event) => sucursal.commune = event.detail }
+        on:setCity={ (event) => sucursal.city = event.detail }
     />
 
     <br>
-    <div class="company-actions grid-col-span-1">
+    <div>
         <Button 
             label="Guardar"
             custom 
@@ -319,37 +321,40 @@
                 version=2
                 type="text"
                 label="Responsable" 
-                bind:value={officeEdit.nameInCharge}
+                bind:value={officeEdit.name_in_charge}
             />
     {/if}
     
-    <div class="company-actions grid-col-span-1">
-        {#if addOffice}
+    {#if addOffice}
+        <div class="company-actions grid-col-span-1">
             <Button 
                 label="Guardar"
+                custom
                 on:click={ saveOffice }
             />
         
             <Button 
                 label="Cancelar"
                 type="outlined"
+                custom
                 color=""
                 on:click={ () => addOffice = false}
             />
+        </div>
 
-        {:else}
-            <Button 
-                label="Agregar"
-                custom
-                on:click={ () => {
-                    officeEdit = { floor: '', description: '', nameInCharge: '' }
-                    addOffice = true
-                    editing = -1
-                }}
-            />
-        {/if}
+    {:else}
+        <Button 
+            label="Agregar"
+            custom
+            on:click={ () => {
+                officeEdit = { floor: '', description: '', name_in_charge: '' }
+                addOffice = true
+                editing = -1
+            }}
+        />
+    {/if}
         
-    </div>
+    
     
     
 

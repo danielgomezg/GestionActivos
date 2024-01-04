@@ -1,11 +1,11 @@
 <script>
-  import { onMount } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { MDCSnackbar } from "@material/snackbar";
   import { snackbar } from "../stores/store";
 
-  export let message = "Mensaje para el snackbar";
-  // export let type = "";
   let snackbarComponent, mdcSnackbar;
+  
+  let confirmAction = getContext('confirmAction');
 
   onMount(() => {
     mdcSnackbar = new MDCSnackbar(snackbarComponent);
@@ -14,6 +14,10 @@
   });
 
   $: if ($snackbar.open && mdcSnackbar != undefined) mdcSnackbar.open()
+  $: if ($snackbar.type == "confirm" && mdcSnackbar != undefined) mdcSnackbar.timeoutMs = -1;
+
+  // $: if ($snackbar.context != '') confirmAction = getContext($snackbar.context);
+
 
 </script>
 
@@ -26,11 +30,22 @@
       { $snackbar.message }
     </div>
     <div class="mdc-snackbar__actions" aria-atomic="true">
+      {#if $snackbar.type == 'confirm'}
+        <button 
+          type="button" 
+          class="mdc-button mdc-action" 
+          on:click={ () => {
+            $snackbar.open = false;
+            confirmAction($snackbar.confirm)
+          } }>
+          <div class="mdc-button__ripple"></div>
+          <span class="mdc-button__label">confirmar</span>
+        </button>
+      {/if}
       <button type="button" class="mdc-button mdc-snackbar__dismiss">
         <div class="mdc-button__ripple"></div>
         <span class="mdc-button__label"></span>
         <span class="material-symbols-rounded" style="color: #FFF;">close</span>
-
       </button>
     </div>
   </div>

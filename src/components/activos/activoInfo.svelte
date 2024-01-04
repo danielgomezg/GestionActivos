@@ -13,8 +13,8 @@
             purchase: '20/12/2023',
             serie: 'al-09saiosui',
             model: 'green 256GB',
-            nameInCharge: 'Cristiano Ronaldo',
-            rutInCharge: '11.111.111-1',
+            name_in_charge: 'Cristiano Ronaldo',
+            rut_in_charge: '11.111.111-1',
             numRegister: '',
             description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
         }
@@ -36,7 +36,7 @@
             <div>
                 <li>{ `Serie: ${activo.serie}` }</li>
                 <li>{ `Modelo: ${activo.model}` }</li>
-                <li>{ `Responsable: ${activo.nameInCharge}, ${activo.rutInCharge}` }</li>
+                <li>{ `Responsable: ${activo.name_in_charge}, ${activo.rut_in_charge}` }</li>
                 
             </div>
             <!-- <div class="info__description">

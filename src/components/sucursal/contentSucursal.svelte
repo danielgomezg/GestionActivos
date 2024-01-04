@@ -75,7 +75,7 @@
 </script>
     
 <div style="padding-top: 20px;">
-    <div class="header-company">
+    <div class="header-content">
         <Button label="Nueva sucursal" on:click={ createSucursal } />
         <IconButton icon="tune" />
         <!-- <div class="title">Empresas</div> -->
@@ -108,12 +108,6 @@
 />
 
 <style>
-    .header-company {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
     .companies-content {
         display: flex;
         flex-direction: column;
