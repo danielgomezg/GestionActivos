@@ -1,32 +1,35 @@
 <script>
-    import { getContext } from "svelte";
+    import { getContext, onMount } from "svelte";
     import { Divider, IconButton } from "$lib";
+    import Api from "../../../helpers/ApiCall";
 
     export let article = {};
 
     let editActivo = getContext('editActivo')
 
-    let activos = [
-        {
-            barcode: '001234817384929818200',
-            createdAt: '21/12/2023',
-            purchase: '20/12/2023',
-            serie: 'al-09saiosui',
-            model: 'green 256GB',
-            name_in_charge: 'Cristiano Ronaldo',
-            rut_in_charge: '11.111.111-1',
-            numRegister: '',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-        }
-    ]
+    let activos = []
+
+
+    const getActives = async () => {
+        let response = (await Api.call('http://127.0.0.1:9000/actives', 'GET'))
+        console.log('RESPONSE GET ACTIVES --> ', response)
+        if (response.success) {
+            activos = response.data.result
+        } 
+    }
+
+    onMount(async () => {
+        getActives()
+    })
+
 </script>
 <div>
     {#each activos as activo}
         <div>
             <div class="info__title">
                 <div>    
-                    <strong>{ activo.barcode }</strong>
-                    <h5>{ `Adquirido el ${activo.purchase} - Agregado el ${activo.createdAt}` }  </h5>
+                    <strong>{ activo.bar_code }</strong>
+                    <h5>{ `Adquirido el ${activo.acquisition_date} - Agregado el ${activo.creation_date}` }  </h5>
                 </div>
                 <div>
                     <IconButton icon="edit" on:click={ () => editActivo(activo, article) } />
@@ -36,7 +39,7 @@
             <div>
                 <li>{ `Serie: ${activo.serie}` }</li>
                 <li>{ `Modelo: ${activo.model}` }</li>
-                <li>{ `Responsable: ${activo.name_in_charge}, ${activo.rut_in_charge}` }</li>
+                <li>{ `Responsable: ${activo.name_in_charge_active}, ${activo.rut_in_charge_active}` }</li>
                 
             </div>
             <!-- <div class="info__description">
