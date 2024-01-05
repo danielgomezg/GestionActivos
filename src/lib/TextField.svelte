@@ -56,6 +56,7 @@
         {disabled}
         class="mdc-text-field__input" 
         aria-labelledby="my-label-id" 
+        on:focus
         >
         {#if trailing != ''}
             <span style="margin: auto; padding: 10px">
@@ -76,3 +77,9 @@
     >
     </md-outlined-text-field>
 {/if}
+
+<style>
+    .mdc-text-field__input::-webkit-calendar-picker-indicator {
+       display: initial;
+    }
+</style>

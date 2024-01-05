@@ -33,6 +33,13 @@
         // openModal = true
     })
 
+    // Contexto para aumentar el contador de activos de un articulo
+    setContext('addActivoCount', (articleId) => {
+        let article = articles.find(art => art.id == articleId);
+        article.count_actives++;
+        articles = [...articles]
+    })
+
     setContext('editActivo', (activo, article) => {
         editActivo(activo, article);
     });

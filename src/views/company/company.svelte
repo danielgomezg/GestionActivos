@@ -1,9 +1,8 @@
 <script>
     import { navigate } from "svelte-routing";
-    // @ts-ignore
     import { Select, Card, Button } from "$lib";
     
-    import { empresas, session } from "../../stores/store";
+    import { session } from "../../stores/store";
 
     let loading = false, selectCompany;
 
@@ -17,7 +16,7 @@
             s.company = {
                 name: company.value
             }
-            return s
+            return
         })
     }
 
@@ -35,7 +34,7 @@
         <h3>Seleccione empresa</h3>
         <Select
             label="Empresas"
-            options={$empresas}
+            options={[]}
             on:change={ (event) => selectedCompany(event.detail) }
         />
 

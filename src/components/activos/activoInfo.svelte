@@ -1,7 +1,8 @@
 <script>
-    import { getContext, onMount } from "svelte";
     import { Divider, IconButton } from "$lib";
     import Api from "../../../helpers/ApiCall";
+    import { getContext, onMount } from "svelte";
+    import { estadosActivo } from "../../stores/store";
 
     export let article = {};
 
@@ -9,11 +10,10 @@
 
     let activos = []
 
-
     const getActives = async () => {
-        let response = (await Api.call('http://127.0.0.1:9000/actives', 'GET'))
+        let response = (await Api.call(`http://127.0.0.1:9000/activePorArticle/${article.id}`, 'GET'))
         console.log('RESPONSE GET ACTIVES --> ', response)
-        if (response.success) {
+        if (response.success && response.statusCode == '200') {
             activos = response.data.result
         } 
     }
@@ -40,6 +40,7 @@
                 <li>{ `Serie: ${activo.serie}` }</li>
                 <li>{ `Modelo: ${activo.model}` }</li>
                 <li>{ `Responsable: ${activo.name_in_charge_active}, ${activo.rut_in_charge_active}` }</li>
+                <li>{ `Estado: ${ $estadosActivo.find(ea => ea.value == activo.state).label } ${ activo.comment != '' ? `(${activo.comment })` : '' }` }</li>
                 
             </div>
             <!-- <div class="info__description">

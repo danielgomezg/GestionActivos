@@ -1,43 +1,17 @@
 <script>
-    import { TextField, Button, Select, FileInput } from "$lib";
-    import { snackbar } from "../../stores/store";
-    import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
+    import { getContext } from "svelte";
     import Api from "../../../helpers/ApiCall";
+    import { snackbar, estadosActivo } from "../../stores/store";
+    import { TextField, Button, Select, FileInput, DatePicker } from "$lib";
+    import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
     export let activo = {}, article_id = 0, company_id = 0
+
+    let addActivoCount = getContext('addActivoCount');
     let inputDate;
     let message= ''
     let office_id = 0
-    let estadosActivo = [
-        {
-            label: 'Reparación',
-            value: 'repare'
-        },
-        {
-            label: 'Nuevo',
-            value: 'new'
-        },
-        {
-            label: 'Operativo',
-            value: 'operativo'
-        },
-        {
-            label: 'Perdida o Robo',
-            value: 'lost'
-        },
-        {
-            label: 'Dañado',
-            value: 'damage'
-        },
-        {
-            label: 'Obsoleto',
-            value: 'deprecated'
-        },
-        {
-            label: 'Otro',
-            value: 'other'
-        }
-    ]
+    let date = ''
 
     function formatRut(code) {
         if (code == undefined) return ''
@@ -110,6 +84,7 @@
     const saveActivo = async () => {
         activo.article_id = parseInt(article_id)
         activo.office_id = parseInt(office_id)
+        
         //console.log(activo.office_id)
         let isValid = validForm();
         if (!isValid) {
@@ -131,6 +106,7 @@
                 snk.message = "Activo agregado con éxito."
                 return snk
             })
+            addActivoCount(article_id)
             
         }else {
             snackbar.update(snk => {
@@ -142,9 +118,9 @@
 
     }
 
+    
+
     $: activo.rut_in_charge_active = formatRut(activo.rut_in_charge_active)
-    //$:console.log(sucursal_id)
-    //$:console.log(activo.office_id)
 
 </script>
 <div class="form">
@@ -172,22 +148,30 @@
         bind:value={activo.model}
     />
 
-    <input bind:this={ inputDate } type="date" readonly style="display: none;">
-
-    <TextField 
-        version=2
-        required 
-        type="text"
-        trailing="calendar_month"
+    <DatePicker 
+        value={activo.acquisition_date}
         label="Fecha de adquisición" 
-        on:click={ () => inputDate.focus() }
-        bind:value={activo.acquisition_date}
     />
+
+    <!-- <div style="position: relative">
+        <input bind:value={activo.acquisition_date} type="date" class="custom-date" >
+
+        <TextField 
+            version=2
+            required 
+            type="text"
+            trailing="calendar_month"
+            label="Fecha de adquisición" 
+            bind:value={activo.acquisition_date}
+            on:click={ showDatePicker }
+            on:focus={ showDatePicker }
+        />
+    </div> -->
 
     <Select 
         label="Estado"
         selected = {activo.state}
-        options={estadosActivo}
+        options={$estadosActivo}
         on:change={ (event) => activo.state = event.detail }
     />
 
@@ -215,10 +199,6 @@
         bind:value={activo.rut_in_charge_active}
     />
 
-    
-
-    
-
     <OfficeSucursalSelected companyId={company_id} bind:selectedOffice={office_id} />
 
     <TextField 
@@ -243,3 +223,4 @@
     />
 
 </div>
+

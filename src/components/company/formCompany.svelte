@@ -3,7 +3,6 @@
     import { snackbar } from "../../stores/store";
     import { getContext } from "svelte";
     import { TextField, Button, Select } from "$lib";
-    import Company from "../../views/company/company.svelte";
     
     export let company = {}, isEdit = false;
     let showSucursalesBtn = false, loading = false, message = 'Empresa agregada';

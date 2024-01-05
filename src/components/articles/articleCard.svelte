@@ -9,6 +9,10 @@
         return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
+    const deleteArticle = () => {
+        
+    }
+
 </script>
 
 <Card>
@@ -28,7 +32,10 @@
                     <p> { article.count_actives } activos</p>
                 </div>
             </div>
-            <IconButton icon="edit" on:click={ dispath("edit", article) } />
+            <div>
+                <IconButton icon="edit" on:click={ dispath("edit", article) } />
+                <IconButton icon="delete" on:click={ deleteArticle } />
+            </div>
         </div>
         <div class="card-content">
             <div class="contenedor">
