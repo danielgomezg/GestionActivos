@@ -57,20 +57,26 @@
         backButton = false;
     }
 
-    const newActivo = (activo) => {
-        modalTitle = `Nuevo activo ${activo.name}`
+    const newActivo = (article, company_id) => {
+        modalTitle = `Nuevo activo ${article.name}`
         modalContent = ActivoForm
         props = { 
             activo: {
-                barcode: '',
+                bar_code: '',
                 serie: '',
                 model: '',
                 comment: '',
-                purchase: '',
-                numRegister: '',
-                name_in_charge: '',
-                rut_in_charge: ''
-            }
+                acquisition_date: '',
+                accounting_document: '',
+                accounting_record_number: '',
+                name_in_charge_active: '',
+                rut_in_charge_active: '',
+                state: '',
+                article_id: '',
+                office_id: ''
+            },
+            article_id: article.id,
+            company_id
         }
 
         openModal = true;
@@ -171,7 +177,7 @@
             <CardArticle 
                 {article} 
                 on:edit={ (event) => editArticle(event.detail) } 
-                on:newActivo={ (event) => newActivo(event.detail) } 
+                on:newActivo={ (event) => newActivo(event.detail, company_id) } 
                 on:showActivos={ (event) => showActivos(event.detail) } 
             />
         {:else}
