@@ -17,6 +17,7 @@
     let openModal = false;
     let backButton = false;
     let newArticleDisabled = true;
+    let message = "Selecciona una empresa para obtener sus articulos."
 
     let previusComponent, previusProps, previusModelTitle = '';
 
@@ -115,6 +116,7 @@
             articles = response.data.result;
         }
         else {
+            message = "La empresa no tiene articulos registrados."
             articles = []
         }
 
@@ -173,7 +175,7 @@
                 on:showActivos={ (event) => showActivos(event.detail) } 
             />
         {:else}
-            <p>Selecciona una empresa para obtener sus articulos.</p>
+            <p>{ message }</p>
         {/each}
     </div>
 
