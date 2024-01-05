@@ -34,15 +34,19 @@
     })
 
     // Contexto para aumentar el contador de activos de un articulo
-    setContext('addActivoCount', (articleId) => {
+    setContext('addActivoCount', (articleId, cont) => {
         let article = articles.find(art => art.id == articleId);
-        article.count_actives++;
+        article.count_actives = article.count_actives + cont;
         articles = [...articles]
     })
 
     setContext('editActivo', (activo, article) => {
         editActivo(activo, article);
     });
+
+    setContext('removeArticle', (articleId) => {
+        articles = articles.filter(art => articleId !== art.id);
+    })
 
     const editActivo = (activo, article) => {
         // Se guarda el contenido actual del modal.

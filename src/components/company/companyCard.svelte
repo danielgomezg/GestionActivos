@@ -22,14 +22,6 @@
     const deleteCompany = async () => {
 
         let confirmacion = confirm('Esta seguro que desea eliminar la empresa ', company.name)
-        // snackbar.update(snk => {
-        //     snk.open = true;
-        //     snk.message = "Eliminando empresa..."
-        //     snk.type = 'confirm'
-        //     snk.confirm.id = 'deleteCompany'
-        //     snk.context = 'confirmAction'
-        //     return snk
-        // })
 
         if (!confirmacion) return;
         

@@ -3,10 +3,12 @@
     import Api from "../../../helpers/ApiCall";
     import { getContext, onMount } from "svelte";
     import { estadosActivo } from "../../stores/store";
+    import { snackbar } from "../../stores/store";
 
     export let article = {};
 
     let editActivo = getContext('editActivo')
+    let addActivoCount = getContext('addActivoCount');
 
     let activos = []
 
@@ -16,6 +18,33 @@
         if (response.success && response.statusCode == '200') {
             activos = response.data.result
         } 
+    }
+
+    const deleteActive = async (activo) => {
+        let confirmacion = confirm('Esta seguro que desea eliminar el activo ', activo.bar_code)
+        if(!confirmacion) return;
+
+        let response = (await Api.call(`http://127.0.0.1:9000/active/${activo.id}`, 'DELETE'));
+        console.log('RESPONSE DELETE ACTIVE -> ', response)
+        if (response.success && response.statusCode == '201') {
+
+            activos = activos.filter(act => act.id !== activo.id);
+
+            addActivoCount(article.id, -1)
+
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Activo eliminado con éxito."
+                return snk
+            })
+
+        } else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al eliminar activo."
+                return snk
+            })
+        }
     }
 
     onMount(async () => {
@@ -33,7 +62,7 @@
                 </div>
                 <div>
                     <IconButton icon="edit" on:click={ () => editActivo(activo, article) } />
-                    <IconButton icon="delete" />
+                    <IconButton icon="delete" on:click={deleteActive(activo)}/>
                 </div>
             </div>
             <div>

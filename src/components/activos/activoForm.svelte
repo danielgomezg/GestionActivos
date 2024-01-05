@@ -106,7 +106,7 @@
                 snk.message = "Activo agregado con éxito."
                 return snk
             })
-            addActivoCount(article_id)
+            addActivoCount(article_id, 1)
             
         }else {
             snackbar.update(snk => {
@@ -149,7 +149,7 @@
     />
 
     <DatePicker 
-        value={activo.acquisition_date}
+        bind:value={activo.acquisition_date}
         label="Fecha de adquisición" 
     />
 

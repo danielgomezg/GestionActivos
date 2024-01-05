@@ -1,16 +1,39 @@
 <script>
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, getContext } from "svelte";
     import { Card, IconButton, Button } from "$lib";
+    import Api from "../../../helpers/ApiCall";
+    import { snackbar } from "../../stores/store";
 
     export let article = {}
     let dispath = createEventDispatcher();
+    let removeArticle = getContext('removeArticle');
 
     const normalizeText = (text) => {
         return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
-    const deleteArticle = () => {
-        
+    const deleteArticle = async () => {
+        let confirmacion = confirm('Esta seguro que desea eliminar el articulo ', article.name)
+        if(!confirmacion) return;
+
+        let response = (await Api.call(`http://127.0.0.1:9000/article/${article.id}`, 'DELETE'));
+        console.log('RESPONSE DELETE ARTICLE -> ', response)
+        if (response.success && response.statusCode == '201') {
+            removeArticle(article.id)
+
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Articulo eliminada con éxito."
+                return snk
+            })
+
+        } else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al eliminar articulo."
+                return snk
+            })
+        }
     }
 
 </script>
