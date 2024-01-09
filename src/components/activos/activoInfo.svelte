@@ -5,7 +5,7 @@
     import { estadosActivo } from "../../stores/store";
     import { snackbar } from "../../stores/store";
 
-    export let article = {};
+    export let article = {}, company_id = 0;
 
     let editActivo = getContext('editActivo')
     let addActivoCount = getContext('addActivoCount');
@@ -61,7 +61,7 @@
                     <h5>{ `Adquirido el ${activo.acquisition_date} - Agregado el ${activo.creation_date}` }  </h5>
                 </div>
                 <div>
-                    <IconButton icon="edit" on:click={ () => editActivo(activo, article) } />
+                    <IconButton icon="edit" on:click={ () => editActivo(activo, article, company_id) } />
                     <IconButton icon="delete" on:click={deleteActive(activo)}/>
                 </div>
             </div>

@@ -5,7 +5,8 @@
 
     export let companyId = 0;
     export let selectedOffice = '';
-    export let selectedSucursal = '';  // Inicializar con algún valor predeterminado
+    export let selectedSucursal = '';  
+    export let isEdit = false;
 
     let sucursales = [];
     let offices = [];
@@ -18,7 +19,7 @@
         }
     };
 
-    const getOffices = async (sucursalId) => {
+    const getOfficesBySucursal = async (sucursalId) => {
         let response = await Api.call(`http://127.0.0.1:9000/officePorSucursal/${sucursalId}`, 'GET');
         console.log('RESPONSE GET OFFICES --> ', response);
         if (response.success && response.statusCode === '200') {
@@ -29,13 +30,35 @@
         }
     };
 
-    onMount(() => {
-        getSucursales();
+    const getOffice = async (selectedOffice)=>{
+        let response = await Api.call(`http://127.0.0.1:9000/office/${selectedOffice}`,'GET')
+        console.log('RESPONSE GET OFFICE --> ', response);
+        if (response.success && response.statusCode === '200') {
+            console.log("200")
+            return response.data.result
+        }
+        return;
+    }
+
+    onMount(async () => {
+        await getSucursales();
+        
+        if(isEdit){
+            let office = await getOffice(selectedOffice)
+            if(office){
+                selectedSucursal = office.sucursal_id
+                await getOfficesBySucursal(office.sucursal_id)
+                selectedOffice = office.id
+            }
+        }
+        
     });
 
     $: if (selectedSucursal) {
-        getOffices(selectedSucursal);
+        getOfficesBySucursal(selectedSucursal);
     }
+
+    $:console.log(sucursales)
 </script>
 
 {#key sucursales}
@@ -46,7 +69,7 @@
         on:change={(event) => {
             selectedSucursal = event.detail;
             selectedOffice = ''; // Resetear el valor de la oficina al cambiar la sucursal
-            //getOffices(selectedSucursal);
+            //getOfficesBySucursal(selectedSucursal);
         }}
     />
 {/key}

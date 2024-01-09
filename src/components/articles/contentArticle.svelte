@@ -40,22 +40,36 @@
         articles = [...articles]
     })
 
-    setContext('editActivo', (activo, article) => {
-        editActivo(activo, article);
+    setContext('editActivo', (activo, article, company_id) => {
+        editActivo(activo, article, company_id);
     });
 
     setContext('removeArticle', (articleId) => {
         articles = articles.filter(art => articleId !== art.id);
     })
 
-    const editActivo = (activo, article) => {
+    setContext('addArticle', (article) => {
+        articles = [article, ...articles]
+    })
+
+    setContext('replaceArticle', (article) => {
+        let index = articles.findIndex(art => art.id == article.id);
+        articles[index] = article;
+        articles = [...articles]
+        openModal = false;
+    })
+
+    const editActivo = (activo, article, company_id) => {
         // Se guarda el contenido actual del modal.
         previusComponent = modalContent;
         previusProps = { ...props };
 
         modalTitle = `Activo `;
         modalContent = ActivoForm;
-        props = { activo, article };
+        props = { activo, 
+            article_id: article.id,
+            company_id: company_id,
+            isEdit: true};
         backButton = true;
         // openModal = true;
     }
@@ -93,7 +107,7 @@
         openModal = true;
     }
 
-    const showActivos = (article) => {
+    const showActivos = (article, company_id) => {
         // Se guarda componente actual para boton back 
         previusComponent = modalContent;
         previusProps = { ...props };
@@ -101,7 +115,7 @@
         modalTitle = `${article.name} - activos`
         previusModelTitle = modalTitle;
         modalContent = ActivoInfo;
-        props = { article }
+        props = { article, company_id }
         backButton = false
         openModal = true;
     }
@@ -189,7 +203,7 @@
                 {article} 
                 on:edit={ (event) => editArticle(event.detail) } 
                 on:newActivo={ (event) => newActivo(event.detail, company_id) } 
-                on:showActivos={ (event) => showActivos(event.detail) } 
+                on:showActivos={ (event) => showActivos(event.detail, company_id) } 
             />
         {:else}
             <p>{ message }</p>
