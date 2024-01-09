@@ -95,7 +95,7 @@
                         snk.message = "Sucursal creada con éxito."
                         return snk
                     })
-                    addSucursalCount(company.id)
+                    addSucursalCount(company.id, + 1)
                 }
             }
             else {

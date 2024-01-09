@@ -2,9 +2,13 @@
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
     import { TextField, Button, FileInput } from "$lib";
+    import { onMount, getContext } from "svelte";
 
     export let article = {}, companyId = 0, isEdit = false;
     let image = null;
+
+    let replaceArticle = getContext('replaceArticle');
+    let addArticle = getContext('addArticle');
 
     function validForm() {
         if (article.name == ''){
@@ -33,7 +37,16 @@
     }
 
     const saveArticle = async () => {
-        if (!validForm()) return;
+        
+        let isValid = validForm();
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return console.log(message)
+        }
 
         let imageUrl = await uploadImage(image)
         
@@ -50,6 +63,7 @@
                 return snk
             })
             
+            addArticle(response.data.result)
         }
         else {
             snackbar.update(snk => {
@@ -61,6 +75,53 @@
 
     }
 
+    const editArticle = async () => {
+        console.log('edit article')
+
+        let isValid = validForm();
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return console.log(message)
+        }
+
+        // Peticion
+        let body = JSON.stringify(article)  
+        let response = (await Api.call(`http://127.0.0.1:9000/article/${article.id}`, 'PUT', { body }))
+        console.log('RESPONSE EDIT ARTICLE--> ', response)
+        if (response.success && response.statusCode == "201") {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Articulo editado con éxito."
+                return snk
+            })
+
+            replaceArticle(response.data.result)
+
+        }
+        else {
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al editar articulo."
+                return snk
+            })
+        }
+    }
+
+    let accionBtn;
+
+    onMount(async ()=> {
+        if(isEdit){
+            accionBtn = editArticle
+        }else{
+            accionBtn = saveArticle
+        }
+    })
+ 
 </script>
 
 <div class="form">
@@ -94,7 +155,7 @@
     <Button 
         label="Guardar"
         custom
-        on:click={ saveArticle }
+        on:click={ accionBtn }
     />
 
 </div>

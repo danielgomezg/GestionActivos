@@ -1,11 +1,11 @@
 <script>
-    import { getContext } from "svelte";
+    import { getContext, onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
     import { snackbar, estadosActivo } from "../../stores/store";
     import { TextField, Button, Select, FileInput, DatePicker } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
-    export let activo = {}, article_id = 0, company_id = 0
+    export let activo = {}, article_id = 0, company_id = 0, isEdit = false
 
     let addActivoCount = getContext('addActivoCount');
     let inputDate;
@@ -106,7 +106,7 @@
                 snk.message = "Activo agregado con éxito."
                 return snk
             })
-            addActivoCount(article_id)
+            addActivoCount(article_id, 1)
             
         }else {
             snackbar.update(snk => {
@@ -118,9 +118,58 @@
 
     }
 
+    const editActivo = async () => {
+        console.log('edit active')
+        activo.office_id = parseInt(office_id)
+
+        let isValid = validForm();
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return console.log(message)
+        }
+
+        // Peticion
+        let body = JSON.stringify(activo)  
+        let response = (await Api.call(`http://127.0.0.1:9000/active/${activo.id}`, 'PUT', { body }))
+        console.log('RESPONSE EDIT ACTIVE--> ', response)
+        if (response.success && response.statusCode == "201") {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Activo editado con éxito."
+                return snk
+            })
+
+            //replaceArticle(response.data.result)
+
+        }
+        else {
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al editar activo."
+                return snk
+            })
+        }
+    }
+
+    let accionBtn;
+
+    onMount(async () => {
+        if(isEdit){
+            office_id = activo.office_id
+            accionBtn = editActivo
+        }else{
+            accionBtn = saveActivo
+        }
+    })
     
 
     $: activo.rut_in_charge_active = formatRut(activo.rut_in_charge_active)
+
 
 </script>
 <div class="form">
@@ -149,7 +198,7 @@
     />
 
     <DatePicker 
-        value={activo.acquisition_date}
+        bind:value={activo.acquisition_date}
         label="Fecha de adquisición" 
     />
 
@@ -199,7 +248,7 @@
         bind:value={activo.rut_in_charge_active}
     />
 
-    <OfficeSucursalSelected companyId={company_id} bind:selectedOffice={office_id} />
+    <OfficeSucursalSelected companyId={company_id} bind:selectedOffice={office_id} isEdit={isEdit} />
 
     <TextField 
         version=2
@@ -219,7 +268,7 @@
 
     <Button 
         label="Guardar"
-        on:click={ saveActivo }
+        on:click={ accionBtn }
     />
 
 </div>

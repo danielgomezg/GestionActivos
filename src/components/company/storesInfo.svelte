@@ -5,6 +5,7 @@
     import { snackbar } from "../../stores/store";
 
     let editStore = getContext('editStore');
+    let addSucursalCount = getContext('addSucursalCount')
     
     export let company_id = 0, company = {}
     let stores = []
@@ -30,6 +31,8 @@
         if (response.success && response.statusCode == '201') {
 
             stores = stores.filter(st => store.id !== st.id);
+
+            addSucursalCount(company.id, -1)
 
             snackbar.update(snk => {
                 snk.open = true;

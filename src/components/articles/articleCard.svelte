@@ -1,11 +1,13 @@
 <script>
-    import Api from "../../../helpers/ApiCall";
-    import { createEventDispatcher, onMount } from "svelte";
+    import { createEventDispatcher, onMount, getContext } from "svelte";
     import { Card, IconButton, Button } from "$lib";
+    import Api from "../../../helpers/ApiCall";
+    import { snackbar } from "../../stores/store";
 
     export let article = {}
     let imageUrl;
     let dispath = createEventDispatcher();
+    let removeArticle = getContext('removeArticle');
 
     const getImage = async (name) => {
         if (name == '') return null;
@@ -22,8 +24,28 @@
 
     }
 
-    const deleteArticle = () => {
-        
+    const deleteArticle = async () => {
+        let confirmacion = confirm('Esta seguro que desea eliminar el articulo ', article.name)
+        if(!confirmacion) return;
+
+        let response = (await Api.call(`http://127.0.0.1:9000/article/${article.id}`, 'DELETE'));
+        console.log('RESPONSE DELETE ARTICLE -> ', response)
+        if (response.success && response.statusCode == '201') {
+            removeArticle(article.id)
+
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Articulo eliminada con éxito."
+                return snk
+            })
+
+        } else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.message = "Error al eliminar articulo."
+                return snk
+            })
+        }
     }
 
     onMount(async () => {
@@ -47,7 +69,7 @@
                 <div class="flex-column">
                     <div class="card-title">{ article.name }</div>
                     <p> Agregado el { article.creation_date }</p>
-                    <p> { article.count_actives } activos</p>
+                    <p> { article.count_actives || 0 } activos</p>
                 </div>
             </div>
             <div>
