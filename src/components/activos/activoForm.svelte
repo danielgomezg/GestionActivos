@@ -8,11 +8,10 @@
     export let activo = {}, article_id = 0, company_id = 0, isEdit = false
 
     let addActivoCount = getContext('addActivoCount');
-    let inputDate;
     let message= ''
-    let office_id = 0
-    let date = ''
-
+    let office_id = 0;
+    let document = null;
+    
     function formatRut(code) {
         if (code == undefined) return ''
         if (code.length >= 13) return code.slice(0, -1);
@@ -81,6 +80,22 @@
         return true
     }
 
+    // FUNCION QUE SUBE LA IMAGEN AL SERVIDOR
+    const uploadDocument = async (image) => {
+        if (image == null) return null;
+
+        let formData = new FormData();
+        formData.append('file', image);
+        let response = await Api.call('http://127.0.0.1:9000/file_active', 'POST', { body: formData }, 'file');
+        console.log(response)
+        if (response.success && response.statusCode == "201") {
+            return response.data.result;
+        }
+        else {
+            return null;
+        }
+    }
+
     const saveActivo = async () => {
         activo.article_id = parseInt(article_id)
         activo.office_id = parseInt(office_id)
@@ -95,6 +110,9 @@
             })
             return console.log(message)
         }
+
+        let documentUrl = await uploadDocument(document)
+        activo.accounting_document = documentUrl == null ? '' : documentUrl;
 
         let body = JSON.stringify(activo);
         console.log(body)
@@ -132,8 +150,12 @@
             return console.log(message)
         }
 
+        let documentUrl = await uploadDocument(document)
+        activo.accounting_document = documentUrl == null ? '' : documentUrl;
+
         // Peticion
         let body = JSON.stringify(activo)  
+        console.log('BODY EDIT ACTIVE --> ', body)  
         let response = (await Api.call(`http://127.0.0.1:9000/active/${activo.id}`, 'PUT', { body }))
         console.log('RESPONSE EDIT ACTIVE--> ', response)
         if (response.success && response.statusCode == "201") {
@@ -264,6 +286,7 @@
         accept={ ['pdf', 'png', 'jpg'] }
         trailing="upload_file"
         helperText="Documento con formato pdf, png o jpg"
+        on:change={ (e) => document = e.detail }
     />
 
     <Button 

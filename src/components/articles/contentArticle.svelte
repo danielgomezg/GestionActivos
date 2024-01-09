@@ -151,26 +151,6 @@
             articles = []
         }
 
-        // setTimeout(() => {
-
-        //     articles = [
-        //         {
-        //             name: 'Samsung S23',
-        //             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        //             creation_date: '20/12/2023',
-        //             countActivos: 3,
-        //             photo: "https://images.samsung.com/is/image/samsung/p6pim/cl/2302/gallery/cl-galaxy-s23-s911-sm-s911bzgjltl-thumb-534841692?imwidth=480"
-        //         },
-        //         {
-        //             name: 'iphone 15',
-        //             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        //             creation_date: '21/12/2023',
-        //             countActivos: 3,
-        //             photo: "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-compare-iphone-15-pro-202309?wid=384&hei=512&fmt=jpeg&qlt=90&.v=1692827834790"
-        //         }
-        //     ]
-        
-        // }, 500)
         newArticleDisabled = false;
 
     }

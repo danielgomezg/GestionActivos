@@ -1,14 +1,18 @@
 <script>
     import Api from "../../../helpers/ApiCall";
+    import { onMount, getContext } from "svelte";
     import { snackbar } from "../../stores/store";
     import { TextField, Button, FileInput } from "$lib";
-    import { onMount, getContext } from "svelte";
 
-    export let article = {}, companyId = 0, isEdit = false;
+    export let article = {};
+    export let companyId = 0;
+    export let isEdit = false;
+    
+    let accionBtn;
     let image = null;
 
-    let replaceArticle = getContext('replaceArticle');
     let addArticle = getContext('addArticle');
+    let replaceArticle = getContext('replaceArticle');
 
     function validForm() {
         if (article.name == ''){
@@ -88,8 +92,12 @@
             return console.log(message)
         }
 
+        let imageUrl = await uploadImage(image)
+        article.photo = imageUrl == null ? '' : imageUrl;
+
         // Peticion
         let body = JSON.stringify(article)  
+        console.log('BODY EDIT ARTICLE--> ', body)
         let response = (await Api.call(`http://127.0.0.1:9000/article/${article.id}`, 'PUT', { body }))
         console.log('RESPONSE EDIT ARTICLE--> ', response)
         if (response.success && response.statusCode == "201") {
@@ -112,12 +120,12 @@
         }
     }
 
-    let accionBtn;
+    
 
     onMount(async ()=> {
-        if(isEdit){
+        if (isEdit) {
             accionBtn = editArticle
-        }else{
+        } else {
             accionBtn = saveArticle
         }
     })

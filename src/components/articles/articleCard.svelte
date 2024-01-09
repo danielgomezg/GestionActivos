@@ -49,8 +49,10 @@
     }
 
     onMount(async () => {
-        getImage(article.photo)
+        // getImage(article.photo)
     })
+
+    $: getImage(article.photo)
 
 
 </script>
@@ -84,7 +86,7 @@
         </div>
         <div class="card-actions">
             <Button label="Ver activos" custom type="outlined" color="" on:click={ dispath("showActivos", article) } />
-            <Button label="Agregar activo" custom on:click={ dispath("newActivo", article) } />
+            <Button label="Nuevo activo" custom on:click={ dispath("newActivo", article) } />
         </div>
     </div>
 </Card>

@@ -9,6 +9,7 @@
 
     let editActivo = getContext('editActivo')
     let addActivoCount = getContext('addActivoCount');
+    let activeDocument;
 
     let activos = []
 
@@ -47,6 +48,20 @@
         }
     }
 
+    const downloadDocument = async (activo) => {
+        console.log(activo)
+
+        fetch(`http://127.0.0.1:9000/file_active/${activo.accounting_document}`)
+            .then(response => response.blob())
+            .then(document => {
+                let objectURL = URL.createObjectURL(document);
+                activeDocument = objectURL;
+                window.open(objectURL)
+
+            })
+            .catch(error => console.error(error));
+    }
+
     onMount(async () => {
         getActives()
     })
@@ -61,6 +76,9 @@
                     <h5>{ `Adquirido el ${activo.acquisition_date} - Agregado el ${activo.creation_date}` }  </h5>
                 </div>
                 <div>
+                    {#if activo.accounting_document}
+                        <IconButton icon="description" on:click={ () => downloadDocument(activo) } />
+                    {/if}
                     <IconButton icon="edit" on:click={ () => editActivo(activo, article, company_id) } />
                     <IconButton icon="delete" on:click={deleteActive(activo)}/>
                 </div>
