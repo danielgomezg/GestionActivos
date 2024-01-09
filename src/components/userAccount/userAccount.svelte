@@ -26,8 +26,10 @@
     }
 
     const logout = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('accessToken');
+        // localStorage.removeItem('user');
+        // localStorage.removeItem('accessToken');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('accessToken');
         user.set({})
 
         navigate("/login", {replace: true})
@@ -44,7 +46,7 @@
     const getCompanyNameId = async () => {
         if (!$user.profileActions.includes('get-empresa')) return
         //loading = true;
-        let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET', {}))
+        let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
         if (response.success && response.statusCode == "200") {
             companiesDB = response.data.result

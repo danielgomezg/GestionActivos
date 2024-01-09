@@ -1,17 +1,35 @@
 <script>
-    import { createEventDispatcher } from "svelte";
+    import Api from "../../../helpers/ApiCall";
+    import { createEventDispatcher, onMount } from "svelte";
     import { Card, IconButton, Button } from "$lib";
 
     export let article = {}
+    let imageUrl;
     let dispath = createEventDispatcher();
 
-    const normalizeText = (text) => {
-        return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const getImage = async (name) => {
+        if (name == '') return null;
+        console.log(name)
+
+        fetch(`http://127.0.0.1:9000/image_article/${name}`)
+            .then(response => response.blob())
+            .then(images => {
+                let objectURL = URL.createObjectURL(images);
+                imageUrl = objectURL;
+
+            })
+            .catch(error => console.error(error));
+
     }
 
     const deleteArticle = () => {
         
     }
+
+    onMount(async () => {
+        getImage(article.photo)
+    })
+
 
 </script>
 
@@ -23,7 +41,7 @@
                     {#if article.photo == ''}
                         <img src="https://via.placeholder.com/150" class="article-image" alt={article.name} />
                     {:else}
-                        <img src={ article.photo } class="article-image" alt={article.name} />
+                        <img src={ imageUrl } class="article-image" alt={article.name} />
                     {/if}
                 </div>
                 <div class="flex-column">
@@ -43,8 +61,8 @@
             </div>
         </div>
         <div class="card-actions">
-            <Button label="ver activos" custom type="outlined" color="" on:click={ dispath("showActivos", article) } />
-            <Button label="agregar activo" custom on:click={ dispath("newActivo", article) } />
+            <Button label="Ver activos" custom type="outlined" color="" on:click={ dispath("showActivos", article) } />
+            <Button label="Agregar activo" custom on:click={ dispath("newActivo", article) } />
         </div>
     </div>
 </Card>

@@ -123,7 +123,7 @@
 
     const getOffices = async (id_sucursal) => {
     
-        let response = (await Api.call(`http://127.0.0.1:9000/officePorSucursal/${id_sucursal}`, 'GET', {}))
+        let response = (await Api.call(`http://127.0.0.1:9000/officePorSucursal/${id_sucursal}`, 'GET'))
         console.log('RESPONSE GET Offices --> ', response)
         if (response.success) {
             offices = response.data.result

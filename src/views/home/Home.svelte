@@ -34,8 +34,12 @@
 
         window.addEventListener('resize', handleResize);
 
-        let userSession = localStorage.getItem("user")
-        let token = localStorage.getItem("accessToken")
+        // let userSession = localStorage.getItem("user")
+        // let token = localStorage.getItem("accessToken")
+
+        let userSession = sessionStorage.getItem("user")
+        let token = sessionStorage.getItem("accessToken")
+
         console.log(userSession)
         console.log(token)
         if (user != null && token != null) {

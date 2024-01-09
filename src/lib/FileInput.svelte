@@ -1,4 +1,6 @@
 <script>    
+    import { createEventDispatcher } from 'svelte';
+
     export let accept = [];
     export let multiple = true;
     export let placeholder = ''
@@ -9,9 +11,10 @@
     export let trailing = ''
     export let helperText = ''
 
-    let value = ''
-    let textfield
-    let invalid = false
+    let value = '';
+    let textfield;
+    let invalid = false;
+    let dispatch = createEventDispatcher();
     
     function handleChange(event) {
         
@@ -26,6 +29,7 @@
 
         invalid = false;
         label = file.name
+        dispatch('change', file);
     }
 
 </script>

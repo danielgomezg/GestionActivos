@@ -119,6 +119,9 @@
                 company.name = '',
                 company.rut = ''
                 company.country = ''
+                company.contact_name = ''
+                company.contact_phone = ''
+                company.contact_email = ''
 
                 snackbar.update(snk => {
                     snk.open = true;

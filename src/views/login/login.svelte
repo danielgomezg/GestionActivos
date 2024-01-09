@@ -87,7 +87,8 @@
                 usuario.password = ''
                 let _userLogged = response.data.result.user
                 
-                localStorage.setItem('accessToken', response.data.result.access_token);
+                // localStorage.setItem('accessToken', response.data.result.access_token);
+                sessionStorage.setItem('accessToken', response.data.result.access_token);
                 let profile = (await getProfile(_userLogged.profile_id))
                 _userLogged.profileActions = profile.profileActions.map(pa => pa.name)
                 
@@ -95,7 +96,8 @@
                     ..._userLogged
                 })
 
-                localStorage.setItem("user",  JSON.stringify(_userLogged))
+                // localStorage.setItem("user",  JSON.stringify(_userLogged))
+                sessionStorage.setItem("user",  JSON.stringify(_userLogged))
                
 
                 // dispatch('login')

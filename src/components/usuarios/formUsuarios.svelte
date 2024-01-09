@@ -218,7 +218,8 @@
                     let userEdited = {...response.data.result, ...$user}
                     console.log(userEdited)
                     user.set(userEdited)
-                    localStorage.setItem("user",  JSON.stringify(userEdited))
+                    // localStorage.setItem("user",  JSON.stringify(userEdited))
+                    sessionStorage.setItem("user",  JSON.stringify(userEdited))
 
 
                 }else{
