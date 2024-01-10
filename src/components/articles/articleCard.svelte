@@ -70,20 +70,34 @@
                 </div>
                 <div class="flex-column">
                     <div class="card-title">{ article.name }</div>
-                    <p> Agregado el { article.creation_date }</p>
-                    <p> { article.count_actives || 0 } activos</p>
+                    <table>
+                        <tr>
+                            <td><span class="material-symbols-rounded">event</span></td>
+                            <td>{ article.creation_date }</td>
+                        </tr>
+                        <tr>
+                            <td><span class="material-symbols-rounded">inventory_2</span></td>
+                            <td>{ article.count_actives || 0 } activos</td>
+                        </tr>
+                        <tr>
+                            <td><span class="material-symbols-rounded">notes</span></td>
+                            <td>{ article.description }</td>
+                        </tr>
+                    </table>
+                    <!-- <p> Agregado el { article.creation_date }</p>
+                    <p> { article.count_actives || 0 } activos</p> -->
                 </div>
             </div>
             <div>
-                <IconButton icon="edit" on:click={ dispath("edit", article) } />
-                <IconButton icon="delete" on:click={ deleteArticle } />
+                <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", article) } />
+                <IconButton icon="delete" tooltipId="btn-delete__{article.name}" tooltipText="Eliminar" on:click={ deleteArticle } />
             </div>
         </div>
-        <div class="card-content">
+        <!-- <div class="card-content">
             <div class="contenedor">
                 <p>{ article.description }</p>
             </div>
-        </div>
+        </div> -->
         <div class="card-actions">
             <Button label="Ver activos" custom type="outlined" color="" on:click={ dispath("showActivos", article) } />
             <Button label="Nuevo activo" custom on:click={ dispath("newActivo", article) } />
@@ -94,8 +108,9 @@
 <style>
     .article-image {
         width: 100%;
-        height: auto;
-        display: block;
+        height: 100%;
+        object-fit: contain;
+        /* display: block; */
         /* border-radius: 3px; */
     }
 

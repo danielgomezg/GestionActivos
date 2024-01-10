@@ -161,6 +161,7 @@
     <div class="header-content">
         <div class="flex-row gap-8 space-between">
             <CompanySelect 
+                customHeight
                 on:change={ (event) => findArticles(event.detail)  }
             />
             <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(company_id) } />

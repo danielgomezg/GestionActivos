@@ -154,8 +154,8 @@
     <FileInput 
         label="Imagen"
         trailing="image"
-        accept={ ['png', 'jpg'] }
-        helperText="Imagen con formato png o jpg"
+        accept={ ['png', 'jpg', 'jpeg'] }
+        helperText="Imagen con formato png, jpg o jpeg"
         on:change={ (e) => image = e.detail }
     />
 

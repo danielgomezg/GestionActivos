@@ -368,6 +368,7 @@
     <br>
     <div class="grid-col-span-1">
         <Button 
+            custom
             trailing
             disabled={disabledSave}
             label="Guardar"

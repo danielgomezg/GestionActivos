@@ -37,12 +37,13 @@
     setContext('addSucursalCount', (companyId, cont) => {
         let empresa = empresas.find(emp => emp.id == companyId);
         empresa.count_sucursal = empresa.count_sucursal + cont;
-        console.log('empresa found > ', empresa)
         empresas = [...empresas]
+        openModal = false;
     })
 
     setContext('addCompany', (company) => {
         empresas = [company, ...empresas]
+        openModal = false;
     })
 
     setContext('editStore', (store, company) => {

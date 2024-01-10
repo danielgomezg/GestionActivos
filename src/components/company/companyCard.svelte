@@ -53,11 +53,41 @@
         <div class="card-header">
             <div class="card-title">{ company.name }</div>
             <div>
-                <IconButton icon="edit" on:click={ dispath("edit", company) } />
-                <IconButton icon="delete" on:click={ deleteCompany } />
+                <IconButton icon="edit" tooltipId="btn-edit__{company.name}" tooltipText="Editar" on:click={ dispath("edit", company) } />
+                <IconButton icon="delete" tooltipId="btn-delete__{company.name}" tooltipText="Eliminar" on:click={ deleteCompany } />
             </div>
         </div>
         <div class="card-content">
+            <table>
+                <tr>
+                    <td><span class="material-symbols-rounded">badge</span></td>
+                    <td>{ company.rut }</td>
+                </tr>
+                <tr>
+                    <td> <img src={ '/flags/' + normalizeText(company.country) + '.png' } class="flag" alt="flag" /> </td>
+                    <td>{ company.country }</td>
+                </tr>
+                <tr>
+                    <td><span class="material-symbols-rounded">store</span></td>
+                    <td>{ company.count_sucursal || 0 } sucursales</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td><span class="material-symbols-rounded">contact_emergency</span></td>
+                    <td>{ company.contact_name || '' } </td>
+                </tr>
+                <tr>
+                    <td><span class="material-symbols-rounded">contact_mail</span></td>
+                    <td>{ company.contact_email || '' } </td>
+                </tr>
+                <tr>
+                    <td><span class="material-symbols-rounded">contact_phone</span></td>
+                    <td>{ company.contact_phone || '' } </td>
+                </tr>
+            </table>
+
+            <!-- <span class="material-symbols-rounded">badge</span>
             <div>{ company.rut }</div>
             <div>
                 <img src={ '/flags/' + normalizeText(company.country) + '.png' } class="flag" alt="flag" />
@@ -65,9 +95,9 @@
             </div>
             <div class="store-info">
                 <span class="material-symbols-rounded">store</span>
-                <!-- Muestra la cantidad de sucursales -->
+               
                 <div>{ company.count_sucursal || 0 } sucursales</div>
-            </div>
+            </div> -->
         </div>
         <div class="card-actions">
             <Button label="Ver sucursales" custom type="outlined" color="" on:click={ dispath("showStores", company) } />
@@ -77,9 +107,10 @@
 </Card>
 
 <style>
-  .store-info {
+  .card-content {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    gap: 50px;
   }
 
   .flag {

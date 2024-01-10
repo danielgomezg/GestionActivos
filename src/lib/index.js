@@ -7,6 +7,7 @@ export { default as Search } from "./Search.svelte";
 export { default as Select } from "./Select.svelte";
 export { default as Divider } from "./Divider.svelte";
 export { default as Loading } from "./Loading.svelte";
+export { default as Tooltip } from "./Tooltip.svelte";
 export { default as TextArea } from "./TextArea.svelte";
 export { default as Snackbar } from "./Snackbar.svelte";
 export { default as TopAppBar } from "./TopAppBar.svelte";

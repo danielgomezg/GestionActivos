@@ -26,6 +26,7 @@
     "@material/snackbar": "^14.0.0",
     "@material/tab-bar": "^14.0.0",
     "@material/textfield": "^14.0.0",
+    "@material/tooltip": "^14.0.0",
     "@material/top-app-bar": "^14.0.0",
     "@material/web": "^1.0.1",
     "express": "^4.18.2",

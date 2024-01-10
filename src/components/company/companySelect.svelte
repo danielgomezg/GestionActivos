@@ -4,6 +4,7 @@
     import Api from "../../../helpers/ApiCall";
 
     export let selected = ''
+    export let customHeight = false
     let companies = []
 
     //Se obtiene las companias con el id y nombre solamente
@@ -26,7 +27,7 @@
 <Select         
     on:change
     {selected}
-    customHeight
+    {customHeight}
     label="Empresa"
     options={ companies }
 />

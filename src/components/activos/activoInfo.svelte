@@ -77,10 +77,10 @@
                 </div>
                 <div>
                     {#if activo.accounting_document}
-                        <IconButton icon="description" on:click={ () => downloadDocument(activo) } />
+                        <IconButton icon="description" tooltipId="btn-doc__{activo.bar_code}" tooltipText="Documento contable" on:click={ () => downloadDocument(activo) } />
                     {/if}
-                    <IconButton icon="edit" on:click={ () => editActivo(activo, article, company_id) } />
-                    <IconButton icon="delete" on:click={deleteActive(activo)}/>
+                    <IconButton icon="edit" tooltipId="btn-edit__{activo.bar_code}" tooltipText="Editar" on:click={ () => editActivo(activo, article, company_id) } />
+                    <IconButton icon="delete" tooltipId="btn-delete__{activo.bar_code}" tooltipText="Eliminar" on:click={deleteActive(activo)}/>
                 </div>
             </div>
             <div>

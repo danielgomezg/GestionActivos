@@ -244,8 +244,7 @@
         on:setCity={ (event) => sucursal.city = event.detail }
     />
 
-    <br>
-    <div>
+    <div class="grid-col-span-1">
         <Button 
             label="Guardar"
             custom 

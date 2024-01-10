@@ -122,6 +122,7 @@
             sucursal.address = ''
             sucursal.region = ''
             sucursal.commune = ''
+            sucursal.city = ''
             offices = [ 
                 {
                     floor: '', 
@@ -222,10 +223,11 @@
         </div>  
     {/each}
 
-    <div class="company-actions grid-col-span-1">
+    <div class="grid-col-2 new-office-actions">
       
         <Button 
-            label="Agregar oficina"
+            label="Nueva oficina"
+            custom
             on:click={ () => {
                 offices = [ ...offices, { floor: '', description: '', name_in_charge: '' } ]
             }}
@@ -233,6 +235,7 @@
         {#if offices.length != 1}
 
             <Button 
+                custom
                 type="outlined"
                 label="Cancelar"
                 color=""
@@ -244,10 +247,9 @@
         {/if}
     </div>
 
-    <br>
-    <br>
-    <div class="company-actions grid-col-span-1">
+    <div class="grid-col-span-1">
         <Button 
+            custom
             label="Guardar"
             on:click={ saveSucursal }
         />
@@ -257,10 +259,10 @@
 
 <style>
 
-    .company-actions {
+    .new-office-actions {
         display: flex;
+        flex-direction: row-reverse;
         gap: 8px;
-        grid-column: 1;
     }
 
     .container-office {

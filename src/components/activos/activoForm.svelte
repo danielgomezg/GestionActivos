@@ -290,6 +290,7 @@
     />
 
     <Button 
+        custom
         label="Guardar"
         on:click={ accionBtn }
     />

@@ -48,6 +48,9 @@ $primary-color: #39404A;
 @use "@material/chips/styles" as chipset;
 @use "@material/chips";
 
+// Tooltip
+@use "@material/tooltip/styles" as tooltip;
+
 
 // **** Include
 @include card.core-styles;
