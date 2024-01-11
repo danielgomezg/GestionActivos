@@ -1,10 +1,12 @@
 <script>
+    import { Button, Loading } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import { onMount, setContext } from "svelte";
     import StoresInfo from "./storesInfo.svelte";
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
-    import { Button, Loading, Search } from "$lib";
+    import CompanySearch from "./companySearch.svelte";
+    import { companyBackup } from "../../stores/store";
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
@@ -16,6 +18,7 @@
     let previusComponent, previusProps;
     let empresas = []
     let loading = false;
+    let startSearch = false;
 
     setContext('backModalContent', (e) => {
         e.preventDefault();
@@ -140,7 +143,18 @@
 <div style="padding-top: 20px;">
     <div class="header-content">
         <Button label="Nueva empresa" custom on:click={ createCompany } />
-        <Search value="" />
+        <!-- <Search value="" /> -->
+        <CompanySearch 
+            bind:empresas={empresas} 
+            on:startSearch={ () => {
+                startSearch = true;
+                companyBackup.set(empresas)
+            } }
+            on:removeSearch={ () => {
+                startSearch = false;
+                empresas = [...$companyBackup]
+            } }
+        />
     </div>
     <br>
 
@@ -155,6 +169,12 @@
                 on:newStore={ (event) => newStore(event.detail) } 
                 on:showStores={ (event) => showStores(event.detail) } 
             />
+        {:else}
+            {#if startSearch}
+                <p>No se encontraron empresas para tu búsqueda</p>
+            {:else}
+                <p>No hay empresas registradas</p>
+            {/if}
         {/each}
     </div>
 </div>

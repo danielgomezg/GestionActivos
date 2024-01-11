@@ -22,16 +22,12 @@ class Api {
             delete params.headers['Content-Type']
         }
 
-        console.log(params)
-
-
-
         return fetch(url, {
             method,
             ...params
         })
         .then(response => {
-            console.log(response)
+            // console.log(response)
 
             let statusCode = response.status
 

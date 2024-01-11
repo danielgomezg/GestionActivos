@@ -61,7 +61,7 @@
     }
 
     onMount(async () => {
-        await getCompanyNameId(); 
+        // await getCompanyNameId(); 
         window.addEventListener('click', handleAccountOptions)
     })
 

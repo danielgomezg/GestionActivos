@@ -76,6 +76,7 @@ $primary-color: #39404A;
 .mdc-text-field--search {
     @include textfield.outline-shape-radius(50px);
     padding-left: 20px;
+    padding-right: 20px;
     @include textfield.height(40px);
     @include textfield.focused-outline-color(none);
 }

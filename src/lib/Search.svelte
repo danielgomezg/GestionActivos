@@ -1,17 +1,29 @@
 <script>
-    import { onMount } from 'svelte';
     import { MDCTextField } from '@material/textfield';
+    import { onMount, createEventDispatcher } from 'svelte';
     import '@material/web/textfield/outlined-text-field.js';
 
     export let placeholder = ''
     export let required = false
     export let type = 'text'
-    export let value
+    export let value = ''
     export let id = ''
     export let trailing = ''
     export let leading = 'search'
 
     let textfield
+    let dispatch = createEventDispatcher()
+
+    const clickTrailing = () => {
+        console.log('click')
+        dispatch('click', value)
+    }
+
+    const removeText = () => {
+        value = ''
+        console.log('remove text')
+        dispatch('removeSearch')
+    }
 
     onMount(() => {
         new MDCTextField(textfield) 
@@ -27,11 +39,17 @@
         
     })
 
+    $: if (value != '') {
+        trailing = 'close'
+    } else {
+        trailing = ''
+    }
+
 </script>
 <label 
     bind:this={textfield} 
     class="mdc-text-field mdc-text-field--outlined mdc-text-field--search mdc-text-field--no-label"
-    class:mdc-text-field--with-trailing-icon={trailing != ''}
+    
     >
     <span class="mdc-notched-outline">
         <span class="mdc-notched-outline__leading"></span>
@@ -42,10 +60,12 @@
     </span>
 
     {#if leading.trim()}
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <i
         class="material-symbols-rounded mdc-text-field__icon mdc-text-field__icon--leading"
         tabindex="0"
         role="button"
+        on:click={ clickTrailing }
       >
         {leading}
       </i>
@@ -60,11 +80,12 @@
         aria-labelledby="my-label-id" 
         >
         {#if trailing != ''}
-            <span style="margin: auto; padding: 10px">
+            <!-- <span style="margin: auto; padding: 10px" > -->
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <i class="material-symbols-rounded" on:click>{trailing}</i>
-            </span>
+                <i class="material-symbols-rounded mdc-text-field__icon mdc-text-field__icon--trailing" tabindex="0"
+                role="button" on:click={ removeText } >{trailing}</i>
+            <!-- </span> -->
         {/if}
         
 </label>
@@ -73,4 +94,9 @@
     .mdc-text-field__icon--leading {
         margin-left: auto;
     }
+
+    .mdc-text-field__icon--trailing {
+        cursor: pointer;
+    }
+
 </style>
