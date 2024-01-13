@@ -89,7 +89,7 @@
                 </div>
             </div>
             <div>
-                <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", article) } />
+                <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", {article, imageUrl}) } />
                 <IconButton icon="delete" tooltipId="btn-delete__{article.name}" tooltipText="Eliminar" on:click={ deleteArticle } />
             </div>
         </div>
