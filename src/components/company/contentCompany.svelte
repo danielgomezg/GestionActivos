@@ -7,6 +7,8 @@
     import FormCompany from "./formCompany.svelte";
     import CompanySearch from "./companySearch.svelte";
     import { companyBackup } from "../../stores/store";
+    import HistoryCompany from "./companyHistory.svelte";
+    // import History from "../history/history.svelte";
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
@@ -134,6 +136,16 @@
         loading = false;
     }
 
+    const history = (company) => {
+        console.log('HISTORY COMPANY -> ', company)
+        modalTitle = `${company.name} - Historial`;
+        modalContent = HistoryCompany;
+        props = { 
+            company
+        }
+        openModal = true
+    }
+
     onMount(async () => {
         getCompanies() 
     })
@@ -168,6 +180,7 @@
                 on:edit={ (event) => editCompany(event.detail) } 
                 on:newStore={ (event) => newStore(event.detail) } 
                 on:showStores={ (event) => showStores(event.detail) } 
+                on:history={ (event) => history(event.detail) }
             />
         {:else}
             {#if startSearch}
