@@ -6,6 +6,7 @@
 
     export let article = {};
     export let companyId = 0;
+    export let imageUrl = '';
     export let isEdit = false;
     
     let accionBtn;
@@ -156,10 +157,20 @@
         trailing="image"
         accept={ ['png', 'jpg', 'jpeg'] }
         helperText="Imagen con formato png, jpg o jpeg"
-        on:change={ (e) => image = e.detail }
+        on:change={ (e) => {
+            image = e.detail
+            imageUrl = URL.createObjectURL(image)
+        }}
     />
 
-    <br>
+    <div class="content-image">
+        {#if article.photo == ''}
+            <img src="https://via.placeholder.com/150" class="article-image" alt={article.name} />
+        {:else}
+            <img src={ imageUrl } class="article-image" alt={article.name} />
+        {/if}
+    </div>
+
     <Button 
         label="Guardar"
         custom
@@ -167,3 +178,20 @@
     />
 
 </div>
+
+<style>
+    .article-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        /* display: block; */
+        /* border-radius: 3px; */
+    }
+
+    .content-image {
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        /* border: 1px solid #ccc; */
+    }
+</style>

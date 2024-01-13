@@ -53,39 +53,45 @@
         <div class="card-header">
             <div class="card-title">{ company.name }</div>
             <div>
+                <IconButton icon="history" tooltipId="btn-history__{company.name}" tooltipText="Historial" on:click={ dispath("history", company) } />
                 <IconButton icon="edit" tooltipId="btn-edit__{company.name}" tooltipText="Editar" on:click={ dispath("edit", company) } />
                 <IconButton icon="delete" tooltipId="btn-delete__{company.name}" tooltipText="Eliminar" on:click={ deleteCompany } />
             </div>
         </div>
         <div class="card-content">
-            <table>
-                <tr>
-                    <td><span class="material-symbols-rounded">badge</span></td>
-                    <td>{ company.rut }</td>
-                </tr>
-                <tr>
-                    <td> <img src={ '/flags/' + normalizeText(company.country) + '.png' } class="flag" alt="flag" /> </td>
-                    <td>{ company.country }</td>
-                </tr>
-                <tr>
-                    <td><span class="material-symbols-rounded">store</span></td>
-                    <td>{ company.count_sucursal || 0 } sucursales</td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <td><span class="material-symbols-rounded">contact_emergency</span></td>
-                    <td>{ company.contact_name || '' } </td>
-                </tr>
-                <tr>
-                    <td><span class="material-symbols-rounded">contact_mail</span></td>
-                    <td>{ company.contact_email || '' } </td>
-                </tr>
-                <tr>
-                    <td><span class="material-symbols-rounded">contact_phone</span></td>
-                    <td>{ company.contact_phone || '' } </td>
-                </tr>
-            </table>
+            <div class="responsive-table">
+                <table>
+                    <tr>
+                        <td><span class="material-symbols-rounded">badge</span></td>
+                        <td>{ company.rut }</td>
+                    </tr>
+                    <tr>
+                        <td> <img src={ '/flags/' + normalizeText(company.country) + '.png' } class="flag" alt="flag" /> </td>
+                        <td>{ company.country }</td>
+                    </tr>
+                    <tr>
+                        <td><span class="material-symbols-rounded">store</span></td>
+                        <td>{ company.count_sucursal || 0 } sucursales</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="responsive-table">
+                <table>
+                    <tr>
+                        <td><span class="material-symbols-rounded">contact_emergency</span></td>
+                        <td class="clipped-text">{ company.contact_name || '' } </td>
+                    </tr>
+                    <tr>
+                        <td><span class="material-symbols-rounded">contact_mail</span></td>
+                        <td class="clipped-text">{ company.contact_email || '' } </td>
+                    </tr>
+                    <tr>
+                        <td><span class="material-symbols-rounded">contact_phone</span></td>
+                        <td class="clipped-text">{ company.contact_phone || '' } </td>
+                    </tr>
+                </table>
+            </div>
+            
 
             <!-- <span class="material-symbols-rounded">badge</span>
             <div>{ company.rut }</div>
@@ -107,14 +113,21 @@
 </Card>
 
 <style>
-  .card-content {
-    display: flex;
-    align-items: flex-start;
-    gap: 50px;
-  }
+    .card-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 50px;
+    }
 
-  .flag {
-    width: 25px;
-    border-radius: 3px;
-  }
+    .flag {
+        width: 25px;
+        border-radius: 3px;
+    }
+
+    .clipped-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
 </style>

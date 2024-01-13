@@ -74,10 +74,11 @@
         // openModal = true;
     }
 
-    const editArticle = (article) => {
+    const editArticle = ({article, imageUrl}) => {
+        console.log(article)
         modalTitle = `${article.name} - editando`
         modalContent = FormArticle;
-        props = { article, isEdit: true }
+        props = { article, isEdit: true, imageUrl }
         openModal = true;
         backButton = false;
     }
