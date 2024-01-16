@@ -1,5 +1,4 @@
 // **** Variables
-$primary-color: #39404A;
 
 // **** USE
 
@@ -27,6 +26,7 @@ $primary-color: #39404A;
 
 // Select
 @use "@material/select/styles" as Select;
+@use "@material/select";
 
 // Tabs
 @use "@material/tab-bar/mdc-tab-bar";
@@ -67,9 +67,9 @@ $primary-color: #39404A;
 
 // Other styles
 .mdc-text-field--custom {
-    @include textfield.focused-outline-color($primary-color);
+    // @include textfield.focused-outline-color($primary-color);
     // @include textfield.outline-color(#39404A);
-    @include textfield.label-color($primary-color);
+    @include textfield.label-color(black);
     width: 100%;
 }
 
@@ -79,6 +79,10 @@ $primary-color: #39404A;
     padding-right: 20px;
     @include textfield.height(40px);
     @include textfield.focused-outline-color(none);
+}
+
+.mdc-select {
+    @include select.label-color(black);
 }
 
 .mdc-snackbar-custom { 
@@ -92,10 +96,19 @@ $primary-color: #39404A;
     @include chips.selected-container-color(red);
 }
 
+$primay_button-colors: (
+    "default": "#107acc",
+);
+
 .mdc-button-custom {
     @include button.height(40px);
     @include button.shape-radius(12px);
     text-transform: none;
+    // @include button.container-fill-color($primay_button-colors);
+}
+
+.mdc-button-report {
+    @include button.container-fill-color(#142157);
 }
 
 // .mdc-button-custom {
@@ -104,4 +117,8 @@ $primary-color: #39404A;
 
 .theme-dark {
     --mdc-theme-primary: #39404A;
+}
+
+.theme-blue {
+    --mdc-theme-primary: #107acc;
 }

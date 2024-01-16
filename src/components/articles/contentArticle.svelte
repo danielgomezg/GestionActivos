@@ -1,6 +1,6 @@
 <script>
-    import { setContext } from "svelte";
     import Api from "../../../helpers/ApiCall";
+    import { setContext, onMount } from "svelte";
     import { Button, Loading, Search } from "$lib";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
@@ -10,14 +10,15 @@
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
     let props;
-    let company_id = 0;
     let modalContent;
+    let company_id = 0;
     let modalTitle = '';
     let loading = false;
     let openModal = false;
     let backButton = false;
+    let hideSelectCompany = false;
     let newArticleDisabled = true;
-    let message = "Selecciona una empresa para obtener sus articulos."
+    let message = ""
 
     let previusComponent, previusProps, previusModelTitle = '';
 
@@ -156,16 +157,40 @@
 
     }
 
+    const reportArticle = () => {
+    
+    }
+
+    onMount(() => {
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        console.log(user)
+        if (user.profile_id == 2) {
+            console.log('1')
+            findArticles(user.company_id);
+            hideSelectCompany = true;
+            message = "Buscando..."
+        }
+        else {
+            console.log('2')
+            hideSelectCompany = false;
+            message = "Selecciona una empresa para obtener sus articulos."
+        }
+    })
+
 </script>
 
 <div style="padding-top: 20px;">
     <div class="header-content">
         <div class="flex-row gap-8 space-between">
+            {#if !hideSelectCompany}
             <CompanySelect 
                 customHeight
                 on:change={ (event) => findArticles(event.detail)  }
             />
+            {/if}
             <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(company_id) } />
+            <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } />
+
         </div>
         
         <Search value="" />
