@@ -265,8 +265,8 @@
             <tr>
                 <td style="width: 65%;"><li>{ formatOfficeInfo(office) }</li></td>
                 <td style="width: 65%;">
-                    <IconButton icon="edit" on:click={ () => toggleEdit(office, index) } />
-                    <IconButton icon="delete" on:click={ deleteOffice(office) } />
+                    <IconButton icon="edit" tooltipId="btn-edit__{index}" tooltipText="Editar" on:click={ () => toggleEdit(office, index) } />
+                    <IconButton icon="delete" tooltipId="btn-delete__{index}" tooltipText="Eliminar" on:click={ deleteOffice(office) } />
                 </td>    
             </tr>
             {#if editing == index}

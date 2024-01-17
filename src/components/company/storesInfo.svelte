@@ -67,8 +67,8 @@
                     { ` (${store.count_offices} oficinas)` }
                 </div>
                 <div>
-                    <IconButton icon="edit" on:click={ editStore(store, company) } />
-                    <IconButton icon="delete" on:click={ deleteStore(store) } />
+                    <IconButton icon="edit" tooltipId="btn-edit__{store.number}" tooltipText="Editar" on:click={ editStore(store, company) } />
+                    <IconButton icon="delete" tooltipId="btn-delete__{store.number}" tooltipText="Eliminar" on:click={ deleteStore(store) } />
                 </div>
 
             </div>

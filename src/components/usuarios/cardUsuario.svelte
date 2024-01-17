@@ -51,8 +51,8 @@
                 <div>{ usuario.secondName + ' ' + usuario.secondLastName }</div>
             </div>
             <div>
-                <IconButton icon="edit" on:click={ dispath("edit", usuario) } />
-                <IconButton icon="delete"  on:click={ deleteUsuario }/>
+                <IconButton icon="edit" tooltipId="btn-edit__{usuario.rut}" tooltipText="Editar" on:click={ dispath("edit", usuario) } />
+                <IconButton icon="delete" tooltipId="btn-delete__{usuario.rut}" tooltipText="Eliminar" on:click={ deleteUsuario }/>
             </div>
         </div>
         <Divider />
