@@ -17,11 +17,12 @@
     const generateInfo = (history) => {
 
         let text = ''
+        console.log('HISTORY --> ', history)
 
         switch (history.description) {
             case 'create-sucursal':
                 // let user = getUserName(history.current_session_user_id)
-                text = `Se crea sucursal ${history.sucursal_id.number}`
+                text = `Se crea sucursal ${history.sucursal.number}`
                 break;
             case 'update':
                 text = `Se ha actualizado la empresa ${history.company_name}`
@@ -60,11 +61,11 @@
                 <table>
                     <tr class="centered-row">
                         <td><span class="material-symbols-rounded">location_on</span></td>
-                        <td>{ formatLocation(history.sucursal_id) }</td>
+                        <td>{ formatLocation(history.sucursal) }</td>
                     </tr>
                     <tr class="centered-row">
                         <td><span class="material-symbols-rounded">person_edit</span></td>
-                        <td>{ getUserName(history.current_session_user_id) }</td>
+                        <td>{ getUserName(history.current_session_user) }</td>
                     </tr>
                 </table>
             </div>
