@@ -13,6 +13,7 @@
     export let disabled = false
     export let loading = false
     export let custom = false
+    export let report = false
 
     let button 
     let style = `background-color: ${color}`
@@ -27,16 +28,16 @@
 
 <div bind:this={button} class="mdc-touch-target-wrapper">
     <button 
-        class="mdc-button"
+        class="mdc-button mdc-button-custom"
         class:mdc-button--unelevated={type === 'unelevated'}
         class:mdc-button--raised={type === 'raised'}
         class:mdc-button--icon-leading={leading}
         class:mdc-button--icon-trailing={trailing}
         class:mdc-button--outlined={type === 'outlined'}
         class:disabled={disabled}
-        class:mdc-button-custom={custom}
+        class:mdc-button-report={report}
         on:click
-        {style}
+      
         {disabled}
     >
     

@@ -99,7 +99,7 @@
             </div>
         </div> -->
         <div class="card-actions">
-            <Button label="Ver activos" custom type="outlined" color="" on:click={ dispath("showActivos", article) } />
+            <Button label="Ver activos" type="outlined" color="" on:click={ dispath("showActivos", article) } />
             <Button label="Nuevo activo" custom on:click={ dispath("newActivo", article) } />
         </div>
     </div>

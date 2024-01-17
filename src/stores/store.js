@@ -46,7 +46,7 @@ export const menu = writable([
         ]
     },
     {
-        id: 1,
+        id: 3,
         name: 'Articulos',
         path: '/articulos',
         profiles: [
@@ -56,7 +56,7 @@ export const menu = writable([
         ]
     },
     {
-        id: 1,
+        id: 4,
         name: 'Usuarios',
         path: '/usuarios',
         profiles: [
@@ -64,13 +64,21 @@ export const menu = writable([
         ]
     },
     {
-        id: 1,
+        id: 5,
         name: 'Perfiles',
         path: '/perfiles',
         profiles: [
             1
         ]
     },
+    {
+        id: 6,
+        name: 'Reportes',
+        path: '/reports',
+        profiles: [
+            1
+        ]
+    }
 ])
   
 export const estadosActivo = writable([

@@ -21,8 +21,8 @@
             <div>{ sucursal.description }</div>
         </div>
         <div class="card-actions">
-            <Button label="ver oficinas" type="outlined" color="" on:click={ dispath("showStores", sucursal) } />
-            <Button label="agregar oficina" on:click={ dispath("newStore", sucursal) } />
+            <Button label="Ver oficinas" type="outlined" color="" custom on:click={ dispath("showStores", sucursal) } />
+            <Button label="Nueva oficina" custom on:click={ dispath("newStore", sucursal) } />
         </div>
     </div>
 </Card>
