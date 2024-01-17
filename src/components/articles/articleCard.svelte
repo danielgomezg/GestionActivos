@@ -1,10 +1,12 @@
 <script>
-    import { createEventDispatcher, onMount, getContext } from "svelte";
-    import { Card, IconButton, Button } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
+    import { Card, IconButton, Button } from "$lib";
+    import ReportActive from "../reports/report.svelte";
+    import { createEventDispatcher, onMount, getContext } from "svelte";
 
     export let article = {}
+
     let imageUrl;
     let dispath = createEventDispatcher();
     let removeArticle = getContext('removeArticle');
@@ -89,6 +91,11 @@
                 </div>
             </div>
             <div>
+                <ReportActive 
+                    type="btn-icon"
+                    id={ article.id } 
+                    label="Reporte activos"
+                />
                 <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", {article, imageUrl}) } />
                 <IconButton icon="delete" tooltipId="btn-delete__{article.name}" tooltipText="Eliminar" on:click={ deleteArticle } />
             </div>
@@ -99,6 +106,11 @@
             </div>
         </div> -->
         <div class="card-actions">
+            <!-- <ReportActive 
+                label=""
+                id={ article.id } 
+                disabled={ false }
+            /> -->
             <Button label="Ver activos" type="outlined" color="" on:click={ dispath("showActivos", article) } />
             <Button label="Nuevo activo" custom on:click={ dispath("newActivo", article) } />
         </div>

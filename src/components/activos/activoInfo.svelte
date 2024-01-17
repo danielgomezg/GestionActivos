@@ -72,7 +72,10 @@
         <div>
             <div class="info__title">
                 <div>    
-                    <strong>{ activo.bar_code }</strong>
+                    <div class="flex-row align-center gap-8">
+                        <span class="material-symbols-rounded">barcode</span>
+                        <strong>{ activo.bar_code }</strong>
+                    </div>
                     <h5>{ `Adquirido el ${activo.acquisition_date} - Agregado el ${activo.creation_date}` }  </h5>
                 </div>
                 <div>

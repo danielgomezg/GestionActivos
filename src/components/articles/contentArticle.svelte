@@ -4,21 +4,22 @@
     import { Button, Loading, Search } from "$lib";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
+    import ReportArticle from "../reports/report.svelte";
     import ActivoForm from "../activos/activoForm.svelte";
     import ActivoInfo from "../activos/activoInfo.svelte";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
     let props;
+    let message = "";
     let modalContent;
-    let company_id = 0;
+    let companyId = 0;
     let modalTitle = '';
     let loading = false;
     let openModal = false;
     let backButton = false;
     let hideSelectCompany = false;
     let newArticleDisabled = true;
-    let message = ""
 
     let previusComponent, previusProps, previusModelTitle = '';
 
@@ -138,12 +139,12 @@
         backButton = false;
     }
 
-    const findArticles = async (companyId) => {
-        console.log(companyId)
+    const findArticles = async (company_id) => {
+        console.log(company_id)
         newArticleDisabled = true;
-        company_id = companyId;
+        companyId = company_id;
 
-        let response = (await Api.call(`http://127.0.0.1:9000/articlesPorCompany/${companyId}`, 'GET'));
+        let response = (await Api.call(`http://127.0.0.1:9000/articlesPorCompany/${company_id}`, 'GET'));
         console.log(response)
         if (response.success && response.statusCode == "200") {
             articles = response.data.result;
@@ -155,10 +156,6 @@
 
         newArticleDisabled = false;
 
-    }
-
-    const reportArticle = () => {
-    
     }
 
     onMount(() => {
@@ -188,9 +185,13 @@
                 on:change={ (event) => findArticles(event.detail)  }
             />
             {/if}
-            <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(company_id) } />
-            <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } />
-
+            <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(companyId) } />
+            <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
+            <ReportArticle 
+                id={ companyId } 
+                label="Nuevo reporte"
+                disabled={ newArticleDisabled }
+            />
         </div>
         
         <Search value="" />
@@ -209,8 +210,8 @@
             <CardArticle 
                 {article} 
                 on:edit={ (event) => editArticle(event.detail) } 
-                on:newActivo={ (event) => newActivo(event.detail, company_id) } 
-                on:showActivos={ (event) => showActivos(event.detail, company_id) } 
+                on:newActivo={ (event) => newActivo(event.detail, companyId) } 
+                on:showActivos={ (event) => showActivos(event.detail, companyId) } 
             />
         {:else}
             <p>{ message }</p>
