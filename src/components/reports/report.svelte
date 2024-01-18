@@ -12,7 +12,7 @@
     const reportArticle = async () => {
         
         // let response = (await Api.call(`http://127.0.0.1:9000/generation_catalogo/${companyId}`, 'GET'));
-        fetch(`http://127.0.0.1:9000/generation_catalogo/${id}`, { method: 'GET', headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }})
+        fetch(`http://127.0.0.1:9000/report/article/${id}`, { method: 'GET', headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }})
             .then(response => response.blob())
             .then(data => {
                 downloadUrl = URL.createObjectURL(data);
@@ -28,6 +28,7 @@
             .catch(error => {
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al descargar reporte."
                     return snk
                 })

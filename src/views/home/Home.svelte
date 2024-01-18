@@ -11,6 +11,7 @@
 
     import NotFound from "../../components/notFound/notFound.svelte";
     import UserAccount from "../../components/userAccount/userAccount.svelte";
+    import ContentActivo from "../../components/activos/contentActivo.svelte";
     import ContentCompany from "../../components/company/contentCompany.svelte";
     import ContentProfile from "../../components/profile/contentProfile.svelte";
     import ContentArticle from "../../components/articles/contentArticle.svelte";
@@ -94,6 +95,7 @@
                 {/if} 
                                 
                 <Route path="/articulos" component={ContentArticle} />
+                <Route path="/activos" component={ContentActivo} />
                 <Route path="/*" component={NotFound} />
             </Router>
         </div>

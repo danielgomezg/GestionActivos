@@ -15,6 +15,8 @@
 
   $: if ($snackbar.open && mdcSnackbar != undefined) mdcSnackbar.open()
   $: if ($snackbar.type == "confirm" && mdcSnackbar != undefined) mdcSnackbar.timeoutMs = -1;
+  $: if ($snackbar.type == "confirm" && mdcSnackbar != undefined && !$snackbar.open) mdcSnackbar.close();
+  $: if ($snackbar.type == "dismiss" && mdcSnackbar != undefined) mdcSnackbar.timeoutMs = 4000;
 
   // $: if ($snackbar.context != '') confirmAction = getContext($snackbar.context);
 
@@ -35,9 +37,13 @@
           type="button" 
           class="mdc-button mdc-action" 
           on:click={ () => {
-            $snackbar.open = false;
-            confirmAction($snackbar.confirm)
-          } }>
+            snackbar.update(snk => {
+              return {
+                  ...snk,
+                  click: true
+              }
+            })
+          } } >
           <div class="mdc-button__ripple"></div>
           <span class="mdc-button__label">confirmar</span>
         </button>

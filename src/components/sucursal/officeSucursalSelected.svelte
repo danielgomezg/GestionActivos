@@ -2,20 +2,29 @@
     import { Select } from "$lib";
     import { onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
-
+  
     export let companyId = 0;
     export let selectedOffice = '';
     export let selectedSucursal = '';  
     export let isEdit = false;
+    export let show = ['sucursal', 'office'];
+    export let custom = false
 
     let sucursales = [];
     let offices = [];
 
     const getSucursales = async () => {
+        if (companyId == 0) {
+            sucursales = [];
+            return;
+        }; 
         let response = await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${companyId}`, 'GET');
         console.log('RESPONSE GET SUCURSALES --> ', response);
         if (response.success && response.statusCode === '200') {
             sucursales = response.data.result.map(r => ({ label: `${r.number} - ${r.description}`, value: r.id }));
+        }
+        else {
+            sucursales = [];
         }
     };
 
@@ -58,10 +67,38 @@
         getOfficesBySucursal(selectedSucursal);
     }
 
+    $: if (companyId) getSucursales();
+
     $:console.log(sucursales)
 </script>
 
-{#key sucursales}
+{#if show.includes('sucursal')}
+    {#key sucursales}
+    <Select
+        label="Sucursal"
+        customHeight={custom}
+        selected={selectedSucursal}
+        options={sucursales}
+        on:change={(event) => {
+            selectedSucursal = event.detail;
+            selectedOffice = ''; // Resetear el valor de la oficina al cambiar la sucursal
+            //getOfficesBySucursal(selectedSucursal);
+        }}
+    />
+    {/key}
+{/if}
+
+{#if show.includes('office')}
+    <Select
+        label="Oficina"
+        selected={selectedOffice}
+        options={offices}
+        on:change={(event) => selectedOffice = event.detail}
+    />
+{/if}
+
+<!-- {#key sucursales}
+    {#key offices}
     <Select
         label="Sucursal"
         selected={selectedSucursal}
@@ -72,12 +109,14 @@
             //getOfficesBySucursal(selectedSucursal);
         }}
     />
-{/key}
-{#key offices}
+    {/key}
+{/key} -->
+
+<!-- {#key offices}
     <Select
         label="Oficina"
         selected={selectedOffice}
         options={offices}
         on:change={(event) => selectedOffice = event.detail}
     />
-{/key}
+{/key} -->

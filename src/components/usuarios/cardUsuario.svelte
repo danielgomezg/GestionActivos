@@ -28,12 +28,14 @@
 
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Usuario eliminado con éxito."
                 return snk
             })
         } else{
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al eliminar usuario."
                 return snk
             })

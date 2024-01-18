@@ -140,7 +140,6 @@
     }
 
     const findArticles = async (company_id) => {
-        console.log(company_id)
         newArticleDisabled = true;
         companyId = company_id;
 
@@ -162,13 +161,11 @@
         let user = JSON.parse(sessionStorage.getItem('user'));
         console.log(user)
         if (user.profile_id == 2) {
-            console.log('1')
             findArticles(user.company_id);
             hideSelectCompany = true;
             message = "Buscando..."
         }
         else {
-            console.log('2')
             hideSelectCompany = false;
             message = "Selecciona una empresa para obtener sus articulos."
         }
@@ -189,7 +186,7 @@
             <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
             <ReportArticle 
                 id={ companyId } 
-                label="Nuevo reporte"
+                label="Exportar a PDF"
                 disabled={ newArticleDisabled }
             />
         </div>

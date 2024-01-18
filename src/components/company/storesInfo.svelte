@@ -36,6 +36,7 @@
 
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Sucursal eliminada con éxito."
                 return snk
             })
@@ -43,6 +44,7 @@
         } else {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al eliminar sucursal."
                 return snk
             })

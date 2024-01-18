@@ -67,6 +67,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -80,6 +81,7 @@
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Empresa editada con éxito."
                 return snk
             })
@@ -91,6 +93,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al editar empresa."
                 return snk
             })
@@ -103,6 +106,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -125,6 +129,7 @@
 
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Empresa creada con éxito."
                     return snk
                 })
@@ -135,6 +140,7 @@
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al crear empresa."
                     return snk
                 })
@@ -143,6 +149,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al crear empresa."
                 return snk
             })

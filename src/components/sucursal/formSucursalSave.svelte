@@ -53,6 +53,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -75,6 +76,7 @@
                         // Error al crear algunas oficinas
                         snackbar.update(snk => {
                             snk.open = true;
+                            snk.type = 'dismiss'
                             snk.message = "Error al crear algunas oficinas, pueden volver a intentar en edicion sucursal. 1"
                             return snk
                         })
@@ -83,6 +85,7 @@
                         // Error al crear las oficinas
                         snackbar.update(snk => {
                             snk.open = true;
+                            snk.type = 'dismiss'
                             snk.message = "Error al crear las oficinas, pueden volver a intentar en edicion sucursal. 2"
                             return snk
                         })
@@ -92,6 +95,7 @@
                     // TODO GUARDADO CORRECTAMENTE.
                     snackbar.update(snk => {
                         snk.open = true;
+                        snk.type = 'dismiss'
                         snk.message = "Sucursal creada con éxito."
                         return snk
                     })
@@ -101,6 +105,7 @@
             else {
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al crear sucursal."
                     return snk
                 })
@@ -110,6 +115,7 @@
         else {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al crear sucursal."
                 return snk
             })
@@ -217,6 +223,7 @@
             <TextField 
                 version=2
                 type="text"
+                required
                 label="Responsable" 
                 bind:value={office.name_in_charge}
             />

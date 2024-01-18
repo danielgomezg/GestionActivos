@@ -47,6 +47,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -64,6 +65,7 @@
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Articulo agregado con éxito."
                 return snk
             })
@@ -73,6 +75,7 @@
         else {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al agregar el articulo."
                 return snk
             })
@@ -87,6 +90,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -104,6 +108,7 @@
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Articulo editado con éxito."
                 return snk
             })
@@ -115,6 +120,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al editar articulo."
                 return snk
             })

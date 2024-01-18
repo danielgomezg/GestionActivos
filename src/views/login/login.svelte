@@ -61,6 +61,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -75,6 +76,7 @@
         if(response == undefined){
             snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al iniciar sesión."
                     return snk
             })
@@ -117,6 +119,7 @@
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al iniciar sesión."
                     return snk
                 })
@@ -125,6 +128,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al iniciar sesión."
                 return snk
             })

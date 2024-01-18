@@ -12,18 +12,35 @@
         return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
-    // Funcion que obtenga la confirmacion del click desde snackbar.svelte
-    setContext('confirmAction', (action) => {
-        console.log('ACTION -> ', action)
-        // if (action.id == 'deleteCompany') deleteCompany()
-    })
+    const aletDelete = () => {
+        snackbar.update(snk => {
+            snk.id = 'deleteCompany'
+            snk.open = true;
+            snk.type = 'confirm';
+            snk.click = false;
+            snk.message = '¿Eliminar la empresa ' + company.name + '?'
+            return snk
+        })
+    }
 
+    const confirmSnackbar = () => {
+        if ($snackbar.id != 'deleteCompany') return;
+        
+        snackbar.update(snk => {
+            return {
+                ...snk,
+                open: false,
+                click: false
+            }
+        })
+
+        deleteCompany()
+    }
 
     const deleteCompany = async () => {
 
-        let confirmacion = confirm('Esta seguro que desea eliminar la empresa ', company.name)
-
-        if (!confirmacion) return;
+        // let confirmacion = confirm('Esta seguro que desea eliminar la empresa ', company.name)
+        // if (!confirmacion) return;
         
         let response = (await Api.call(`http://127.0.0.1:9000/company/${company.id}`, 'DELETE'));
         console.log('RESPONSE DELETE COMPANY -> ', response)
@@ -33,6 +50,7 @@
 
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Empresa eliminada con éxito."
                 return snk
             })
@@ -40,11 +58,14 @@
         } else {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al eliminar empresa."
                 return snk
             })
         }
     }
+
+    $: if ($snackbar.click) confirmSnackbar()
 
 </script>
 
@@ -55,7 +76,7 @@
             <div>
                 <IconButton icon="history" tooltipId="btn-history__{company.name}" tooltipText="Historial" on:click={ dispath("history", company) } />
                 <IconButton icon="edit" tooltipId="btn-edit__{company.name}" tooltipText="Editar" on:click={ dispath("edit", company) } />
-                <IconButton icon="delete" tooltipId="btn-delete__{company.name}" tooltipText="Eliminar" on:click={ deleteCompany } />
+                <IconButton icon="delete" tooltipId="btn-delete__{company.name}" tooltipText="Eliminar" on:click={ aletDelete } />
             </div>
         </div>
         <div class="card-content">

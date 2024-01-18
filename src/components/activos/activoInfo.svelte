@@ -35,6 +35,7 @@
 
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Activo eliminado con éxito."
                 return snk
             })
@@ -42,6 +43,7 @@
         } else {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al eliminar activo."
                 return snk
             })

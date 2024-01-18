@@ -11,6 +11,7 @@
     }
 
     const formatLocation = (location) => {
+        if (location == null) return ''
         return `${location.address}. ${location.commune}, ${location.region}`
     }
 
@@ -24,11 +25,14 @@
                 // let user = getUserName(history.current_session_user_id)
                 text = `Se crea sucursal ${history.sucursal.number}`
                 break;
-            case 'update':
-                text = `Se ha actualizado la empresa ${history.company_name}`
+            case 'update-company':
+                text = `Se ha actualizado la empresa ${history.company.name}`
                 break;
-            case 'delete':
-                text = `Se ha eliminado la empresa ${history.company_name}`
+            case 'delete-company':
+                text = `Se ha eliminado la empresa ${history.company.name}`
+                break;
+            case 'create-company':
+                text = `Se ha creado la empresa ${history.company.name}`
                 break;
             default:
                 break;
@@ -59,10 +63,12 @@
                 <p class="title-history"><strong>{ generateInfo(history) }</strong></p> 
                 <!-- <p>{ getUserName(history.current_session_user_id) }</p> -->
                 <table>
+                    {#if history.sucursal}
                     <tr class="centered-row">
                         <td><span class="material-symbols-rounded">location_on</span></td>
                         <td>{ formatLocation(history.sucursal) }</td>
                     </tr>
+                    {/if}
                     <tr class="centered-row">
                         <td><span class="material-symbols-rounded">person_edit</span></td>
                         <td>{ getUserName(history.current_session_user) }</td>

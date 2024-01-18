@@ -2,15 +2,14 @@ import { writable } from 'svelte/store'
 
 export const companyBackup = writable([])
 export const snackbar = writable({
+    id: '',
     open: false,
     message: '',
-    type: 'dismiss',
-    confirm: {
-        id: '',
-        action: false
-    },
-    context: ''
+    click: false,
+    type: 'dismiss'
 })
+
+
 
 export const user = writable({}) //createUser()
 export const session = writable({
@@ -49,6 +48,16 @@ export const menu = writable([
         id: 3,
         name: 'Articulos',
         path: '/articulos',
+        profiles: [
+            1,
+            2,
+            3
+        ]
+    },
+    {
+        id: 7,
+        name: 'Activos',
+        path: '/activos',
         profiles: [
             1,
             2,

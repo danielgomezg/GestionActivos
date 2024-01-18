@@ -61,6 +61,7 @@
             
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Sucursal editada con exito"
                 return snk
             })      
@@ -69,6 +70,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al editar sucursal"
                 return snk
             })
@@ -88,6 +90,7 @@
         let  isValid = validFormOficce()
         if (!isValid){
             snackbar.update(snk => {
+                snk.type = 'dismiss'
                 snk.open = true;
                 snk.message = message
                 return snk
@@ -104,6 +107,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Oficina creada con éxito."
                 return snk
             }) 
@@ -115,6 +119,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al crear oficina."
                 return snk
             })
@@ -151,6 +156,7 @@
 
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Oficina eliminada con éxito."
                 return snk
             })
@@ -158,6 +164,7 @@
         } else {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al eliminar Oficina."
                 return snk
             })
@@ -173,6 +180,7 @@
             
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Oficina editada con exito"
                 return snk
             })      
@@ -190,6 +198,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al editar oficina"
                 return snk
             })

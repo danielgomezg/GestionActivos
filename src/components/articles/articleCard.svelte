@@ -3,13 +3,19 @@
     import { snackbar } from "../../stores/store";
     import { Card, IconButton, Button } from "$lib";
     import ReportActive from "../reports/report.svelte";
-    import { createEventDispatcher, onMount, getContext } from "svelte";
+    import { createEventDispatcher, onMount, getContext, setContext } from "svelte";
 
     export let article = {}
 
     let imageUrl;
     let dispath = createEventDispatcher();
     let removeArticle = getContext('removeArticle');
+
+    // Funcion que obtenga la confirmacion del click desde snackbar.svelte
+    setContext('confirmAction', (action) => {
+        console.log('ACTION -> ', action)
+        // if (action.id == 'deleteCompany') deleteCompany()
+    })
 
     const getImage = async (name) => {
         if (name == '') return null;
@@ -26,9 +32,34 @@
 
     }
 
+    const alertDelete = () => {
+        snackbar.update(snk => {
+            snk.id = 'deleteArticle'
+            snk.open = true;
+            snk.type = 'confirm';
+            snk.click = false;
+            snk.message = '¿Eliminar el artículo ' + article.name + '?'
+            return snk
+        })
+    }	
+
+    const confirmSnackbar = () => {
+        if ($snackbar.id != 'deleteArticle') return;
+        
+        snackbar.update(snk => {
+            return {
+                ...snk,
+                open: false,
+                click: false
+            }
+        })
+
+        deleteArticle()
+    }
+
     const deleteArticle = async () => {
-        let confirmacion = confirm('Esta seguro que desea eliminar el articulo ', article.name)
-        if(!confirmacion) return;
+        // let confirmacion = confirm('Esta seguro que desea eliminar el articulo ', article.name)
+        // if(!confirmacion) return;
 
         let response = (await Api.call(`http://127.0.0.1:9000/article/${article.id}`, 'DELETE'));
         console.log('RESPONSE DELETE ARTICLE -> ', response)
@@ -37,14 +68,16 @@
 
             snackbar.update(snk => {
                 snk.open = true;
-                snk.message = "Articulo eliminada con éxito."
+                snk.type = 'dismiss'
+                snk.message = "Artículo eliminado."
                 return snk
             })
 
         } else {
             snackbar.update(snk => {
                 snk.open = true;
-                snk.message = "Error al eliminar articulo."
+                snk.type = 'dismiss'
+                snk.message = "Error al eliminar."
                 return snk
             })
         }
@@ -55,6 +88,7 @@
     })
 
     $: getImage(article.photo)
+    $: if ($snackbar.click) confirmSnackbar()
 
 
 </script>
@@ -98,7 +132,7 @@
                 />
                 <IconButton icon="history" tooltipId="btn-history__{article.name}" tooltipText="Historial" on:click={ dispath("history", article) } />
                 <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", {article, imageUrl}) } />
-                <IconButton icon="delete" tooltipId="btn-delete__{article.name}" tooltipText="Eliminar" on:click={ deleteArticle } />
+                <IconButton icon="delete" tooltipId="btn-delete__{article.name}" tooltipText="Eliminar" on:click={ alertDelete } />
             </div>
         </div>
         <!-- <div class="card-content">
