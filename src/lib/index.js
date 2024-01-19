@@ -2,6 +2,7 @@ export { default as Tab } from "./Tabs.svelte";
 export { default as Menu } from "./Menu.svelte";
 export { default as Card } from "./Card.svelte";
 export { default as Chip } from "./chip.svelte";
+export { default as Table } from "./Table.svelte";
 export { default as Button } from "./Button.svelte";
 export { default as Search } from "./Search.svelte";
 export { default as Select } from "./Select.svelte";

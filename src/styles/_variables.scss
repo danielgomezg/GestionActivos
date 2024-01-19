@@ -92,6 +92,10 @@ h4, h5 {
 .flex-row {
     display: flex;
     flex-direction: row;
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        flex-direction: column;
+    }
 }
 
 .space-between {
@@ -161,5 +165,21 @@ p {
         flex-direction: column;
         gap: 8px;
         align-items: normal;
+    }
+}
+
+.account-username {
+    text-align: right;
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        display: none;
+    }
+}
+
+.account-username__secondary {
+    display: none;
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        display: block;
     }
 }

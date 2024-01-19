@@ -120,3 +120,57 @@ export const estadosActivo = writable([
         value: 'other'
     }
 ]);
+
+
+export const headerTableActivos = writable([
+    {
+        name: 'barcode',
+        label: 'Codigo de Barras',
+        numeric: false
+    },
+    {
+        name: 'serie',
+        label: 'Serie',
+        numeric: false
+    },
+    {
+        name: 'model',
+        label: 'Modelo',
+        numeric: false
+    },
+    {
+        name: 'aq_date',
+        label: 'Adquirido',
+        numeric: false
+    },
+    {
+        name: 'create_date',
+        label: 'Creado',
+        numeric: false
+    },
+    {
+        name: 'state',
+        label: 'Estado',
+        numeric: false
+    },
+    {
+        name: 'comment',
+        label: 'Comentario',
+        numeric: false
+    },
+    {
+        name: 'responsable',
+        label: 'Responsable',
+        numeric: false
+    },
+    {
+        name: 'num_register',
+        label: 'N Registro',
+        numeric: false
+    },
+    {
+        name: 'document',
+        label: 'Documento',
+        numeric: false
+    }
+]);

@@ -1,7 +1,8 @@
 <script>
     import { Select } from "$lib";
-    import { onMount } from "svelte";
+    import { onMount, createEventDispatcher } from "svelte";
     import Api from "../../../helpers/ApiCall";
+
   
     export let companyId = 0;
     export let selectedOffice = '';
@@ -12,6 +13,8 @@
 
     let sucursales = [];
     let offices = [];
+
+    let dispatch = createEventDispatcher();
 
     const getSucursales = async () => {
         if (companyId == 0) {
@@ -33,7 +36,6 @@
         console.log('RESPONSE GET OFFICES --> ', response);
         if (response.success && response.statusCode === '200') {
             offices = response.data.result.map(r => ({ label: `${r.floor} - ${r.description}`, value: r.id }));
-            console.log("aca")
         }else{
             offices = []
         }
@@ -69,7 +71,6 @@
 
     $: if (companyId) getSucursales();
 
-    $:console.log(sucursales)
 </script>
 
 {#if show.includes('sucursal')}
@@ -80,21 +81,32 @@
         selected={selectedSucursal}
         options={sucursales}
         on:change={(event) => {
+            console.log('CHANGE SUCURSAL -> ', event.detail)
             selectedSucursal = event.detail;
             selectedOffice = ''; // Resetear el valor de la oficina al cambiar la sucursal
             //getOfficesBySucursal(selectedSucursal);
+            let store = sucursales.find(sucursal => sucursal.value == event.detail)
+            dispatch('changeStore', { selectedSucursal, store })
         }}
     />
     {/key}
 {/if}
 
 {#if show.includes('office')}
+    {#key offices}
     <Select
+        customHeight={custom}
         label="Oficina"
         selected={selectedOffice}
         options={offices}
-        on:change={(event) => selectedOffice = event.detail}
+        on:change={(event) => {
+            selectedOffice = event.detail
+            // console.log('CHANGE OFFICE -> ', event.detail)
+            let office = offices.find(office => office.value == event.detail)
+            dispatch('changeOffice', { selectedOffice, office })    
+        }}
     />
+    {/key}
 {/if}
 
 <!-- {#key sucursales}

@@ -1,7 +1,8 @@
 <script>
     import ActivoCard from "./activoCard.svelte";
-    import { Button, Loading, Search } from "$lib";
+    import { Button, Loading, Search, Table } from "$lib";
     import ReportActivo from "../reports/report.svelte";
+    import { headerTableActivos } from "../../stores/store";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
@@ -17,6 +18,9 @@
     let backButton = false;
     let hideSelectCompany = false;
     let newArticleDisabled = true;
+    // let storeSelected = {};
+    // let officeSelected = {};
+    let filters = {}
 
     let previusComponent, previusProps, previusModelTitle = '';
 
@@ -71,7 +75,18 @@
             <OfficeSucursalSelected 
                 custom
                 {companyId}
-                show={ ['sucursal']}
+                show={ ['sucursal', 'office']}
+                on:changeStore={ (event) => {
+                    
+                    // filters.store = event.detail.store
+                    filters = { ...filters, store: event.detail.store }
+                } }
+                on:changeOffice={ (event) => {
+                    
+                    // filters.office = event.detail.office
+                    filters = { ...filters, office: event.detail.office }
+                    
+                } }
             />
             <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
             <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
@@ -83,26 +98,30 @@
         </div>
         
         <Search value="" />
-        <!-- <div class="">
-        </div> -->
-        <!-- <IconButton icon="tune" /> -->
-        <!-- <div class="title">Empresas</div> -->
     </div>
-    <!-- <br> -->
 
     <div class="flex-column gap-8 mt-8">
-        {#if loading}
-            <Loading />
-        {/if}
-        {#each activos as activo }    
-            <ActivoCard 
-                {activo} 
-                on:edit={ (event) => editActivo(event.detail) } 
-                on:history={ (event) => historyActivo(event.detail, companyId) } 
-            />
-        {:else}
-            <p>{ message }</p>
-        {/each}
+        <Table 
+            headers={ $headerTableActivos }
+            {filters}
+            data={
+                [
+                    {
+                        "barcode": "123456789",
+                        "serie": "123456789",
+                        "model": "123456789",
+                        "acquisition_date": "18-01-2024",
+                        "create_date": "18-01-2024",
+                        "state": "Nuevo",
+                        "comment": "comentario muy extenso",
+                        "responsable": "Juanito Perez",
+                        "register": "0511",
+                        "document": "",
+                        
+                    }
+                ]
+            }
+        />
     </div>
 
 </div>

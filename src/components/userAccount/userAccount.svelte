@@ -73,11 +73,12 @@
 </script>
 
 
-<div style="text-align: right;">{ $user.firstName + ' ' + $user.lastName }</div>
+<div class="account-username">{ $user.firstName + ' ' + $user.lastName }</div>
 <div class="account-container">
     <IconButton on:click={() => { openOptions=!openOptions }} icon="account_circle" />
     {#if openOptions}
     <div class="account-options">
+        <div class="account-username__secondary">{ $user.firstName + ' ' + $user.lastName }</div>
         <Button type="text" label="Editar" color="" on:click={ editUser } />
         <Button type="text" label="Cerrar Sesión" color="" on:click={ logout } />
     </div>  

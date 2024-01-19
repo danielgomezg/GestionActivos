@@ -51,6 +51,9 @@
 // Tooltip
 @use "@material/tooltip/styles" as tooltip;
 
+// Table
+@use "@material/data-table/data-table";
+
 
 // **** Include
 @include card.core-styles;
@@ -59,6 +62,8 @@
 @include drawer.dismissible-core-styles;
 @include drawer.modal-core-styles;
 @include snackbar.core-styles;
+@include data-table.core-styles;
+@include data-table.theme-baseline;
 // @include chipset.core-styles;
 // @include button.core-styles;
 // @include list.core-styles;
