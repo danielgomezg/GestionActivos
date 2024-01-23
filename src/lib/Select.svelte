@@ -20,7 +20,7 @@
         if(selected == null) return;
         
         select.value = selected.toString();
-        dispatch("change", select.value)
+        // dispatch("change", select.value)
 
         // selectedIndex = select.selectedIndex = options.findIndex(option => option.value == selectedValue);
     }
@@ -49,10 +49,10 @@
     })
 
 </script>
-<div bind:this={selectComponent} class="mdc-select mdc-select--outlined"
+<div bind:this={selectComponent} class="mdc-select mdc-select--outlined mdc-select-custom"
     class:mdc-select--disabled={disabled}
     >
-    <div class="mdc-select__anchor" aria-labelledby="outlined-select-label" class:custom-height={customHeight}>
+    <div class="mdc-select__anchor mdc-select-custom" aria-labelledby="outlined-select-label" class:custom-height={customHeight}>
         <span class="mdc-notched-outline">
             <span class="mdc-notched-outline__leading"></span>
             <span class="mdc-notched-outline__notch">

@@ -1,28 +1,25 @@
 <script>
-    import ActivoCard from "./activoCard.svelte";
-    import { Button, Loading, Search, Table } from "$lib";
+    import Api from "../../../helpers/ApiCall";
+    import { Button, Search, Table } from "$lib";
     import ReportActivo from "../reports/report.svelte";
-    import { headerTableActivos } from "../../stores/store";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
+    import { headerTableActivos, estadosActivo } from "../../stores/store";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
     let props;
     let activos = [];
-    let message = "";
+    let storeFilter; // Id de la sucursal para la peticion.
+    let filters = []; // Array de filtros para mostrar en la tabla.
     let modalContent;
     let companyId = 0;
+    let tableCount = 0;
     let modalTitle = '';
-    let loading = false;
+    let officesFilter = []; // Array de id de oficinas para realizar la peticion.
     let openModal = false;
     let backButton = false;
     let hideSelectCompany = false;
     let newArticleDisabled = true;
-    // let storeSelected = {};
-    // let officeSelected = {};
-    let filters = {}
-
-    let previusComponent, previusProps, previusModelTitle = '';
 
     const editActivo = () => {
 
@@ -30,6 +27,83 @@
 
     const historyActivo = () => {
 
+    }
+
+    const getDocument = (url) => {
+        fetch(`http://127.0.0.1:9000/file_active/${url}`)
+            .then(response => response.blob())
+            .then(document => {
+                let objectURL = URL.createObjectURL(document);
+                window.open(objectURL)
+
+            })
+            .catch(error => console.error(error));
+    }
+
+    const getActivosByStore = async (store) => {
+        if (store == undefined) return;
+
+        console.log('STORE ID > ', store)
+        let response = (await Api.call(`http://127.0.0.1:9000/active/sucursal/${store.value}`, 'GET'));
+        console.log('RESPONSE > ', response)
+        if (response.success && response.statusCode == '200') {
+            activos = response.data.result.map( activo => {
+                return {
+                    barcode: activo.bar_code,
+                    activo: activo.serie,   
+                    model: activo.model,
+                    aq_date: activo.acquisition_date,
+                    create_date: activo.creation_date,
+                    state: $estadosActivo.find(ea => ea.value == activo.state).label, //hacer algo
+                    comment: activo.comment,
+                    responsable: activo.name_in_charge_active,
+                    num_register: activo.accounting_record_number,
+                    document: activo.accounting_document
+                }
+            });
+            tableCount = response.data.count;
+        }
+        else {
+            activos = [];
+        }
+    }
+
+    const getActivosByOffice = async (officesId) => {
+        if (officesId.length == 0) {
+            getActivosByStore(storeFilter);
+            return;
+        } 
+
+        console.log('OFFICES ID > ', officesId)
+
+        let response = (await Api.call(`http://127.0.0.1:9000/active/offices/${officesId.join(',')}`, 'GET'));
+        console.log('RESPONSE > ', response)
+        if (response.success && response.statusCode == '200') {
+            if (response.data.result.length == 0) {
+                activos = [];
+                return; 
+            }
+
+
+            activos = response.data.result.map( activo => {
+                return {
+                    barcode: activo.bar_code,
+                    activo: activo.serie,   
+                    model: activo.model,
+                    aq_date: activo.acquisition_date,
+                    create_date: activo.creation_date,
+                    state: $estadosActivo.find(ea => ea.value == activo.state).label, //hacer algo
+                    comment: activo.comment,
+                    responsable: activo.name_in_charge_active,
+                    num_register: activo.accounting_record_number,
+                    document: activo.accounting_document
+                }
+            });
+            tableCount = response.data.count;
+        }
+        else {
+            activos = [];
+        }
     }
 
     const newActivo = (company_id) => {
@@ -57,6 +131,9 @@
         openModal = true;
     }
 
+    $: getActivosByStore(storeFilter)
+    $: getActivosByOffice(officesFilter)
+
 </script>
 
 <div style="padding-top: 20px;">
@@ -77,14 +154,30 @@
                 {companyId}
                 show={ ['sucursal', 'office']}
                 on:changeStore={ (event) => {
-                    
+                    console.log('STORE -> ', event.detail.store)
                     // filters.store = event.detail.store
-                    filters = { ...filters, store: event.detail.store }
+                    if (event.detail.store == undefined) return;
+                    
+                    // quitar storeFilter de filters
+                    filters = filters.filter( filter => filter.label != storeFilter.label )
+
+                    storeFilter = event.detail.store
+
+                    filters = [ storeFilter ]
+                    officesFilter = []
                 } }
                 on:changeOffice={ (event) => {
-                    
+                    console.log('OFFICE -> ', event.detail.office)
                     // filters.office = event.detail.office
-                    filters = { ...filters, office: event.detail.office }
+                    if (event.detail.office == undefined) return;
+
+                    // buscar si ya existe el filtro
+                    let filter = filters.find(filter => filter.label == event.detail.office.label)
+                    if (filter) return;
+
+                    filters = [ ...filters, event.detail.office ]
+
+                    officesFilter = [ ...officesFilter, event.detail.office.value ]
                     
                 } }
             />
@@ -103,24 +196,19 @@
     <div class="flex-column gap-8 mt-8">
         <Table 
             headers={ $headerTableActivos }
+            on:deleteFilter={ (event) => {
+                console.log('deleteFilter > ', event.detail)
+                filters = filters.filter( filter => filter.label != event.detail.label )
+                officesFilter = officesFilter.filter( office => office != event.detail.value )
+
+            } }
             {filters}
-            data={
-                [
-                    {
-                        "barcode": "123456789",
-                        "serie": "123456789",
-                        "model": "123456789",
-                        "acquisition_date": "18-01-2024",
-                        "create_date": "18-01-2024",
-                        "state": "Nuevo",
-                        "comment": "comentario muy extenso",
-                        "responsable": "Juanito Perez",
-                        "register": "0511",
-                        "document": "",
-                        
-                    }
-                ]
-            }
+            data={ activos }
+            on:getDocument={ (event) => {
+                console.log('getDocument > ', event.detail)
+                if (event.detail != '') getDocument(event.detail);
+            } }
+            count={ tableCount }
         />
     </div>
 

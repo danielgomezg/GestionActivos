@@ -25,7 +25,7 @@
 @use "@material/menu/mdc-menu";
 
 // Select
-@use "@material/select/styles" as Select;
+@use "@material/select/styles" as selectt;
 @use "@material/select";
 
 // Tabs
@@ -64,6 +64,7 @@
 @include snackbar.core-styles;
 @include data-table.core-styles;
 @include data-table.theme-baseline;
+// @include select.core-styles;
 // @include chipset.core-styles;
 // @include button.core-styles;
 // @include list.core-styles;
@@ -86,8 +87,16 @@
     @include textfield.focused-outline-color(none);
 }
 
-.mdc-select {
-    @include select.label-color(black);
+$select-colors: (
+    "default": black,
+    "hover": black,
+    "disabled": black,
+    "focus": black
+);
+
+.mdc-select-custom {
+    @include select.label-color($select-colors);
+    @include select.label-floating-color($select-colors);
 }
 
 .mdc-snackbar-custom { 
@@ -96,7 +105,7 @@
     bottom: auto;
 }
 
-.chip-red {
+.chip-custom {
     @include chips.ripple-color(red);
     @include chips.selected-container-color(red);
 }

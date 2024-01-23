@@ -1,14 +1,16 @@
 <script>
-    import { onMount } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
     import Chip from './chip.svelte';
     import IconButton from './IconButton.svelte';
     import { MDCDataTable } from '@material/data-table';
   
+    export let count = 0;
     export let data = [];
     export let headers = [];
     export let filters = {};
 
     let dataTableComponent;
+    let dispatch = createEventDispatcher();
 
     onMount(() => {
         const dataTable = new MDCDataTable(dataTableComponent);
@@ -26,23 +28,13 @@
         
       <table class="mdc-data-table__table" aria-label="Dessert calories">
         <thead>
-            <tr class="mdc-data-table__header-row">
-                <th class="mdc-data-table__header-cell" >
-                    <span class="material-symbols-rounded">filter_list</span>
-                </th>
-                <th 
-                    class="mdc-data-table__header-cell" 
-                    colspan={ headers.length - 1} 
-                    role="columnheader" 
-                    scope="col"
-                >
-                    
-                    {#each Object.entries(filters) as [key, value] (key)}
-                       
-                        <Chip chip={ value } />
-                    {/each}
-                    
-                </th>
+            <tr class="mdc-data-table__row">
+              <td class="mdc-data-table__cell" >
+                <span class="material-symbols-rounded">filter_list</span>
+              </td>
+              <td class="mdc-data-table__cell" colspan={ headers.length  - 1}>
+                <Chip chips={ filters } on:deleteFilter />
+              </td>
             </tr>
             <tr class="mdc-data-table__header-row">
             {#each headers as header}
@@ -67,7 +59,9 @@
                             <td
                                 class="mdc-data-table__cell"
                             >
-                                <IconButton icon="description" on:click={ () => console.log('download document', row) } />
+                              {#if value != ''}
+                                <IconButton icon="description" on:click={ dispatch('getDocument', value) } />
+                              {/if}
                             </td>
                         {:else}
                             <td 
@@ -79,24 +73,6 @@
                     {/each}                   
                 </tr>
             {/each}
-          <!-- <tr class="mdc-data-table__row">
-            <th class="mdc-data-table__cell" scope="row">Frozen yogurt</th>
-            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">24</td>
-            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">4.0</td>
-            <td class="mdc-data-table__cell">Super tasty</td>
-          </tr>
-          <tr class="mdc-data-table__row">
-            <th class="mdc-data-table__cell" scope="row">Ice cream sandwich</th>
-            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">37</td>
-            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">4.33333333333</td>
-            <td class="mdc-data-table__cell">I like ice cream more</td>
-          </tr>
-          <tr class="mdc-data-table__row">
-            <th class="mdc-data-table__cell" scope="row">Eclair</th>
-            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">24</td>
-            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">6.0</td>
-            <td class="mdc-data-table__cell">New filing flavor</td>
-          </tr> -->
         </tbody>
       </table>
     </div>
@@ -105,7 +81,7 @@
       <div class="mdc-data-table__pagination-trailing">
         <div class="mdc-data-table__pagination-rows-per-page">
           <div class="mdc-data-table__pagination-rows-per-page-label">
-            Rows per page
+            Activos por pagina
           </div>
   
           <div class="mdc-select mdc-select--outlined mdc-select--no-label mdc-data-table__pagination-rows-per-page-select">
@@ -146,8 +122,8 @@
                 <li class="mdc-list-item" role="option" data-value="25">
                   <span class="mdc-list-item__text">25</span>
                 </li>
-                <li class="mdc-list-item" role="option" data-value="100">
-                  <span class="mdc-list-item__text">100</span>
+                <li class="mdc-list-item" role="option" data-value={  count }>
+                  <span class="mdc-list-item__text">{ count }</span>
                 </li>
               </ul>
             </div>
@@ -156,7 +132,7 @@
   
         <div class="mdc-data-table__pagination-navigation">
           <div class="mdc-data-table__pagination-total">
-            1‑10 of 100
+            1‑{ data.length } of { count }
           </div>
           <IconButton icon="first_page" on:click={ () => console.log('first page') } />
 
@@ -166,19 +142,6 @@
 
           <IconButton icon="last_page" on:click={ () => console.log('first page') } />
 
-
-          <!-- <button class="mdc-icon-button material-icons mdc-data-table__pagination-button" data-first-page="true" disabled>
-            <div class="mdc-button__icon">first_page</div>
-          </button>
-          <button class="mdc-icon-button material-icons mdc-data-table__pagination-button" data-prev-page="true" disabled>
-            <div class="mdc-button__icon">chevron_left</div>
-          </button>
-          <button class="mdc-icon-button material-icons mdc-data-table__pagination-button" data-next-page="true">
-            <div class="mdc-button__icon">chevron_right</div>
-          </button>
-          <button class="mdc-icon-button material-icons mdc-data-table__pagination-button" data-last-page="true">
-            <div class="mdc-button__icon">last_page</div>
-          </button> -->
         </div>
       </div>
     </div>
