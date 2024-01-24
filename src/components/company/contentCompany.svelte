@@ -34,7 +34,9 @@
 
     setContext('replaceCompany', (company) => {
         let index = empresas.findIndex(emp => emp.id == company.id);
+        let count = empresas[index].count_sucursal
         empresas[index] = company;
+        empresas[index].count_sucursal = count
         empresas = [...empresas]
         openModal = false;
     })
