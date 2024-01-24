@@ -11,15 +11,8 @@
     let dispath = createEventDispatcher();
     let removeArticle = getContext('removeArticle');
 
-    // Funcion que obtenga la confirmacion del click desde snackbar.svelte
-    setContext('confirmAction', (action) => {
-        console.log('ACTION -> ', action)
-        // if (action.id == 'deleteCompany') deleteCompany()
-    })
-
     const getImage = async (name) => {
         if (name == '') return null;
-        console.log(name)
 
         fetch(`http://127.0.0.1:9000/image_article/${name}`)
             .then(response => response.blob())
@@ -34,7 +27,8 @@
 
     const alertDelete = () => {
         snackbar.update(snk => {
-            snk.id = 'deleteArticle'
+            snk.id = article.id
+            snk.action = 'deleteArticle'
             snk.open = true;
             snk.type = 'confirm';
             snk.click = false;
@@ -44,7 +38,8 @@
     }	
 
     const confirmSnackbar = () => {
-        if ($snackbar.id != 'deleteArticle') return;
+        if ($snackbar.action != 'deleteArticle') return;
+        if ($snackbar.id != article.id) return;
         
         snackbar.update(snk => {
             return {

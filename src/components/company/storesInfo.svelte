@@ -1,5 +1,5 @@
 <script>
-    import { Divider, IconButton } from "$lib";
+    import { Divider, IconButton, Snackbar } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import { onMount, getContext } from "svelte";
     import { snackbar } from "../../stores/store";
@@ -9,6 +9,9 @@
     
     export let company_id = 0, company = {}
     let stores = []
+    let openSnackbar = false;
+    let messageSnackbar = '';
+    let storeToDelete = {}
 
     const getSucursalePorCompany = async () => {
         //loading = true;
@@ -21,10 +24,10 @@
     }
 
     const deleteStore = async (store) => {
+        console.log('deleteStore -> ', store)
 
-        let confirmacion = confirm('Esta seguro que desea eliminar la sucursal ', store.number)
-
-        if (!confirmacion) return;
+        // let confirmacion = confirm('Esta seguro que desea eliminar la sucursal ', store.number)
+        // if (!confirmacion) return;
         
         let response = (await Api.call(`http://127.0.0.1:9000/sucursal/${store.id}`, 'DELETE'));
         console.log('RESPONSE DELETE SUCURSAL -> ', response)
@@ -53,12 +56,18 @@
     }
 
     onMount(async () => {
-
-        await getSucursalePorCompany()
-        
+        await getSucursalePorCompany()  
     })
+
   
 </script>
+
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={messageSnackbar}
+    on:confirm={ deleteStore(storeToDelete) }
+/>
 
 <div class="store-info__container">
     {#each stores as store}
@@ -70,7 +79,16 @@
                 </div>
                 <div>
                     <IconButton icon="edit" tooltipId="btn-edit__{store.number}" tooltipText="Editar" on:click={ editStore(store, company) } />
-                    <IconButton icon="delete" tooltipId="btn-delete__{store.number}" tooltipText="Eliminar" on:click={ deleteStore(store) } />
+                    <IconButton 
+                        icon="delete" 
+                        tooltipId="btn-delete__{store.number}" 
+                        tooltipText="Eliminar" 
+                        on:click={ () => {
+                            storeToDelete = store;
+                            messageSnackbar = '¿Eliminar la sucursal ' + store.number + '?'
+                            openSnackbar = true;
+                        } }
+                    />
                 </div>
 
             </div>

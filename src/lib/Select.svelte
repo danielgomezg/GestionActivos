@@ -20,7 +20,7 @@
         if(selected == null) return;
         
         select.value = selected.toString();
-        // dispatch("change", select.value)
+        dispatch("change", select.value)
 
         // selectedIndex = select.selectedIndex = options.findIndex(option => option.value == selectedValue);
     }

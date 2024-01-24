@@ -1,43 +1,24 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
-    import { Card, IconButton, Button } from "$lib";
-    import { createEventDispatcher, getContext, setContext } from "svelte";
+    import { Card, IconButton, Button, Snackbar } from "$lib";
+    import { createEventDispatcher, getContext } from "svelte";
 
     export let company = {}
+
     let dispath = createEventDispatcher();
     let removeCompany = getContext('removeCompany');
+
+    let openSnackbar = false;
+    let messageSnackbar = '';
 
     const normalizeText = (text) => {
         return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
     }
 
-    const aletDelete = () => {
-        snackbar.update(snk => {
-            snk.id = 'deleteCompany'
-            snk.open = true;
-            snk.type = 'confirm';
-            snk.click = false;
-            snk.message = '¿Eliminar la empresa ' + company.name + '?'
-            return snk
-        })
-    }
-
-    const confirmSnackbar = () => {
-        if ($snackbar.id != 'deleteCompany') return;
-        
-        snackbar.update(snk => {
-            return {
-                ...snk,
-                open: false,
-                click: false
-            }
-        })
-        deleteCompany()
-    }
-
     const deleteCompany = async () => {
 
+        console.log('deleteCompany -> ', company)
         // let confirmacion = confirm('Esta seguro que desea eliminar la empresa ', company.name)
         // if (!confirmacion) return;
         let response = (await Api.call(`http://127.0.0.1:9000/company/${company.id}`, 'DELETE'));
@@ -63,9 +44,16 @@
         }
     }
 
-    $: if ($snackbar.click) confirmSnackbar()
+    // $: if ($snackbar.click) confirmSnackbar()
 
 </script>
+
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={messageSnackbar}
+    on:confirm={ deleteCompany }
+/>
 
 <Card>
     <div class="card-container">
@@ -74,7 +62,14 @@
             <div>
                 <IconButton icon="history" tooltipId="btn-history__{company.name}" tooltipText="Historial" on:click={ dispath("history", company) } />
                 <IconButton icon="edit" tooltipId="btn-edit__{company.name}" tooltipText="Editar" on:click={ dispath("edit", company) } />
-                <IconButton icon="delete" tooltipId="btn-delete__{company.name}" tooltipText="Eliminar" on:click={ aletDelete } />
+                <IconButton 
+                    icon="delete" 
+                    tooltipId="btn-delete__{company.name}" 
+                    tooltipText="Eliminar" 
+                    on:click={ () => {
+                        messageSnackbar = '¿Eliminar la empresa ' + company.name + '?'
+                        openSnackbar = true;
+                    } } />
             </div>
         </div>
         <div class="card-content">

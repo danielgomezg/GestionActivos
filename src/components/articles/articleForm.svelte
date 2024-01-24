@@ -98,7 +98,7 @@
         }
 
         let imageUrl = await uploadImage(image)
-        article.photo = imageUrl == null ? '' : imageUrl;
+        article.photo = imageUrl == null ? article.photo : imageUrl;
 
         // Peticion
         let body = JSON.stringify(article)  

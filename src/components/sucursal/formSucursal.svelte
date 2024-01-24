@@ -1,17 +1,20 @@
 <script>
     import { onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
-    import { TextField, Button, Divider, IconButton } from "$lib";
     import { snackbar } from "../../stores/store";
+    import { TextField, Button, Divider, IconButton, Snackbar } from "$lib";
     import SelectCountryLocations from "../selectCountry/selectCountryLocations.svelte";
 
     export let sucursal = { }, company = { }
 
     let message = ""
-
+    let offices = [];
+    let editing = -1
+    let officeEdit = {}
     let addOffice = false
-    let officeEdit = {}, editing = -1
-    let offices = []
+    let officeToDelete = {};
+    let openSnackbar = false;
+    let messageSnackbar = '';
 
     function toggleEdit(office, index) {
         if (editing == index) {
@@ -132,21 +135,18 @@
         console.log('RESPONSE GET Offices --> ', response)
         if (response.success) {
             offices = response.data.result
-            console.log(offices) 
         } 
     }
 
     const formatOfficeInfo = (office) => {
-        console.log(office)
         let name = office.name_in_charge == undefined ? '' : " - " + office.name_in_charge
         return office.floor  + ' - ' + office.description + name
     }
 
     const deleteOffice = async (office) => {
         console.log(office)
-        let confirmacion = confirm(`Esta seguro que desea eliminar la Oficina ${office.floor} ${office.description}`)
-
-        if (!confirmacion) return;
+        // let confirmacion = confirm(`Esta seguro que desea eliminar la Oficina ${office.floor} ${office.description}`)
+        // if (!confirmacion) return;
 
         let response = (await Api.call(`http://127.0.0.1:9000/office/${office.id}`, 'DELETE'));
         console.log('RESPONSE DELETE OFFICE -> ', response)
@@ -215,6 +215,13 @@
 
 </script>
 
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={messageSnackbar}
+    on:confirm={ deleteOffice(officeToDelete) }
+/>
+
 <div class="form">
     <TextField 
         version=2
@@ -275,7 +282,15 @@
                 <td style="width: 65%;"><li>{ formatOfficeInfo(office) }</li></td>
                 <td style="width: 65%;">
                     <IconButton icon="edit" tooltipId="btn-edit__{index}" tooltipText="Editar" on:click={ () => toggleEdit(office, index) } />
-                    <IconButton icon="delete" tooltipId="btn-delete__{index}" tooltipText="Eliminar" on:click={ deleteOffice(office) } />
+                    <IconButton 
+                        icon="delete" 
+                        tooltipId="btn-delete__{index}" 
+                        tooltipText="Eliminar" 
+                        on:click={ () => {
+                            officeToDelete = office;
+                            messageSnackbar = '¿Eliminar la oficina ' + office.floor + ' ' + office.description + '?'
+                            openSnackbar = true;
+                        } } />
                 </td>    
             </tr>
             {#if editing == index}

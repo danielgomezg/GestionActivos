@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
     import { Button, Search, Table } from "$lib";
     import ReportActivo from "../reports/report.svelte";
@@ -130,6 +131,20 @@
 
         openModal = true;
     }
+
+    onMount(() => {
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        console.log(user)
+        if (user.profile_id == 2) {
+            companyId = user.company_id;
+            hideSelectCompany = true;
+            // message = "Buscando..."
+        }
+        else {
+            hideSelectCompany = false;
+            // message = "Selecciona una empresa para obtener sus articulos."
+        }
+    })
 
     $: getActivosByStore(storeFilter)
     $: getActivosByOffice(officesFilter)

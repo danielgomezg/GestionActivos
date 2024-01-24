@@ -21,7 +21,8 @@
 
     function formatRut(code) {
         if (code == undefined) return ''
-        if (company.country != 'Chile') return code.replace(/[.-]/g, '');
+        // if (company.country != 'Chile') return code.replace(/[.-]/g, '');
+        if (company.country != 'Chile') return code.replace(/\D/g, '');
         if (code.length >= 13) return code.slice(0, -1);
         
         let rut = code.replace(/[^\dkK]/g, '')
