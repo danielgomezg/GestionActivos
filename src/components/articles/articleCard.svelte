@@ -1,13 +1,15 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { snackbar } from "../../stores/store";
-    import { Card, IconButton, Button } from "$lib";
+    import { snackbar, user } from "../../stores/store";
     import ReportActive from "../reports/report.svelte";
-    import { createEventDispatcher, onMount, getContext, setContext } from "svelte";
+    import { Card, IconButton, Button, Snackbar } from "$lib";
+    import { createEventDispatcher, getContext } from "svelte";
 
     export let article = {}
 
     let imageUrl;
+    let openSnackbar = false;
+    let messageSnackbar = '';
     let dispath = createEventDispatcher();
     let removeArticle = getContext('removeArticle');
 
@@ -23,33 +25,6 @@
             })
             .catch(error => console.error(error));
 
-    }
-
-    const alertDelete = () => {
-        snackbar.update(snk => {
-            snk.id = article.id
-            snk.action = 'deleteArticle'
-            snk.open = true;
-            snk.type = 'confirm';
-            snk.click = false;
-            snk.message = '¿Eliminar el artículo ' + article.name + '?'
-            return snk
-        })
-    }	
-
-    const confirmSnackbar = () => {
-        if ($snackbar.action != 'deleteArticle') return;
-        if ($snackbar.id != article.id) return;
-        
-        snackbar.update(snk => {
-            return {
-                ...snk,
-                open: false,
-                click: false
-            }
-        })
-
-        deleteArticle()
     }
 
     const deleteArticle = async () => {
@@ -78,15 +53,16 @@
         }
     }
 
-    onMount(async () => {
-        // getImage(article.photo)
-    })
-
     $: getImage(article.photo)
-    $: if ($snackbar.click) confirmSnackbar()
-
 
 </script>
+
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={messageSnackbar}
+    on:confirm={ deleteArticle }
+/>
 
 <Card>
     <div class="card-container">
@@ -120,14 +96,24 @@
                 </div>
             </div>
             <div>
-                <ReportActive 
+                <!-- <ReportActive 
                     type="btn-icon"
                     id={ article.id } 
                     label="Reporte activos"
-                />
-                <IconButton icon="history" tooltipId="btn-history__{article.name}" tooltipText="Historial" on:click={ dispath("history", article) } />
+                /> -->
+                <!-- <IconButton icon="history" tooltipId="btn-history__{article.name}" tooltipText="Historial" on:click={ dispath("history", article) } /> -->
                 <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", {article, imageUrl}) } />
-                <IconButton icon="delete" tooltipId="btn-delete__{article.name}" tooltipText="Eliminar" on:click={ alertDelete } />
+                {#if $user.profile_id != 2}
+                    <IconButton 
+                        icon="delete" 
+                        tooltipId="btn-delete__{article.name}" 
+                        tooltipText="Eliminar"
+                        on:click={ () => {
+                            messageSnackbar = '¿Eliminar el artículo ' + article.name + '?'
+                            openSnackbar = true;
+                    } } />
+
+                {/if}
             </div>
         </div>
         <!-- <div class="card-content">

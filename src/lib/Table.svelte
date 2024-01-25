@@ -3,6 +3,8 @@
     import Chip from './chip.svelte';
     import IconButton from './IconButton.svelte';
     import { MDCDataTable } from '@material/data-table';
+    import Checkbox from './Checkbox.svelte';
+    
   
     export let count = 0;
     export let data = [];
@@ -13,7 +15,8 @@
     let dispatch = createEventDispatcher();
 
     onMount(() => {
-        const dataTable = new MDCDataTable(dataTableComponent);
+      // const checkbox = new MDCCheckbox(checkboxComponent);
+      const dataTable = new MDCDataTable(dataTableComponent);
         // dataTable.listen('MDCDataTable:rowSelectionChanged', (event) => {
         //     console.log(event.detail);
         // });
@@ -26,7 +29,7 @@
 <div bind:this={dataTableComponent} class="mdc-data-table">
     <div class="mdc-data-table__table-container">
         
-      <table class="mdc-data-table__table" aria-label="Dessert calories">
+      <table class="mdc-data-table__table" aria-label="">
         <thead>
             <tr class="mdc-data-table__row">
               <td class="mdc-data-table__cell" >
@@ -37,41 +40,42 @@
               </td>
             </tr>
             <tr class="mdc-data-table__header-row">
-            {#each headers as header}
+              <th class="mdc-data-table__header-cell mdc-data-table__header-cell--checkbox" role="columnheader" scope="col">
+                <Checkbox />
+              </th>
+              {#each headers as header}
                 <th 
                     class="mdc-data-table__header-cell" 
                     class:mdc-data-table__header-cell--numeric={ header.numeric }
                     role="columnheader" 
                     scope="col">{ header.label }</th>
-            {/each}
-
-            <!-- <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Dessert</th>
-            <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Carbs (g)</th>
-            <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Protein (g)</th>
-            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Comments</th> -->
-          </tr>
+              {/each}
+            </tr>
         </thead>
         <tbody class="mdc-data-table__content">
             {#each data as row}
-                <tr class="mdc-data-table__row">
-                    {#each Object.entries(row) as [key, value] (key)}
-                        {#if key == 'document'}
-                            <td
-                                class="mdc-data-table__cell"
-                            >
-                              {#if value != ''}
-                                <IconButton icon="description" on:click={ dispatch('getDocument', value) } />
-                              {/if}
-                            </td>
-                        {:else}
-                            <td 
-                                class="mdc-data-table__cell"
-                            >
-                                { value }
-                            </td>
-                        {/if}
-                    {/each}                   
-                </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
+                  <Checkbox />
+                </td>
+                {#each Object.entries(row) as [key, value] (key)}
+                  {#if key == 'document'}
+                    <td
+                        class="mdc-data-table__cell"
+                    >
+                      {#if value != ''}
+                        <IconButton icon="description" on:click={ dispatch('getDocument', value) } />
+                      {/if}
+                    </td>
+                  {:else}
+                    <td 
+                        class="mdc-data-table__cell"
+                    >
+                        { value }
+                    </td>
+                  {/if}
+                {/each}                   
+              </tr>
             {/each}
         </tbody>
       </table>

@@ -5,7 +5,7 @@
     import { TextField, Button, Divider, IconButton, Snackbar } from "$lib";
     import SelectCountryLocations from "../selectCountry/selectCountryLocations.svelte";
 
-    export let sucursal = { }, company = { }
+    export let sucursal = { }, company = { }, readinfo = false;
 
     let message = ""
     let offices = [];
@@ -263,6 +263,7 @@
     <div class="grid-col-span-1">
         <Button 
             label="Guardar"
+            disabled={ readinfo }
             custom 
             on:click={ editSucursal }
         />
@@ -353,6 +354,7 @@
             <Button 
                 label="Guardar"
                 custom
+                disabled={ readinfo }
                 on:click={ saveOffice }
             />
         
@@ -369,6 +371,7 @@
         <Button 
             label="Agregar"
             custom
+            disabled={ readinfo }
             on:click={ () => {
                 officeEdit = { floor: '', description: '', name_in_charge: '' }
                 addOffice = true

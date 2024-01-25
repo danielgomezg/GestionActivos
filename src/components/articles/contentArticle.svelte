@@ -1,4 +1,5 @@
 <script>
+    import { user } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     import { setContext, onMount } from "svelte";
     import { Button, Loading, Search } from "$lib";
@@ -182,13 +183,15 @@
                 on:change={ (event) => findArticles(event.detail)  }
             />
             {/if}
-            <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(companyId) } />
-            <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
-            <ReportArticle 
+            {#if $user.profile_id != 2}
+                <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(companyId) } />
+            {/if}
+                <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
+            <!-- <ReportArticle 
                 id={ companyId } 
                 label="Exportar a PDF"
                 disabled={ newArticleDisabled }
-            />
+            /> -->
         </div>
         
         <Search value="" />

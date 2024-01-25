@@ -51,13 +51,21 @@
             //   }
             // })
             dispath('confirm')
-            mdcSnackbar.close();
+            open = false;
+            mdcSnackbar.close()
           } } >
           <div class="mdc-button__ripple"></div>
           <span class="mdc-button__label">confirmar</span>
         </button>
       {/if}
-      <button type="button" class="mdc-button mdc-snackbar__dismiss">
+      <button 
+        type="button" 
+        class="mdc-button mdc-snackbar__dismiss"
+        on:click={ () => {
+          open = false;
+          mdcSnackbar.close()
+        } }
+      >
         <div class="mdc-button__ripple"></div>
         <span class="mdc-button__label"></span>
         <span class="material-symbols-rounded" style="color: #FFF;">close</span>

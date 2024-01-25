@@ -11,7 +11,7 @@
     <div class="card-container">
         <div class="card-header">
             <div class="card-title">{ sucursal.number }</div>
-            <IconButton icon="edit" on:click={ dispath("edit", sucursal) } />
+            <IconButton icon="visibility" readinfo on:click={ dispath("edit", sucursal) } />
         </div>
         <div class="card-content">
             <div class="store-info__address">
@@ -22,7 +22,7 @@
         </div>
         <div class="card-actions">
             <Button label="Ver oficinas" type="outlined" color="" custom on:click={ dispath("showStores", sucursal) } />
-            <Button label="Nueva oficina" custom on:click={ dispath("newStore", sucursal) } />
+            <Button label="Nueva oficina" disabled custom on:click={ dispath("newStore", sucursal) } />
         </div>
     </div>
 </Card>

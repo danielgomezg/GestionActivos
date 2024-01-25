@@ -1,17 +1,20 @@
 <script>
-    import { Divider, IconButton } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import { getContext, onMount } from "svelte";
-    import { estadosActivo } from "../../stores/store";
     import { snackbar } from "../../stores/store";
+    import { estadosActivo } from "../../stores/store";
+    import { Divider, IconButton, Snackbar } from "$lib";
 
     export let article = {}, company_id = 0;
 
+    let activos = [];
+    let activeDocument;
+    let activoToDelete = {};
+    let openSnackbar = false;
+    let messageSnackbar = '';
+
     let editActivo = getContext('editActivo')
     let addActivoCount = getContext('addActivoCount');
-    let activeDocument;
-
-    let activos = []
 
     const getActives = async () => {
         let response = (await Api.call(`http://127.0.0.1:9000/activePorArticle/${article.id}`, 'GET'))
@@ -22,8 +25,6 @@
     }
 
     const deleteActive = async (activo) => {
-        let confirmacion = confirm('Esta seguro que desea eliminar el activo ', activo.bar_code)
-        if(!confirmacion) return;
 
         let response = (await Api.call(`http://127.0.0.1:9000/active/${activo.id}`, 'DELETE'));
         console.log('RESPONSE DELETE ACTIVE -> ', response)
@@ -69,6 +70,14 @@
     })
 
 </script>
+
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={ messageSnackbar }
+    on:confirm={ deleteActive(activoToDelete) }
+/>
+
 <div>
     {#each activos as activo}
         <div>
@@ -85,7 +94,17 @@
                         <IconButton icon="description" tooltipId="btn-doc__{activo.bar_code}" tooltipText="Documento contable" on:click={ () => downloadDocument(activo) } />
                     {/if}
                     <IconButton icon="edit" tooltipId="btn-edit__{activo.bar_code}" tooltipText="Editar" on:click={ () => editActivo(activo, article, company_id) } />
-                    <IconButton icon="delete" tooltipId="btn-delete__{activo.bar_code}" tooltipText="Eliminar" on:click={deleteActive(activo)}/>
+                    <IconButton 
+                        icon="delete" 
+                        tooltipId="btn-delete__{activo.bar_code}" 
+                        tooltipText="Eliminar" 
+                        on:click={ () => {
+
+                            activoToDelete = activo;
+                            messageSnackbar = '¿Eliminar el activo ' + activo.bar_code + '?'
+                            openSnackbar = true;
+
+                        } } />
                 </div>
             </div>
             <div>

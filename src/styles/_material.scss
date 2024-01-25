@@ -54,6 +54,11 @@
 // Table
 @use "@material/data-table/data-table";
 
+@use "@material/checkbox";
+
+@use "@material/form-field";
+
+
 
 // **** Include
 @include card.core-styles;
@@ -64,6 +69,8 @@
 @include snackbar.core-styles;
 @include data-table.core-styles;
 @include data-table.theme-baseline;
+@include checkbox.core-styles;
+@include form-field.core-styles;
 // @include select.core-styles;
 // @include chipset.core-styles;
 // @include button.core-styles;

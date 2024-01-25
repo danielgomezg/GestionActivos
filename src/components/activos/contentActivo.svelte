@@ -160,6 +160,10 @@
                     on:change={ (event) => {
                         console.log('COMPANY ID -> ', event.detail)
                         companyId = event.detail;
+                        filters = [];
+                        storeFilter = undefined;
+                        officesFilter = [];
+                        activos = [];
                         
                     }  }
                 />

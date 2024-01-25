@@ -81,14 +81,14 @@ export const menu = writable([
             1
         ]
     },
-    {
-        id: 6,
-        name: 'Reportes',
-        path: '/reports',
-        profiles: [
-            1
-        ]
-    }
+    // {
+    //     id: 6,
+    //     name: 'Reportes',
+    //     path: '/reports',
+    //     profiles: [
+    //         1
+    //     ]
+    // }
 ])
   
 export const estadosActivo = writable([

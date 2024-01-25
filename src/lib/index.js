@@ -11,6 +11,7 @@ export { default as Loading } from "./Loading.svelte";
 export { default as Tooltip } from "./Tooltip.svelte";
 export { default as TextArea } from "./TextArea.svelte";
 export { default as Snackbar } from "./Snackbar.svelte";
+export { default as Checkbox } from "./Checkbox.svelte";
 export { default as TopAppBar } from "./TopAppBar.svelte";
 export { default as TextField } from "./TextField.svelte";
 export { default as FileInput } from "./FileInput.svelte";

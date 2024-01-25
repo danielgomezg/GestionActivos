@@ -76,7 +76,7 @@
     
 <div style="padding-top: 20px;">
     <div class="header-content">
-        <Button label="Nueva sucursal" custom on:click={ createSucursal } />
+        <!-- <Button label="Nueva sucursal" custom on:click={ createSucursal } /> -->
         <!-- <IconButton icon="tune" /> -->
         <!-- <div class="title">Empresas</div> -->
     </div>
