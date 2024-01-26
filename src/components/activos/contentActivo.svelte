@@ -48,20 +48,21 @@
         let response = (await Api.call(`http://127.0.0.1:9000/active/sucursal/${store.value}`, 'GET'));
         console.log('RESPONSE > ', response)
         if (response.success && response.statusCode == '200') {
-            activos = response.data.result.map( activo => {
-                return {
-                    barcode: activo.bar_code,
-                    activo: activo.serie,   
-                    model: activo.model,
-                    aq_date: activo.acquisition_date,
-                    create_date: activo.creation_date,
-                    state: $estadosActivo.find(ea => ea.value == activo.state).label, //hacer algo
-                    comment: activo.comment,
-                    responsable: activo.name_in_charge_active,
-                    num_register: activo.accounting_record_number,
-                    document: activo.accounting_document
-                }
-            });
+            activos = response.data.result
+            // activos = response.data.result.map( activo => {
+            //     return {
+            //         barcode: activo.bar_code,
+            //         activo: activo.serie,   
+            //         model: activo.model,
+            //         aq_date: activo.acquisition_date,
+            //         create_date: activo.creation_date,
+            //         state: $estadosActivo.find(ea => ea.value == activo.state).label, //hacer algo
+            //         comment: activo.comment,
+            //         responsable: activo.name_in_charge_active,
+            //         num_register: activo.accounting_record_number,
+            //         document: activo.accounting_document
+            //     }
+            // });
             tableCount = response.data.count;
         }
         else {
@@ -84,22 +85,21 @@
                 activos = [];
                 return; 
             }
-
-
-            activos = response.data.result.map( activo => {
-                return {
-                    barcode: activo.bar_code,
-                    activo: activo.serie,   
-                    model: activo.model,
-                    aq_date: activo.acquisition_date,
-                    create_date: activo.creation_date,
-                    state: $estadosActivo.find(ea => ea.value == activo.state).label, //hacer algo
-                    comment: activo.comment,
-                    responsable: activo.name_in_charge_active,
-                    num_register: activo.accounting_record_number,
-                    document: activo.accounting_document
-                }
-            });
+            activos = response.data.result
+            // activos = response.data.result.map( activo => {
+            //     return {
+            //         barcode: activo.bar_code,
+            //         activo: activo.serie,   
+            //         model: activo.model,
+            //         aq_date: activo.acquisition_date,
+            //         create_date: activo.creation_date,
+            //         state: $estadosActivo.find(ea => ea.value == activo.state).label, //hacer algo
+            //         comment: activo.comment,
+            //         responsable: activo.name_in_charge_active,
+            //         num_register: activo.accounting_record_number,
+            //         document: activo.accounting_document
+            //     }
+            // });
             tableCount = response.data.count;
         }
         else {

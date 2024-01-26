@@ -125,7 +125,7 @@ export const estadosActivo = writable([
 
 export const headerTableActivos = writable([
     {
-        name: 'barcode',
+        name: 'bar_code',
         label: 'Codigo de Barras',
         numeric: false
     },
@@ -140,12 +140,12 @@ export const headerTableActivos = writable([
         numeric: false
     },
     {
-        name: 'aq_date',
+        name: 'acquisition_date',
         label: 'Adquirido',
         numeric: false
     },
     {
-        name: 'create_date',
+        name: 'creation_date',
         label: 'Creado',
         numeric: false
     },
@@ -160,17 +160,17 @@ export const headerTableActivos = writable([
         numeric: false
     },
     {
-        name: 'responsable',
+        name: 'name_in_charge_active',
         label: 'Responsable',
         numeric: false
     },
     {
-        name: 'num_register',
+        name: 'accounting_record_number',
         label: 'N Registro',
         numeric: false
     },
     {
-        name: 'document',
+        name: 'accounting_document',
         label: 'Documento',
         numeric: false
     }
