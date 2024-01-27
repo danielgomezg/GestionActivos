@@ -3,10 +3,12 @@
   import Chip from "./chip.svelte";
   import IconButton from "./IconButton.svelte";
   import { MDCDataTable } from "@material/data-table";
-  import Checkbox from "./Checkbox.svelte";
+  import Select from "./Select.svelte";
 
+  export let limit = 0;
   export let count = 0;
   export let data = [];
+  export let offset = 0;
   export let headers = [];
   export let filters = {};
 
@@ -31,10 +33,8 @@
   });
 
   $: if (data.length > 0 && dataTable != undefined) {
-    console.log("re render: ", data.length)
     dataTable.layout();
-  } 
-  $: console.log("data table ", data);
+  }
 </script>
 
 <div bind:this={dataTableComponent} class="mdc-data-table">
@@ -44,11 +44,11 @@
         <span class="material-symbols-rounded">filter_list</span>
       </div>
       <div>
-        <Chip chips={ filters } on:deleteFilter />
+        <Chip chips={filters} on:deleteFilter />
       </div>
       <div class="align-right">
-        <IconButton icon="edit" on:click={ () => dispatch('clearFilters') } />
-        <IconButton icon="delete" on:click={ () => dispatch('clearFilters') } />
+        <IconButton icon="edit" on:click={() => dispatch("clearFilters")} />
+        <IconButton icon="delete" on:click={() => dispatch("clearFilters")} />
       </div>
     </div>
     <table class="mdc-data-table__table" aria-label="activos">
@@ -81,24 +81,24 @@
             </div>
           </th>
           {#each headers as header}
-            <th 
-              class="mdc-data-table__header-cell" 
-              role="columnheader" 
-              scope="col">{ header.label }
+            <th
+              class="mdc-data-table__header-cell"
+              role="columnheader"
+              scope="col"
+              >{header.label}
             </th>
           {/each}
         </tr>
       </thead>
       <tbody class="mdc-data-table__content">
-
         {#each data as row, index}
-          <tr data-row-id={ `u${index}` } class="mdc-data-table__row">
+          <tr data-row-id={`u${index}`} class="mdc-data-table__row">
             <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
               <div class="mdc-checkbox mdc-data-table__row-checkbox">
                 <input
                   type="checkbox"
                   class="mdc-checkbox__native-control"
-                  aria-labelledby={ `u${index}` }
+                  aria-labelledby={`u${index}`}
                 />
                 <div class="mdc-checkbox__background">
                   <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
@@ -116,58 +116,104 @@
 
             {#each headers as header (header.name)}
               {#if row[header.name] !== undefined}
-                {#if header.name == 'bar_code'}
-                  <th class="mdc-data-table__cell" scope="row" id={ `u${index}` }
-                    >{ row[header.name] }</th
+                {#if header.name == "bar_code"}
+                  <th class="mdc-data-table__cell" scope="row" id={`u${index}`}
+                    >{row[header.name]}</th
                   >
-                {:else if header.name == 'accounting_document'}
-                  <td
-                      class="mdc-data-table__cell"
-                  >
-                    {#if row[header.name] != ''}
-                      <IconButton icon="description" on:click={ dispatch('getDocument', row[header.name]) } />
+                {:else if header.name == "accounting_document"}
+                  <td class="mdc-data-table__cell">
+                    {#if row[header.name] != ""}
+                      <IconButton
+                        icon="description"
+                        on:click={dispatch("getDocument", row[header.name])}
+                      />
                     {/if}
                   </td>
                 {:else}
-                  <td 
-                      class="mdc-data-table__cell"
-                  >
-                      { row[header.name] }
+                  <td class="mdc-data-table__cell">
+                    {row[header.name]}
                   </td>
                 {/if}
               {/if}
             {/each}
-
-            
-            <!-- {#each Object.entries(row) as [key, value] (key)}
-            {#if headers.map(h => h.name).includes(key)}
-              {#if key == 'bar_code'}
-                <th class="mdc-data-table__cell" scope="row" id={ `u${index}` }
-                  >{ value }</th
-                >
-              {:else if key == 'accounting_document'}
-                <td
-                    class="mdc-data-table__cell"
-                >
-                  {#if value != ''}
-                    <IconButton icon="description" on:click={ dispatch('getDocument', value) } />
-                  {/if}
-                </td>
-              {:else}
-                <td 
-                    class="mdc-data-table__cell"
-                >
-                    { value }
-                </td>
-              {/if}
-            {/if}
-            {/each}               -->
           </tr>
         {/each}
       </tbody>
     </table>
   </div>
+  <div class="mdc-data-table__pagination">
+    <div class="mdc-data-table__pagination-trailing">
+      <div class="mdc-data-table__pagination-rows-per-page">
+        <div class="mdc-data-table__pagination-rows-per-page-label">
+          Activos por página
+        </div>
+        <div >
+          <Select 
+            customHeight
+            label=""
+            options={ [ { label: 3, value: 3 } ,{ label: 10, value: 10 }, { label: 50, value: 50 }, { label: 100, value: 100 } ] }
+          />
+        </div>
+      </div>
+
+      <div class="mdc-data-table__pagination-navigation">
+        <div class="mdc-data-table__pagination-total">{ (offset + 1) + ' - ' + (offset + limit > count ? count : offset + limit ) + ' de ' + count }</div>
+        <button
+          class="mdc-icon-button material-icons mdc-data-table__pagination-button"
+          data-first-page="true"
+          disabled={ offset == 0 }
+          on:click={ () => {
+            offset = 0;
+            dispatch("changePage", offset);
+          } }
+        >
+          <!-- <div class="mdc-button__icon">first_page</div> -->
+          <span class="material-symbols-rounded">first_page</span>
+        </button>
+        <button
+          class="mdc-icon-button material-icons mdc-data-table__pagination-button"
+          data-prev-page="true"
+          disabled={ offset == 0 }
+          on:click={ () => {
+            offset -= limit;
+            if (offset < 0) offset = 0;
+            dispatch("changePage", offset);
+          } }
+        >
+          <!-- <div class="mdc-button__icon">chevron_left</div> -->
+          <span class="material-symbols-rounded">chevron_left</span>
+        </button>
+        <button
+          class="mdc-icon-button material-icons mdc-data-table__pagination-button"
+          data-next-page="true"
+          disabled={ offset + limit >= count }
+          on:click={ () => {
+            offset += limit;
+            if (offset > count) offset = count - limit;
+            dispatch("changePage", offset);
+          } }
+        >
+          <!-- <div class="mdc-button__icon">chevron_right</div> -->
+          <span class="material-symbols-rounded">chevron_right</span>
+        </button>
+        <button
+          class="mdc-icon-button material-icons mdc-data-table__pagination-button"
+          data-last-page="true"
+          disabled={ offset + limit >= count }
+          on:click={ () => {
+            offset = count - limit;
+            if (offset < 0) offset = 0;
+            dispatch("changePage", offset);
+          } }
+        >
+          <!-- <div class="mdc-button__icon">last_page</div> -->
+          <span class="material-symbols-rounded">last_page</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
+
 <style>
   .table-filters {
     display: flex;

@@ -8,6 +8,9 @@
     import { headerTableActivos, estadosActivo } from "../../stores/store";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
+    let limit = 3;
+    let offset = 0;
+
     let props;
     let activos = [];
     let storeFilter; // Id de la sucursal para la peticion.
@@ -44,25 +47,10 @@
     const getActivosByStore = async (store) => {
         if (store == undefined) return;
 
-        console.log('STORE ID > ', store)
-        let response = (await Api.call(`http://127.0.0.1:9000/active/sucursal/${store.value}`, 'GET'));
-        console.log('RESPONSE > ', response)
+        let response = (await Api.call(`http://127.0.0.1:9000/active/sucursal/${store.value}?limit=${limit}&offset=${offset}`, 'GET'));
+        console.log('RESPONSE ACTIVOS BY STORE > ', response)
         if (response.success && response.statusCode == '200') {
             activos = response.data.result
-            // activos = response.data.result.map( activo => {
-            //     return {
-            //         barcode: activo.bar_code,
-            //         activo: activo.serie,   
-            //         model: activo.model,
-            //         aq_date: activo.acquisition_date,
-            //         create_date: activo.creation_date,
-            //         state: $estadosActivo.find(ea => ea.value == activo.state).label, //hacer algo
-            //         comment: activo.comment,
-            //         responsable: activo.name_in_charge_active,
-            //         num_register: activo.accounting_record_number,
-            //         document: activo.accounting_document
-            //     }
-            // });
             tableCount = response.data.count;
         }
         else {
@@ -76,30 +64,14 @@
             return;
         } 
 
-        console.log('OFFICES ID > ', officesId)
-
         let response = (await Api.call(`http://127.0.0.1:9000/active/offices/${officesId.join(',')}`, 'GET'));
-        console.log('RESPONSE > ', response)
+        console.log('RESPONSE ACTIVOS BY OFFICE > ', response)
         if (response.success && response.statusCode == '200') {
             if (response.data.result.length == 0) {
                 activos = [];
                 return; 
             }
             activos = response.data.result
-            // activos = response.data.result.map( activo => {
-            //     return {
-            //         barcode: activo.bar_code,
-            //         activo: activo.serie,   
-            //         model: activo.model,
-            //         aq_date: activo.acquisition_date,
-            //         create_date: activo.creation_date,
-            //         state: $estadosActivo.find(ea => ea.value == activo.state).label, //hacer algo
-            //         comment: activo.comment,
-            //         responsable: activo.name_in_charge_active,
-            //         num_register: activo.accounting_record_number,
-            //         document: activo.accounting_document
-            //     }
-            // });
             tableCount = response.data.count;
         }
         else {
@@ -146,7 +118,7 @@
         }
     })
 
-    $: getActivosByStore(storeFilter)
+    $: getActivosByStore(storeFilter, offset)
     $: getActivosByOffice(officesFilter)
 
 </script>
@@ -228,6 +200,13 @@
                 if (event.detail != '') getDocument(event.detail);
             } }
             count={ tableCount }
+            {limit}
+            {offset}
+            on:changePage={ (event) => {
+                console.log('changePage > ', event.detail)
+                offset = event.detail;
+                // limit = event.detail.limit;
+            } }
         />
     </div>
 
