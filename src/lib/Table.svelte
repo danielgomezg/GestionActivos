@@ -11,22 +11,39 @@
   export let offset = 0;
   export let headers = [];
   export let filters = {};
+  export { setUnselectedAll };
 
   let dataTable;
   let dataTableComponent;
   let dispatch = createEventDispatcher();
 
   const checkedRow = (event) => {
-    console.log("checked row: ", event);
+    // console.log(event.detail);
     let index = event.detail.rowIndex;
     let element = data[index];
-    console.log("element: ", element);
+    dispatch("rowSelected", element);
   };
+
+  const unselectedAll = (event) => {
+    dispatch("unselectedAll")
+  }
+
+  const selectedAll = (event) => {
+    dispatch("selectedAll")
+  }
+
+  const setUnselectedAll = () => {
+    console.log("setUnselectedAll")
+    dataTable.setSelectedRowIds([]);
+    unselectedAll();
+  }
 
   onMount(() => {
     // const checkbox = new MDCCheckbox(checkboxComponent);
     dataTable = new MDCDataTable(dataTableComponent);
     dataTable.listen("MDCDataTable:rowSelectionChanged", checkedRow);
+    dataTable.listen("MDCDataTable:selectedAll", selectedAll);
+    dataTable.listen("MDCDataTable:unselectedAll", unselectedAll);
     // dataTable.listen('MDCDataTable:rowSelectionChanged', (event) => {
     //     console.log(event.detail);
     // });
@@ -35,6 +52,8 @@
   $: if (data.length > 0 && dataTable != undefined) {
     dataTable.layout();
   }
+
+  
 </script>
 
 <div bind:this={dataTableComponent} class="mdc-data-table">
@@ -47,8 +66,8 @@
         <Chip chips={filters} on:deleteFilter />
       </div>
       <div class="align-right">
-        <IconButton icon="edit" on:click={() => dispatch("clearFilters")} />
-        <IconButton icon="delete" on:click={() => dispatch("clearFilters")} />
+        <IconButton icon="edit" on:click={() => dispatch("edit")} />
+        <IconButton icon="delete" on:click={() => dispatch("delete")} />
       </div>
     </div>
     <table class="mdc-data-table__table" aria-label="activos">
