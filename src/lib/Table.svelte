@@ -1,9 +1,10 @@
 <script>
-  import { createEventDispatcher, onMount } from "svelte";
   import Chip from "./chip.svelte";
+  import Select from "./Select.svelte";
+  import { fly } from 'svelte/transition';
   import IconButton from "./IconButton.svelte";
   import { MDCDataTable } from "@material/data-table";
-  import Select from "./Select.svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   export let limit = 0;
   export let count = 0;
@@ -15,20 +16,33 @@
 
   let dataTable;
   let dataTableComponent;
+  let showSearch = false;
+  let showActions = false;
   let dispatch = createEventDispatcher();
 
+  const showActionsControl = () => {
+    if (dataTable.getSelectedRowIds().length > 0) {
+      showActions = true;
+    } else {
+      showActions = false;
+    }
+  }
+
   const checkedRow = (event) => {
-    // console.log(event.detail);
+    showActionsControl()
+    
     let index = event.detail.rowIndex;
     let element = data[index];
     dispatch("rowSelected", element);
   };
 
   const unselectedAll = (event) => {
+    showActionsControl()
     dispatch("unselectedAll")
   }
 
   const selectedAll = (event) => {
+    showActionsControl()
     dispatch("selectedAll")
   }
 
@@ -52,12 +66,11 @@
   $: if (data.length > 0 && dataTable != undefined) {
     dataTable.layout();
   }
-
   
 </script>
 
 <div bind:this={dataTableComponent} class="mdc-data-table">
-  <div class="mdc-data-table__table-container">
+  <div class="table-head__custom">
     <div class="table-filters">
       <div>
         <span class="material-symbols-rounded">filter_list</span>
@@ -66,10 +79,19 @@
         <Chip chips={filters} on:deleteFilter />
       </div>
       <div class="align-right">
-        <IconButton icon="edit" on:click={() => dispatch("edit")} />
-        <IconButton icon="delete" on:click={() => dispatch("delete")} />
+        <slot name="search" />
       </div>
     </div>
+    {#if showActions}
+      <div class="table-actions" >
+        <div transition:fly="{{y: 0, x: -5, duration: 200}}">
+          <IconButton icon="edit" on:click={() => dispatch("edit")} />
+          <IconButton icon="delete" on:click={() => dispatch("delete")} />
+        </div>
+      </div>
+    {/if}
+  </div>
+  <div class="mdc-data-table__table-container">
     <table class="mdc-data-table__table" aria-label="activos">
       <thead>
         <tr class="mdc-data-table__header-row">
@@ -234,14 +256,22 @@
 </div>
 
 <style>
+
+  .table-head__custom {
+    /* padding: 6px 12px; */
+    border-bottom: #ccc 2px solid;
+  }
   .table-filters {
     display: flex;
     align-items: center;
     padding: 6px 12px;
-    border-bottom: #ccc 2px solid;
     gap: 24px;
   }
   .align-right {
     margin-left: auto;
+  }
+  
+  .table-actions {
+    border-top: #ccc 1px solid;
   }
 </style>

@@ -1,9 +1,9 @@
 <script>
-    import { onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
-    import { Button, Search, Table, Snackbar } from "$lib";
+    import { onMount, setContext } from "svelte";
     import ActivoForm from "./activoForm.svelte";	
     import ReportActivo from "../reports/report.svelte";
+    import { Button, Search, Table, Snackbar } from "$lib";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import { headerTableActivos, snackbar } from "../../stores/store";
@@ -29,6 +29,14 @@
     let openSnackbar = false;
     let hideSelectCompany = false;
     let newArticleDisabled = true;
+
+    setContext('reloadActivo', () => {
+        console.log('reloadActivo')
+        openModal = false;
+        table.setUnselectedAll();
+        if (officesFilter.length > 0) getActivosByOffice(officesFilter, offset)
+        else getActivosByStore(storeFilter, offset)
+    })
 
     const editActivo = () => {
         console.log('EDIT ACTIVO');
@@ -109,9 +117,12 @@
         })
 
         // let exito = response.filter(r => r.data.code == "201").map(r => r.data.result);
-        // table.setUnselectedAll()
         // tableCount -= exito.length;
         // activos = activos.filter(activo => !exito.includes(activo.id));
+        
+        table.setUnselectedAll()
+        if (officesFilter.length > 0) getActivosByOffice(officesFilter, offset)
+        else getActivosByStore(storeFilter, offset)
 
         return;
 
@@ -218,22 +229,25 @@
 />
 
 <div style="padding-top: 20px;">
-    <div class="header-content">
+    {#if !hideSelectCompany}
+        <CompanySelect 
+            customHeight
+            on:change={ (event) => {
+                console.log('COMPANY ID -> ', event.detail)
+                companyId = event.detail;
+                filters = [];
+                storeFilter = undefined;
+                officesFilter = [];
+                activos = [];
+                
+                newArticleDisabled = false;
+            }  }
+        />
+    {/if}
+    <div class="header-content mt-18">
+        
         <div class="flex-row gap-8 space-between">
-            {#if !hideSelectCompany}
-                <CompanySelect 
-                    customHeight
-                    on:change={ (event) => {
-                        console.log('COMPANY ID -> ', event.detail)
-                        companyId = event.detail;
-                        filters = [];
-                        storeFilter = undefined;
-                        officesFilter = [];
-                        activos = [];
-                        
-                    }  }
-                />
-            {/if}
+            
             <OfficeSucursalSelected 
                 custom
                 {companyId}
@@ -266,6 +280,10 @@
                     
                 } }
             />
+            
+            
+        </div>
+        <div class="flex-row gap-8">
             <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
             <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
             <ReportActivo 
@@ -274,8 +292,7 @@
                 disabled={ newArticleDisabled }
             />
         </div>
-        
-        <Search value="" />
+        <!-- <Search value="" /> -->
     </div>
 
     <div class="flex-column gap-8 mt-8">
@@ -300,10 +317,11 @@
             on:changePage={ (event) => {
                 console.log('changePage > ', event.detail)
                 offset = event.detail;
+                table.setUnselectedAll();
                 // limit = event.detail.limit;
             } }
             on:rowSelected={ (event) => {
-                console.log('rowSelected > ', event.detail)
+                // console.log('rowSelected > ', event.detail)
                 // buscar si activo existe en el array
                 let activo = activosSelected.find( activo => activo.id == event.detail.id)
 
@@ -339,7 +357,9 @@
             on:unselectedAll={ () => {
                 activosSelected = [];
             } }
-        />
+        >
+            <Search slot="search" value="" />
+        </Table>
     </div>
 
 </div>

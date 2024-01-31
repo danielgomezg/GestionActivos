@@ -1,16 +1,22 @@
 <script>
-    import { getContext, onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
     import { snackbar, estadosActivo } from "../../stores/store";
+    import { createEventDispatcher, getContext, onMount } from "svelte";
     import { TextField, Button, Select, FileInput, DatePicker } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
-    export let activo = {}, article_id = 0, company_id = 0, isEdit = false
+    export let activo = {};
+    export let article_id = 0;
+    export let company_id = 0;
+    export let isEdit = false;
 
-    let addActivoCount = getContext('addActivoCount');
-    let message= ''
+    let accionBtn;
+    let message= '';
     let office_id = 0;
     let document = null;
+    let dispatch = createEventDispatcher();
+    let addActivoCount = getContext('addActivoCount');
+    let reloadActivo = getContext('reloadActivo');
     
     function formatRut(code) {
         if (code == undefined) return ''
@@ -32,7 +38,6 @@
 
         return rut
         
-        // return code
     }
 
     function validForm() {
@@ -126,7 +131,8 @@
                 snk.message = "Activo agregado con éxito."
                 return snk
             })
-            addActivoCount(article_id, 1)
+            addActivoCount(article_id, 1);
+            dispatch('reloadActivo')
             
         }else {
             snackbar.update(snk => {
@@ -158,6 +164,7 @@
         activo.accounting_document = documentUrl == null ? '' : documentUrl;
 
         // Peticion
+        delete activo.office
         let body = JSON.stringify(activo)  
         console.log('BODY EDIT ACTIVE --> ', body)  
         let response = (await Api.call(`http://127.0.0.1:9000/active/${activo.id}`, 'PUT', { body }))
@@ -171,7 +178,8 @@
             })
 
             //replaceArticle(response.data.result)
-
+            // dispatch('reloadActivo')
+            reloadActivo();
         }
         else {
             //aviso
@@ -184,7 +192,6 @@
         }
     }
 
-    let accionBtn;
 
     onMount(async () => {
         if(isEdit){
@@ -229,21 +236,6 @@
         bind:value={activo.acquisition_date}
         label="Fecha de adquisición" 
     />
-
-    <!-- <div style="position: relative">
-        <input bind:value={activo.acquisition_date} type="date" class="custom-date" >
-
-        <TextField 
-            version=2
-            required 
-            type="text"
-            trailing="calendar_month"
-            label="Fecha de adquisición" 
-            bind:value={activo.acquisition_date}
-            on:click={ showDatePicker }
-            on:focus={ showDatePicker }
-        />
-    </div> -->
 
     <Select 
         label="Estado"

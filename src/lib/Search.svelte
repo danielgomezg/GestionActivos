@@ -1,6 +1,7 @@
 <script>
+    import IconButton from './IconButton.svelte';
     import { MDCTextField } from '@material/textfield';
-    import { onMount, createEventDispatcher } from 'svelte';
+    import { onMount, createEventDispatcher, tick } from 'svelte';
     import '@material/web/textfield/outlined-text-field.js';
 
     export let placeholder = ''
@@ -11,8 +12,30 @@
     export let trailing = ''
     export let leading = 'search'
 
-    let textfield
+    let search;
+    let textfield;
+    let isFocused = false;
     let dispatch = createEventDispatcher()
+
+    async function handleFocus() {
+        isFocused = true;
+
+        await tick();
+
+        search = new MDCTextField(textfield) 
+        textfield.addEventListener('input', function() {
+            var valorInput = textfield.querySelector('input')
+            value = valorInput.value
+        });
+        search.focus();
+        
+    }
+
+    function handleBlur() {
+        if (value.trim() === '') {
+            isFocused = false;
+        }
+    }
 
     const clickTrailing = () => {
         console.log('click')
@@ -26,16 +49,11 @@
     }
 
     onMount(() => {
-        new MDCTextField(textfield) 
-        textfield.addEventListener('input', function() {
-            // Acceder al valor del input
-            // console.log(textfield)
-            var valorInput = textfield.querySelector('input') //textfield.value;
-
-            // Hacer algo con el valor, como imprimirlo en la consola
-            // console.log('Texto ingresado:', valorInput.value);
-            value = valorInput.value
-        });
+        // new MDCTextField(textfield) 
+        // textfield.addEventListener('input', function() {
+        //     var valorInput = textfield.querySelector('input')
+        //     value = valorInput.value
+        // });
         
     })
 
@@ -46,39 +64,44 @@
     }
 
 </script>
+{#if isFocused}
 <label 
     bind:this={textfield} 
-    class="mdc-text-field mdc-text-field--outlined mdc-text-field--search mdc-text-field--no-label"
-    
+    class="mdc-text-field mdc-text-field--outlined mdc-text-field--search mdc-text-field--no-label"    
     >
-    <span class="mdc-notched-outline">
-        <span class="mdc-notched-outline__leading"></span>
-        <span class="mdc-notched-outline__notch">
-            <!-- <span class="mdc-floating-label" id="my-label-id">{label}</span> -->
-        </span>
-        <span class="mdc-notched-outline__trailing"></span>
-    </span>
 
-    {#if leading.trim()}
-      <!-- svelte-ignore a11y-click-events-have-key-events -->
-      <i
-        class="material-symbols-rounded mdc-text-field__icon mdc-text-field__icon--leading"
-        tabindex="0"
-        role="button"
-        on:click={ clickTrailing }
-      >
-        {leading}
-      </i>
-    {/if}
-    <input 
-        {id}
-        {type} 
-        {value}
-        {required}
-        {placeholder}
-        class="mdc-text-field__input" 
-        aria-labelledby="my-label-id" 
+    
+        <span class="mdc-notched-outline">
+            <span class="mdc-notched-outline__leading"></span>
+            <span class="mdc-notched-outline__notch">
+                <!-- <span class="mdc-floating-label" id="my-label-id">{label}</span> -->
+            </span>
+            <span class="mdc-notched-outline__trailing"></span>
+        </span>
+
+        {#if leading.trim()}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <i
+                class="material-symbols-rounded mdc-text-field__icon mdc-text-field__icon--leading"
+                tabindex="0"
+                role="button"
+                on:click={ clickTrailing }
+            >
+                {leading}
+            </i>
+        {/if}
+
+        <input 
+            {id}
+            {type} 
+            {value}
+            {required}
+            {placeholder}
+            on:blur={handleBlur}
+            class="mdc-text-field__input" 
+            aria-labelledby="my-label-id" 
         >
+    
         {#if trailing != ''}
             <!-- <span style="margin: auto; padding: 10px" > -->
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -87,8 +110,11 @@
                 role="button" on:click={ removeText } >{trailing}</i>
             <!-- </span> -->
         {/if}
-        
 </label>
+{/if}
+{#if !isFocused}
+    <IconButton icon="search" on:click={ handleFocus } />
+{/if}
 
 <style>
     .mdc-text-field__icon--leading {
