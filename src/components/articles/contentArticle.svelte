@@ -144,7 +144,7 @@
         newArticleDisabled = true;
         companyId = company_id;
 
-        let response = (await Api.call(`http://127.0.0.1:9000/articlesPorCompany/${company_id}`, 'GET'));
+        let response = (await Api.call(`http://127.0.0.1:9000/articles/company/${company_id}`, 'GET'));
         console.log(response)
         if (response.success && response.statusCode == "200") {
             articles = response.data.result;

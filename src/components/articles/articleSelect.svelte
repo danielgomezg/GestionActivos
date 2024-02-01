@@ -3,38 +3,39 @@
     import Api from "../../../helpers/ApiCall";
     import { onMount, createEventDispatcher } from "svelte";
 
+    export let companyId = 0
     export let selected = ''
     export let customHeight = false
 
-    let companies = []
+    let articles = []
     let dispatch = createEventDispatcher();
 
     //Se obtiene las companias con el id y nombre solamente
-    const getCompanyNameId = async () => {
-        let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET'))
-        console.log('RESPONSE GET COMPANIES --> ', response)
+    const getArticleByCompanyId = async () => {
+        let response = (await Api.call('http://127.0.0.1:9000/articles/company/' + companyId, 'GET'))
+        console.log('RESPONSE GET ARTICLES --> ', response)
         if (response.success && response.statusCode == '200') {
-            companies = response.data.result.map(r => { return { label: r.name, value: r.id } })
+            articles = response.data.result.map(r => { return { label: r.name, value: r.id } })
         } 
     }
 
     onMount(() => {
-        getCompanyNameId();
+        getArticleByCompanyId();
     })
 
 </script>
 
-{#key companies}
+{#key articles}
 
 <Select         
     on:change={e => {
-        dispatch('name', companies.find(c => c.value == e.detail).label)
+        // dispatch('name', companies.find(c => c.value == e.detail).label)
         dispatch('change', e.detail)
     }}
     {selected}
     {customHeight}
-    label="Empresa"
-    options={ companies }
+    label="Articulo"
+    options={ articles }
 />
 
 {/key}

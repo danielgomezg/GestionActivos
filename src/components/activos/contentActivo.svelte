@@ -21,6 +21,7 @@
     let companyId = 0;
     let tableCount = 0;
     let modalTitle = '';
+    let companyName = '';
     let openModal = false;
     let officesFilter = []; // Array de id de oficinas para realizar la peticion.
     let backButton = false;
@@ -37,6 +38,33 @@
         if (officesFilter.length > 0) getActivosByOffice(officesFilter, offset)
         else getActivosByStore(storeFilter, offset)
     })
+
+    const newActivo = (company_id) => {
+        modalTitle = `Nuevo activo - ` + companyName;
+        modalContent = ActivoForm
+        props = { 
+            activo: {
+                bar_code: '',
+                serie: '',
+                model: '',
+                comment: '',
+                acquisition_date: '',
+                accounting_document: '',
+                accounting_record_number: '',
+                name_in_charge_active: '',
+                rut_in_charge_active: '',
+                state: '',
+                article_id: '',
+                office_id: ''
+            },
+            article_id: 0,
+            company_id,
+            showArticles: true
+        }
+
+        openModal = true;
+    }
+
 
     const editActivo = () => {
         console.log('EDIT ACTIVO');
@@ -176,31 +204,6 @@
         }
     }
 
-    const newActivo = (company_id) => {
-        modalTitle = `Nuevo activo `
-        modalContent = ActivoForm
-        props = { 
-            activo: {
-                bar_code: '',
-                serie: '',
-                model: '',
-                comment: '',
-                acquisition_date: '',
-                accounting_document: '',
-                accounting_record_number: '',
-                name_in_charge_active: '',
-                rut_in_charge_active: '',
-                state: '',
-                article_id: '',
-                office_id: ''
-            },
-            article_id: 0,
-            company_id
-        }
-
-        openModal = true;
-    }
-
     onMount(() => {
         let user = JSON.parse(sessionStorage.getItem('user'));
         console.log(user)
@@ -215,8 +218,8 @@
         }
     })
 
-    $: getActivosByStore(storeFilter, offset)
-    $: getActivosByOffice(officesFilter, offset)
+    $: getActivosByStore(storeFilter, offset, limit)
+    $: getActivosByOffice(officesFilter, offset, limit)
 
 </script>
 
@@ -232,6 +235,9 @@
     {#if !hideSelectCompany}
         <CompanySelect 
             customHeight
+            on:name={ (event) => {
+                companyName = event.detail;
+            } }
             on:change={ (event) => {
                 console.log('COMPANY ID -> ', event.detail)
                 companyId = event.detail;
@@ -312,7 +318,7 @@
                 if (event.detail != '') getDocument(event.detail);
             } }
             count={ tableCount }
-            {limit}
+            bind:limit={limit}
             {offset}
             on:changePage={ (event) => {
                 console.log('changePage > ', event.detail)

@@ -1,6 +1,7 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { snackbar, estadosActivo } from "../../stores/store";
+    import ArticleSelect from "../articles/articleSelect.svelte";
     import { createEventDispatcher, getContext, onMount } from "svelte";
     import { TextField, Button, Select, FileInput, DatePicker } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
@@ -9,6 +10,7 @@
     export let article_id = 0;
     export let company_id = 0;
     export let isEdit = false;
+    export let showArticles = false;
 
     let accionBtn;
     let message= '';
@@ -208,6 +210,16 @@
 
 </script>
 <div class="form">
+
+    <OfficeSucursalSelected keep companyId={company_id} bind:selectedOffice={office_id} isEdit={isEdit} />
+
+    {#if showArticles}
+        <ArticleSelect 
+            companyId={company_id} 
+            on:change={e => article_id = e.detail}
+        />
+    {/if}
+
     <TextField 
         version=2
         required 
@@ -268,8 +280,6 @@
         bind:value={activo.rut_in_charge_active}
     />
 
-    <OfficeSucursalSelected companyId={company_id} bind:selectedOffice={office_id} isEdit={isEdit} />
-
     <TextField 
         version=2
         required 
@@ -286,6 +296,10 @@
         helperText="Documento con formato pdf, png o jpg"
         on:change={ (e) => document = e.detail }
     />
+
+    {#if showArticles}
+        <div></div>
+    {/if}
 
     <Button 
         custom

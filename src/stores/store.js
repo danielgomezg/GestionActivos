@@ -10,6 +10,9 @@ export const snackbar = writable({
     type: 'dismiss'
 })
 
+export const lockStore = writable(0);
+export const lockOffice = writable(0);	
+
 
 
 export const user = writable({}) //createUser()
@@ -94,31 +97,31 @@ export const menu = writable([
 export const estadosActivo = writable([
     {
         label: 'Reparación',
-        value: 'repare'
+        value: 'Reparación'
     },
     {
         label: 'Nuevo',
-        value: 'new'
+        value: 'Nuevo'
     },
     {
         label: 'Operativo',
-        value: 'operativo'
+        value: 'Operativo'
     },
     {
         label: 'Perdida o Robo',
-        value: 'lost'
+        value: 'Perdida o Robo'
     },
     {
         label: 'Dañado',
-        value: 'damage'
+        value: 'Dañado'
     },
     {
         label: 'Obsoleto',
-        value: 'deprecated'
+        value: 'Obsoleto'
     },
     {
         label: 'Otro',
-        value: 'other'
+        value: 'Otro'
     }
 ]);
 

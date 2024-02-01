@@ -191,7 +191,14 @@
         <div >
           <Select 
             customHeight
-            label=""
+            selected={ limit }
+            on:change={ (event) => {
+              console.log(event.detail);
+              // limite igual a event.detail en int
+              limit = parseInt(event.detail);
+
+              // dispatch("changeLimit", limit);
+            } }
             options={ [ { label: 3, value: 3 } ,{ label: 10, value: 10 }, { label: 50, value: 50 }, { label: 100, value: 100 } ] }
           />
         </div>

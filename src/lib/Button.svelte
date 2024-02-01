@@ -8,8 +8,8 @@
     export let color = '#107acc'//'#39404A'
     export let icon = ''
     export let type = 'unelevated'
-    export let trailing = false
-    export let leading = false
+    export let trailing = ''
+    export let leading = ''
     export let disabled = false
     export let loading = false
     export let custom = false
@@ -31,8 +31,8 @@
         class="mdc-button mdc-button-custom"
         class:mdc-button--unelevated={type === 'unelevated'}
         class:mdc-button--raised={type === 'raised'}
-        class:mdc-button--icon-leading={leading}
-        class:mdc-button--icon-trailing={trailing}
+        class:mdc-button--icon-leading={leading != ''}
+        class:mdc-button--icon-trailing={trailing != ''}
         class:mdc-button--outlined={type === 'outlined'}
         class:disabled={disabled}
         class:mdc-button-report={report}
@@ -44,7 +44,7 @@
         <span class="mdc-button__ripple"></span>
         <span class="mdc-button__touch"></span>
         {#if leading}
-            <i class="material-symbols-rounded">{icon}</i>
+            <i class="material-symbols-rounded">{leading}</i>
         {/if}
         <span class="mdc-button__label">
             {#if loading}
@@ -55,7 +55,7 @@
         
         </span>
         {#if trailing}
-            <i class="material-symbols-rounded">{icon}</i>
+            <i class="material-symbols-rounded">{trailing}</i>
         {/if}
         
     </button>

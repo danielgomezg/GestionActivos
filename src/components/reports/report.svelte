@@ -43,10 +43,9 @@
 {#if type == 'button'}
     <Button 
         report 
-        leading 
+        leading="download" 
         {label}
-        {disabled}
-        icon="download" 
+        {disabled} 
         on:click={ reportArticle } 
     />
 {:else}

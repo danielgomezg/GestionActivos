@@ -26,7 +26,6 @@
     }
 
     const setDispatch = () => {
-            
         dispatch("change", select.value)
     }
 
@@ -51,12 +50,15 @@
 </script>
 <div bind:this={selectComponent} class="mdc-select mdc-select--outlined mdc-select-custom"
     class:mdc-select--disabled={disabled}
+    class:mdc-select--no-label={label == ''}
     >
     <div class="mdc-select__anchor mdc-select-custom" aria-labelledby="outlined-select-label" class:custom-height={customHeight}>
         <span class="mdc-notched-outline">
             <span class="mdc-notched-outline__leading"></span>
             <span class="mdc-notched-outline__notch">
-                <span id="outlined-select-label" class="mdc-floating-label">{label}</span>
+                {#if label != ''}
+                    <span id="outlined-select-label" class="mdc-floating-label">{label}</span>
+                {/if}
             </span>
             <span class="mdc-notched-outline__trailing"></span>
         </span>

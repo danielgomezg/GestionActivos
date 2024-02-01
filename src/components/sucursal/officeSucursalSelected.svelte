@@ -1,20 +1,42 @@
 <script>
     import { Select } from "$lib";
-    import { onMount, createEventDispatcher } from "svelte";
     import Api from "../../../helpers/ApiCall";
+    import Button from "../../lib/Button.svelte";
+    import { lockOffice, lockStore } from "../../stores/store";
+    import { onMount, createEventDispatcher, tick, onDestroy } from "svelte";
 
   
+    export let keep = false;
     export let companyId = 0;
+    export let custom = false;
+    export let isEdit = false;
     export let selectedOffice = '';
     export let selectedSucursal = '';  
-    export let isEdit = false;
     export let show = ['sucursal', 'office'];
-    export let custom = false
 
-    let sucursales = [];
     let offices = [];
+    let sucursales = [];
+    let disabledKeep = true;
+    let disabledOffice = false;
+    let keepOfficeIcon = false;
+    let disabledSucursal = false;
 
     let dispatch = createEventDispatcher();
+
+    const keepOffice = () => {
+
+
+
+        disabledSucursal = !disabledSucursal;
+        disabledOffice = !disabledOffice;
+
+        console.log('KEEP OFFICE')
+
+        lockStore.set(selectedSucursal);
+        lockOffice.set(selectedOffice);
+
+        keepOfficeIcon = !keepOfficeIcon;
+    };
 
     const getSucursales = async () => {
         if (companyId == 0) {
@@ -52,7 +74,24 @@
     }
 
     onMount(async () => {
+        console.log('MOUNT OFFICE SUCURSAL')
+        
         await getSucursales();
+        
+        if ($lockOffice > 0) {
+            await getOffice($lockOffice)
+            selectedSucursal = $lockStore;
+
+            await tick();
+
+            selectedOffice = $lockOffice;
+            disabledKeep = false;
+            disabledOffice = true;
+            disabledSucursal = true;
+        }
+
+        console.log($lockOffice)
+        console.log($lockStore)
         
         if(isEdit){
             let office = await getOffice(selectedOffice)
@@ -65,11 +104,22 @@
         
     });
 
+    onDestroy(() => {
+        console.log('DESTROY OFFICE SUCURSAL')
+        console.log(keepOfficeIcon)
+        if (!keepOfficeIcon) {
+            lockStore.set(0);
+            lockOffice.set(0);
+        }
+    })
+
     $: if (selectedSucursal) {
         getOfficesBySucursal(selectedSucursal);
     }
 
     $: if (companyId) getSucursales();
+
+
 
 </script>
 
@@ -77,9 +127,10 @@
     {#key sucursales}
     <Select
         label="Sucursal"
-        customHeight={custom}
-        selected={selectedSucursal}
         options={sucursales}
+        customHeight={custom}
+        disabled={disabledSucursal}
+        selected={selectedSucursal}
         on:change={(event) => {
             console.log('CHANGE SUCURSAL -> ', event.detail)
             selectedSucursal = event.detail;
@@ -95,12 +146,14 @@
 {#if show.includes('office')}
     {#key offices}
     <Select
-        customHeight={custom}
         label="Oficina"
-        selected={selectedOffice}
         options={offices}
+        customHeight={custom}
+        selected={selectedOffice}
+        disabled={disabledOffice}
         on:change={(event) => {
             selectedOffice = event.detail
+            disabledKeep = false
             // console.log('CHANGE OFFICE -> ', event.detail)
             let office = offices.find(office => office.value == event.detail)
             dispatch('changeOffice', { selectedOffice, office })    
@@ -109,26 +162,14 @@
     {/key}
 {/if}
 
-<!-- {#key sucursales}
-    {#key offices}
-    <Select
-        label="Sucursal"
-        selected={selectedSucursal}
-        options={sucursales}
-        on:change={(event) => {
-            selectedSucursal = event.detail;
-            selectedOffice = ''; // Resetear el valor de la oficina al cambiar la sucursal
-            //getOfficesBySucursal(selectedSucursal);
-        }}
+{#if keep}
+<div style="margin-left: auto; grid-column: 1 / -1;">
+    <Button 
+        disabled={disabledKeep}
+        custom
+        label={ keepOfficeIcon ? "Cambiar oficina" : "Mantener oficina"}
+        trailing={ keepOfficeIcon ? 'lock' : 'lock_open'}
+        on:click={ keepOffice }
     />
-    {/key}
-{/key} -->
-
-<!-- {#key offices}
-    <Select
-        label="Oficina"
-        selected={selectedOffice}
-        options={offices}
-        on:change={(event) => selectedOffice = event.detail}
-    />
-{/key} -->
+</div>  
+{/if}	
