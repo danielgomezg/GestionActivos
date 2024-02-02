@@ -2,7 +2,7 @@
     import Api from "../../../helpers/ApiCall";
     import { snackbar, estadosActivo } from "../../stores/store";
     import ArticleSelect from "../articles/articleSelect.svelte";
-    import { createEventDispatcher, getContext, onMount } from "svelte";
+    import { createEventDispatcher, getContext, onDestroy, onMount } from "svelte";
     import { TextField, Button, Select, FileInput, DatePicker } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
@@ -16,9 +16,17 @@
     let message= '';
     let office_id = 0;
     let document = null;
+    let selectedOffice = 0;
+    let selectedSucursal = 0;
+    let locationsActivesNew = {
+        stores: [],
+        offices: []
+    };
+
     let dispatch = createEventDispatcher();
     let addActivoCount = getContext('addActivoCount');
     let reloadActivo = getContext('reloadActivo');
+    let newActivo = getContext('newActivo');
     
     function formatRut(code) {
         if (code == undefined) return ''
@@ -133,8 +141,27 @@
                 snk.message = "Activo agregado con éxito."
                 return snk
             })
-            addActivoCount(article_id, 1);
-            dispatch('reloadActivo')
+
+            if (!showArticles) addActivoCount(article_id, 1);
+
+            activo = {
+                bar_code: '',
+                serie: '',
+                model: '',
+                comment: '',
+                acquisition_date: '',
+                accounting_document: '',
+                accounting_record_number: '',
+                name_in_charge_active: '',
+                rut_in_charge_active: '',
+                state: '',
+                article_id: '',
+                office_id: ''
+            };
+            article_id = 0;
+
+            locationsActivesNew.offices.push(selectedOffice);
+            locationsActivesNew.stores.push(selectedSucursal);
             
         }else {
             snackbar.update(snk => {
@@ -203,6 +230,10 @@
             accionBtn = saveActivo
         }
     })
+
+    onDestroy(() => {
+        newActivo(locationsActivesNew)
+    })
     
 
     $: activo.rut_in_charge_active = formatRut(activo.rut_in_charge_active)
@@ -211,11 +242,19 @@
 </script>
 <div class="form">
 
-    <OfficeSucursalSelected keep companyId={company_id} bind:selectedOffice={office_id} isEdit={isEdit} />
+    <OfficeSucursalSelected 
+        keep 
+        isEdit={isEdit} 
+        companyId={company_id} 
+        bind:selectedOffice={office_id}
+        on:changeOffice={e => selectedOffice = e.detail.selectedOffice}
+        on:changeSucursal={e => selectedSucursal = e.detail.selectedSucursal}
+    />
 
     {#if showArticles}
         <ArticleSelect 
             companyId={company_id} 
+            selected={article_id}
             on:change={e => article_id = e.detail}
         />
     {/if}
@@ -257,8 +296,7 @@
     />
 
     <TextField 
-        version=2
-        required 
+        version=2 
         type="text"
         label="Comentario" 
         bind:value={activo.comment}

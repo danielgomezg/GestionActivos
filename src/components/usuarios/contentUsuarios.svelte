@@ -76,8 +76,8 @@
         loading = true;
         let response = (await Api.call('http://127.0.0.1:9000/users', 'GET'))
         console.log('RESPONSE GET USERS --> ', response)
-        if (response.success) {
-            usuarios = response.data 
+        if (response.success && response.statusCode == '200') {
+            usuarios = response.data.result
         } 
         loading = false;
     }
@@ -123,7 +123,6 @@
         getPerfiles()
     })
 
-    $: console.log('open modal: ', openModal)
 
 </script>
 

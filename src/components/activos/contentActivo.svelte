@@ -31,6 +31,32 @@
     let hideSelectCompany = false;
     let newArticleDisabled = true;
 
+    setContext('newActivo', (locations) => {
+        console.log('newActivo')
+        console.log(locations)
+        
+
+        if (officesFilter.length > 0) {
+            // Si al menos una id de officesFilter existe en locations.offices, realizar peticion con officesFilter
+            let exists = officesFilter.some(office => locations.offices.includes(office))
+            if (exists) {
+                if (offset == 0) getActivosByOffice(officesFilter, offset)
+                else offset = 0;
+            } 
+        }
+        else if (storeFilter.length > 0) {
+            // Si al menos una id de storeFilter existe en locations.stores, realizar peticion con storeFilter
+            if (locations.stores.includes(storeFilter.value)) {
+                if (offset == 0) getActivosByStore(storeFilter, offset)
+                else offset = 0;
+            }
+        }
+
+        table.setUnselectedAll();
+        if (officesFilter.length > 0) getActivosByOffice(officesFilter, offset)
+        else getActivosByStore(storeFilter, offset)
+    })
+
     setContext('reloadActivo', () => {
         console.log('reloadActivo')
         openModal = false;
@@ -220,6 +246,9 @@
 
     $: getActivosByStore(storeFilter, offset, limit)
     $: getActivosByOffice(officesFilter, offset, limit)
+    $: if (!openModal) {
+        console.log(modalContent)
+    }
 
 </script>
 

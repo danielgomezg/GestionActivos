@@ -111,7 +111,7 @@
                 <li>{ `Serie: ${activo.serie}` }</li>
                 <li>{ `Modelo: ${activo.model}` }</li>
                 <li>{ `Responsable: ${activo.name_in_charge_active}, ${activo.rut_in_charge_active}` }</li>
-                <li>{ `Estado: ${ $estadosActivo.find(ea => ea.value == activo.state).label } ${ activo.comment != '' ? `(${activo.comment })` : '' }` }</li>
+                <li>{ `Estado: ${ activo.state } ${ activo.comment != '' ? `(${activo.comment })` : '' }` }</li>
                 
             </div>
             <!-- <div class="info__description">

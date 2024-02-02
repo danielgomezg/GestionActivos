@@ -16,15 +16,22 @@
     const getImage = async (name) => {
         if (name == '') return null;
 
-        fetch(`http://127.0.0.1:9000/image_article/${name}`)
-            .then(response => response.blob())
-            .then(images => {
-                let objectURL = URL.createObjectURL(images);
-                imageUrl = objectURL;
+        try {
+        
+            fetch(`http://127.0.0.1:9000/image_article/${name}`)
+                .then(response => response.blob())
+                .then(images => {
+                    console.log('IMAGES -> ', images)
+                    let objectURL = URL.createObjectURL(images);
+                    console.log('OBJECT URL -> ', objectURL)
+                    imageUrl = objectURL;
 
-            })
-            .catch(error => console.error(error));
+                })
+                .catch(error => console.error(error));
 
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     const deleteArticle = async () => {
@@ -101,7 +108,7 @@
                     id={ article.id } 
                     label="Reporte activos"
                 /> -->
-                <!-- <IconButton icon="history" tooltipId="btn-history__{article.name}" tooltipText="Historial" on:click={ dispath("history", article) } /> -->
+                <IconButton icon="history" tooltipId="btn-history__{article.name}" tooltipText="Historial" on:click={ dispath("history", article) } />
                 <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", {article, imageUrl}) } />
                 {#if $user.profile_id != 2}
                     <IconButton 

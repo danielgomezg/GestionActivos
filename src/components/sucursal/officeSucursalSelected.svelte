@@ -25,12 +25,8 @@
 
     const keepOffice = () => {
 
-
-
         disabledSucursal = !disabledSucursal;
         disabledOffice = !disabledOffice;
-
-        console.log('KEEP OFFICE')
 
         lockStore.set(selectedSucursal);
         lockOffice.set(selectedOffice);
@@ -85,6 +81,7 @@
             await tick();
 
             selectedOffice = $lockOffice;
+            keepOfficeIcon = true;
             disabledKeep = false;
             disabledOffice = true;
             disabledSucursal = true;
@@ -105,8 +102,6 @@
     });
 
     onDestroy(() => {
-        console.log('DESTROY OFFICE SUCURSAL')
-        console.log(keepOfficeIcon)
         if (!keepOfficeIcon) {
             lockStore.set(0);
             lockOffice.set(0);
@@ -118,8 +113,6 @@
     }
 
     $: if (companyId) getSucursales();
-
-
 
 </script>
 
