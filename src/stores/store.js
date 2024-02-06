@@ -1,6 +1,8 @@
 import { writable } from 'svelte/store'
 
 export const companyBackup = writable([])
+export const articleBackup = writable([])
+
 export const snackbar = writable({
     id: 0,
     action: '',

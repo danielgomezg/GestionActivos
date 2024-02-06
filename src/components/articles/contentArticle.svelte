@@ -3,6 +3,8 @@
     import Api from "../../../helpers/ApiCall";
     import { setContext, onMount } from "svelte";
     import { Button, Loading, Search, Fab } from "$lib";
+    import ArticlesSearch from "./articlesSearch.svelte";
+    import { articleBackup } from "../../stores/store";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
     import ReportArticle from "../reports/report.svelte";
@@ -10,6 +12,7 @@
     import ActivoInfo from "../activos/activoInfo.svelte";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
+  import ArticleCard from "./articleCard.svelte";
 
     let props;
     let message = "";
@@ -21,6 +24,7 @@
     let backButton = false;
     let hideSelectCompany = false;
     let newArticleDisabled = true;
+    let startSearch = false;
 
     let previusComponent, previusProps, previusModelTitle = '';
 
@@ -198,9 +202,25 @@
                 disabled={ newArticleDisabled }
             /> -->
         </div>
+
+
+
+        <ArticlesSearch
+            bind:articles={articles} 
+            on:startSearch={ () => {
+                startSearch = true;
+                articleBackup.set(articles)
+            } }
+            on:removeSearch={ () => {
+                startSearch = false;
+                articles = [...$articleBackup]
+            } }
+            company_id = {companyId}
+        />
         
-        <Search value="" />
-        <!-- <div class="">
+       <!-- <Search value="" />
+
+         <div class="">
         </div> -->
         <!-- <IconButton icon="tune" /> -->
         <!-- <div class="title">Empresas</div> -->
@@ -219,7 +239,13 @@
                 on:showActivos={ (event) => showActivos(event.detail, companyId) } 
             />
         {:else}
-            <p>{ message }</p>
+            {#if startSearch}
+                <p>No se encontraron articulos para tu búsqueda</p>
+            {:else}
+                <p>No hay articulos en esta empresa</p>
+            {/if}
+       <!--{:else}
+            <p>{ message }</p>--> 
         {/each}
     </div>
 
