@@ -3,10 +3,10 @@
     import { onMount, setContext } from "svelte";
     import ActivoForm from "./activoForm.svelte";	
     import ReportActivo from "../reports/report.svelte";
-    import { Button, Search, Table, Snackbar } from "$lib";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import { headerTableActivos, snackbar } from "../../stores/store";
+    import { Button, Search, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
     let limit = 3;
@@ -25,6 +25,7 @@
     let openModal = false;
     let officesFilter = []; // Array de id de oficinas para realizar la peticion.
     let backButton = false;
+    let openActions = false;
     let activosSelected = [];
     let messageSnackbar = '';
     let openSnackbar = false;
@@ -44,7 +45,7 @@
                 else offset = 0;
             } 
         }
-        else if (storeFilter.length > 0) {
+        else if (storeFilter != undefined && storeFilter.length > 0) {
             // Si al menos una id de storeFilter existe en locations.stores, realizar peticion con storeFilter
             if (locations.stores.includes(storeFilter.value)) {
                 if (offset == 0) getActivosByStore(storeFilter, offset)
@@ -260,6 +261,10 @@
     on:confirm={ deleteActivos }
 />
 
+<div class="mobile-only" style="position: fixed; bottom: 10px; left: 10px; z-index: 10">
+    <Fab disabled={ newArticleDisabled } on:click={ newActivo(companyId) } />
+</div>
+
 <div style="padding-top: 20px;">
     {#if !hideSelectCompany}
         <CompanySelect 
@@ -318,14 +323,31 @@
             
             
         </div>
-        <div class="flex-row gap-8">
-            <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
-            <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
-            <ReportActivo 
+        <div class="flex-row gap-8" style="align-items: center;">
+            <div class="desktop-only">
+                <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
+            </div>
+            <!-- <ReportActivo 
                 id={ companyId } 
                 label="Exportar a PDF"
                 disabled={ newArticleDisabled }
-            />
+            /> -->
+            <div class="mobile-only" style="display: flex; align-items: center; justify-content: space-between;">
+                <Search slot="search" value="" />
+                <Menu
+                        bind:open={openActions}
+                        options={
+                            [
+                                { label: "Exportar PDF", dispatch: "toPdf"},
+                                { label: "Exportar Excel", dispatch: "toExcel"}
+                            ]  
+                        }
+                        on:toPdf={() => console.log('toPdf') }
+                        on:toExcel={() => console.log('toExcel') }
+                    >
+                      <IconButton icon="download" on:click={() => openActions = !openActions } />
+                </Menu>
+            </div>
         </div>
         <!-- <Search value="" /> -->
     </div>
@@ -393,7 +415,9 @@
                 activosSelected = [];
             } }
         >
-            <Search slot="search" value="" />
+            <div class="desktop-only">
+                <Search slot="search" value="" />
+            </div>
         </Table>
     </div>
 

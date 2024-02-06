@@ -281,4 +281,15 @@
   .table-actions {
     border-top: #ccc 1px solid;
   }
+
+  @media only screen and (max-width: 600px) {
+    .mdc-data-table__pagination-rows-per-page {
+      padding: 10px 5px 5px 5px;
+      margin: auto;
+    }
+
+    .mdc-data-table__pagination-rows-per-page-label {
+      white-space: break-spaces;
+    }
+  }
 </style>

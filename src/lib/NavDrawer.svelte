@@ -68,7 +68,8 @@
     .mdc-drawer--modal{
         box-shadow: none;
         /* top: 64px; */
-        z-index: 1;
+        /* z-index: 5; */
+        z-index: 11;
     }
 
     .mobile {

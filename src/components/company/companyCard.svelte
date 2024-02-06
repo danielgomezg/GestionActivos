@@ -1,7 +1,7 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
-    import { Card, IconButton, Button, Snackbar } from "$lib";
+    import { Card, IconButton, Button, Snackbar, Menu } from "$lib";
     import { createEventDispatcher, getContext } from "svelte";
 
     export let company = {}
@@ -9,6 +9,7 @@
     let dispath = createEventDispatcher();
     let removeCompany = getContext('removeCompany');
 
+    let openActions = false;
     let openSnackbar = false;
     let messageSnackbar = '';
 
@@ -60,16 +61,39 @@
         <div class="card-header">
             <div class="card-title">{ company.name }</div>
             <div>
-                <IconButton icon="history" tooltipId="btn-history__{company.name}" tooltipText="Historial" on:click={ dispath("history", company) } />
-                <IconButton icon="edit" tooltipId="btn-edit__{company.name}" tooltipText="Editar" on:click={ dispath("edit", company) } />
-                <IconButton 
-                    icon="delete" 
-                    tooltipId="btn-delete__{company.name}" 
-                    tooltipText="Eliminar" 
-                    on:click={ () => {
-                        messageSnackbar = '¿Eliminar la empresa ' + company.name + '?'
-                        openSnackbar = true;
-                    } } />
+                <div class="mobile-only">
+                    <!-- <IconButton icon="more_vert" /> -->
+                    <Menu
+                        bind:open={openActions}
+                        options={
+                            [
+                                { label: "Historial", dispatch: "history"},
+                                { label: "Editar", dispatch: "edit"},
+                                { label: "Eliminar", dispatch: "delete" }
+                            ]  
+                        }
+                        on:edit={() => dispath("edit", company) }
+                        on:history={() => dispath("history", company) }
+                        on:delete={() => {
+                            messageSnackbar = '¿Eliminar la empresa ' + company.name + '?'
+                            openSnackbar = true;
+                        }}
+                    >
+                      <IconButton icon="more_vert" on:click={() => openActions = !openActions } />
+                    </Menu>
+                </div>
+                <div class="desktop-only">    
+                    <IconButton icon="history" tooltipId="btn-history__{company.name}" tooltipText="Historial" on:click={ dispath("history", company) } />
+                    <IconButton icon="edit" tooltipId="btn-edit__{company.name}" tooltipText="Editar" on:click={ dispath("edit", company) } />
+                    <IconButton 
+                        icon="delete" 
+                        tooltipId="btn-delete__{company.name}" 
+                        tooltipText="Eliminar" 
+                        on:click={ () => {
+                            messageSnackbar = '¿Eliminar la empresa ' + company.name + '?'
+                            openSnackbar = true;
+                        } } />
+                </div>
             </div>
         </div>
         <div class="card-content">

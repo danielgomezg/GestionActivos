@@ -217,8 +217,7 @@
     <div>
         {#if !isEdit}
             <Button 
-                leading
-                label="Guardar"
+                label="Guardar 2"
                 custom 
                 {loading}
                 on:click={ saveCompany }
@@ -226,8 +225,7 @@
         {:else}
 
             <Button 
-                leading
-                label="Guardar"
+                label="Guardar 1"
                 custom
                 {loading}
                 on:click={ editCompany }

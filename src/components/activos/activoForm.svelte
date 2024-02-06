@@ -339,11 +339,13 @@
         <div></div>
     {/if}
 
-    <Button 
-        custom
-        label="Guardar"
-        on:click={ accionBtn }
-    />
+    <div class="mobile-fixed">
+        <Button 
+            custom
+            label="Guardar"
+            on:click={ accionBtn }
+        />
+    </div>
 
 </div>
 

@@ -1,14 +1,14 @@
 <script>
-    import { Button, Loading } from "$lib";
     import Api from "../../../helpers/ApiCall";
+    import { Button, Loading, Fab } from "$lib";
     import { onMount, setContext } from "svelte";
     import StoresInfo from "./storesInfo.svelte";
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
     import CompanySearch from "./companySearch.svelte";
     import { companyBackup } from "../../stores/store";
-    import HistoryCompany from "./companyHistory.svelte";
     // import History from "../history/history.svelte";
+    import HistoryCompany from "./companyHistory.svelte";
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
@@ -154,10 +154,15 @@
 
 </script>
 
-<div style="padding-top: 20px;">
-    <div class="header-content">
-        <Button label="Nueva empresa" custom on:click={ createCompany } />
+<!--  style="padding-top: 20px;" -->
+
+<div style="position: relative">
+    <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 24px 0 10px">
+        <div class="desktop-only">
+            <Button label="Nueva empresa" custom on:click={ createCompany } />
+        </div>
         <!-- <Search value="" /> -->
+        <div>
         <CompanySearch 
             bind:empresas={empresas} 
             on:startSearch={ () => {
@@ -169,10 +174,14 @@
                 empresas = [...$companyBackup]
             } }
         />
+        </div>
+        <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
+            <Fab on:click={ createCompany } />
+        </div>
     </div>
-    <br>
+    <!-- <br> -->
 
-    <div class="companies-content">
+    <div class="companies-content" style="padding: 14px 0 10px;">
         {#if loading}
             <Loading />
         {/if}

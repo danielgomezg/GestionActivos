@@ -187,3 +187,31 @@ p {
         display: block;
     }
 }
+
+@media only screen and (max-width: 600px) {
+    .mobile-fixed{
+        bottom: 0px;
+        width: 100%;
+        position: sticky;
+        padding-bottom: 5px;
+        background-color: white;
+    }
+}
+
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+@media only screen and (max-width: 600px) {
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+}

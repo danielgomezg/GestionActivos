@@ -1,6 +1,6 @@
 <script>
     // @ts-ignore
-    import { Button, IconButton, Loading } from "$lib"
+    import { Button, IconButton, Loading, Fab } from "$lib"
     import { setContext, onMount } from "svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     //import { usuarios } from "../../stores/store";
@@ -126,11 +126,14 @@
 
 </script>
 
-<div style="padding-top: 20px;">
+<div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
+    <Fab on:click={ createUser } />
+</div>
+<div style="padding: 20px 0;">
     <div class="header-content">
-        <Button label="Nuevo usuario" custom on:click={ createUser } />
-        <IconButton icon="tune" />
-        <!-- <div class="title">Empresas</div> -->
+        <div class="desktop-only">
+            <Button label="Nuevo usuario" custom on:click={ createUser } />
+        </div>
     </div>
     <br>
 

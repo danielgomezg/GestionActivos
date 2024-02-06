@@ -1,3 +1,4 @@
+export { default as Fab } from "./Fab.svelte";
 export { default as Tab } from "./Tabs.svelte";
 export { default as Menu } from "./Menu.svelte";
 export { default as Card } from "./Card.svelte";

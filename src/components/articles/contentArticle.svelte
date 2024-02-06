@@ -2,7 +2,7 @@
     import { user } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     import { setContext, onMount } from "svelte";
-    import { Button, Loading, Search } from "$lib";
+    import { Button, Loading, Search, Fab } from "$lib";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
     import ReportArticle from "../reports/report.svelte";
@@ -174,6 +174,9 @@
 
 </script>
 
+<div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
+    <Fab disabled={ newArticleDisabled } on:click={ createArticle(companyId) } />
+</div>
 <div style="padding-top: 20px;">
     <div class="header-content">
         <div class="flex-row gap-8 space-between">
@@ -184,7 +187,9 @@
             />
             {/if}
             {#if $user.profile_id != 2}
-                <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(companyId) } />
+                <div class="desktop-only">
+                    <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(companyId) } />
+                </div>
             {/if}
                 <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
             <!-- <ReportArticle 

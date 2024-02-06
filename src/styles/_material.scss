@@ -58,7 +58,7 @@
 
 @use "@material/form-field";
 
-
+@use "@material/fab";
 
 // **** Include
 @include card.core-styles;
@@ -71,6 +71,7 @@
 @include data-table.theme-baseline;
 @include checkbox.core-styles;
 @include form-field.core-styles;
+@include fab.core-styles;
 // @include select.core-styles;
 // @include chipset.core-styles;
 // @include button.core-styles;
@@ -130,6 +131,15 @@ $primay_button-colors: (
 
 .mdc-button-report {
     @include button.container-fill-color(#142157);
+}
+
+.mdc-fab {
+    @include fab.container-color(#107acc);
+}
+
+.mdc-fab--disabled {
+    @include fab.ink-color(#C3C3C3);
+    @include fab.container-color(#DBDBDB);
 }
 
 // .mdc-button-custom {

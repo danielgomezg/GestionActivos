@@ -18,6 +18,7 @@
     let dispatch = createEventDispatcher()
 
     async function handleFocus() {
+        
         isFocused = true;
 
         await tick();
@@ -49,12 +50,16 @@
     }
 
     onMount(() => {
-        // new MDCTextField(textfield) 
-        // textfield.addEventListener('input', function() {
-        //     var valorInput = textfield.querySelector('input')
-        //     value = valorInput.value
-        // });
-        
+        console.log('onMount')
+        console.log('textfield -> ', textfield)
+        if (textfield != undefined) {
+            // handleFocus()
+            search = new MDCTextField(textfield) 
+            textfield.addEventListener('input', function() {
+                var valorInput = textfield.querySelector('input')
+                value = valorInput.value
+            });
+        }
     })
 
     $: if (value != '') {
@@ -64,13 +69,15 @@
     }
 
 </script>
-{#if isFocused}
-<label 
-    bind:this={textfield} 
-    class="mdc-text-field mdc-text-field--outlined mdc-text-field--search mdc-text-field--no-label"    
-    >
 
-    
+<div 
+    class="isFocused"
+    class:active={isFocused}
+>
+    <label 
+        bind:this={textfield} 
+        class="mdc-text-field mdc-text-field--outlined mdc-text-field--search mdc-text-field--no-label "    
+    >        
         <span class="mdc-notched-outline">
             <span class="mdc-notched-outline__leading"></span>
             <span class="mdc-notched-outline__notch">
@@ -104,17 +111,19 @@
     
         {#if trailing != ''}
             <!-- <span style="margin: auto; padding: 10px" > -->
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <i class="material-symbols-rounded mdc-text-field__icon mdc-text-field__icon--trailing" tabindex="0"
-                role="button" on:click={ removeText } >{trailing}</i>
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <i class="material-symbols-rounded mdc-text-field__icon mdc-text-field__icon--trailing" tabindex="0"
+            role="button" on:click={ removeText } >{trailing}</i>
             <!-- </span> -->
         {/if}
-</label>
-{/if}
-{#if !isFocused}
-    <IconButton icon="search" on:click={ handleFocus } />
-{/if}
+    </label>
+</div>
+<div class="desktop-only">
+    {#if !isFocused}
+        <IconButton icon="search" on:click={ handleFocus } />
+    {/if}
+</div>
 
 <style>
     .mdc-text-field__icon--leading {
@@ -125,4 +134,21 @@
         cursor: pointer;
     }
 
+    .isFocused {
+        display: none;
+    }
+
+    @media only screen and (min-width: 600px) {
+        /* isFocused tiene que tener la propiedad display: block cuando exista la clase active */
+        .isFocused.active {
+            display: block;
+        }
+
+    }
+
+    @media only screen and (max-width: 600px) {
+        .isFocused {
+            display: block;   
+        }
+    }
 </style>

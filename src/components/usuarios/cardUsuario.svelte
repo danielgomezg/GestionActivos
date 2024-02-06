@@ -1,5 +1,5 @@
 <script>
-    import { Card, IconButton, Divider } from "$lib"
+    import { Card, IconButton, Divider, Menu, Search } from "$lib"
     import { createEventDispatcher } from "svelte";
     import { snackbar } from "../../stores/store";
     import { getContext } from "svelte";
@@ -8,7 +8,8 @@
     export let usuario = {}
 
     //Contexto para actualizar users
-    let removeUsuario = getContext('removeUsuario')
+    let openActions = false;
+    let removeUsuario = getContext('removeUsuario');
 
     let dispath = createEventDispatcher();
 
@@ -52,9 +53,25 @@
                 <div class="card-title">{ usuario.firstName + ' ' + usuario.lastName }</div>
                 <div>{ usuario.secondName + ' ' + usuario.secondLastName }</div>
             </div>
-            <div>
+            <div class="desktop-only">
                 <IconButton icon="edit" tooltipId="btn-edit__{usuario.rut}" tooltipText="Editar" on:click={ dispath("edit", usuario) } />
                 <IconButton icon="delete" tooltipId="btn-delete__{usuario.rut}" tooltipText="Eliminar" on:click={ deleteUsuario }/>
+            </div>
+            <div class="mobile-only">
+                <!-- <IconButton icon="more_vert" /> -->
+                <Menu
+                    bind:open={openActions}
+                    options={
+                        [
+                            { label: "Editar", dispatch: "edit"},
+                            { label: "Eliminar", dispatch: "delete" }
+                        ]  
+                    }
+                    on:edit={() => dispath("edit", usuario) }
+                    on:delete={() => deleteUsuario }
+                >
+                  <IconButton icon="more_vert" on:click={() => openActions = !openActions } />
+                </Menu>
             </div>
         </div>
         <Divider />

@@ -2,12 +2,13 @@
     import Api from "../../../helpers/ApiCall";
     import { snackbar, user } from "../../stores/store";
     import ReportActive from "../reports/report.svelte";
-    import { Card, IconButton, Button, Snackbar } from "$lib";
     import { createEventDispatcher, getContext } from "svelte";
+    import { Card, IconButton, Button, Snackbar, Menu } from "$lib";
 
     export let article = {}
 
     let imageUrl;
+    let openActions = false;
     let openSnackbar = false;
     let messageSnackbar = '';
     let dispath = createEventDispatcher();
@@ -102,7 +103,7 @@
                     <p> { article.count_actives || 0 } activos</p> -->
                 </div>
             </div>
-            <div>
+            <div class="desktop-only">
                 <!-- <ReportActive 
                     type="btn-icon"
                     id={ article.id } 
@@ -121,6 +122,27 @@
                     } } />
 
                 {/if}
+            </div>
+            <div class="mobile-only">
+                <!-- <IconButton icon="more_vert" /> -->
+                <Menu
+                    bind:open={openActions}
+                    options={
+                        [
+                            { label: "Historial", dispatch: "history"},
+                            { label: "Editar", dispatch: "edit"},
+                            { label: "Eliminar", dispatch: "delete" }
+                        ]  
+                    }
+                    on:edit={() => dispath("edit", {article, imageUrl}) }
+                    on:history={() => dispath("history", article) }
+                    on:delete={() => {
+                        messageSnackbar = '¿Eliminar el artículo ' + article.name + '?'
+                        openSnackbar = true;
+                    }}
+                >
+                  <IconButton icon="more_vert" on:click={() => openActions = !openActions } />
+                </Menu>
             </div>
         </div>
         <!-- <div class="card-content">

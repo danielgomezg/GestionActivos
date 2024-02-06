@@ -374,10 +374,9 @@
     {/if}
 
     <br>
-    <div class="grid-col-span-1">
+    <div class="grid-col-span-1 mobile-fixed">
         <Button 
             custom
-            trailing
             disabled={disabledSave}
             label="Guardar"
             on:click={ accionBtn }
