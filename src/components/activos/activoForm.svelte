@@ -155,9 +155,11 @@
                 name_in_charge_active: '',
                 rut_in_charge_active: '',
                 state: '',
-                article_id: '',
+                // article_id: '',
                 office_id: ''
             };
+            if (showArticles) activo.article_id = 0;
+
             article_id = 0;
 
             locationsActivesNew.offices.push(selectedOffice);
@@ -232,7 +234,7 @@
     })
 
     onDestroy(() => {
-        newActivo(locationsActivesNew)
+        if (showArticles) newActivo(locationsActivesNew)
     })
     
 
