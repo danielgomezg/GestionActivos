@@ -7,6 +7,7 @@
     import FormSucursalSave from "./formSucursalSave.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import { user } from "../../stores/store";
+    import SucursalSearch from "./sucursalSearch.svelte";
         
     let props;
     let company;
@@ -16,6 +17,7 @@
     let loading = false;
     let openModal = false
     let backButton = false;
+    let startSearch = false;
 
     const createSucursal = () => {
         modalTitle = 'Crear Sucursal';
@@ -80,8 +82,24 @@
         <!-- <IconButton icon="tune" /> -->
         <!-- <div class="title">Empresas</div> -->
     </div>
-    <br>
+    
 
+    <div class="search-sucursal">
+        <SucursalSearch
+            bind:sucursales = {stores}
+            companyId={$user.company_id}
+            on:startSearch={ () => {
+                startSearch = true;
+                // companyBackup.set(empresas)
+            } }
+            on:removeSearch={ () => {
+                startSearch = false;
+                getStores($user.company_id)
+                // empresas = [...$companyBackup]
+            } }
+        />
+    </div>
+    <br>
     <div class="companies-content">
         {#if loading}
             <Loading />
@@ -112,5 +130,11 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
+    }
+    
+    .search-sucursal{
+        display: flex;
+        justify-content: end;
+        align-items: center;
     }
 </style>

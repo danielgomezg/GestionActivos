@@ -4,6 +4,7 @@
     import { setContext, onMount } from "svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     //import { usuarios } from "../../stores/store";
+    import UsuarioSearch from "./usuarioSearch.svelte";
     import CardUsuario from "./cardUsuario.svelte";
     import FormUsuarios from "./formUsuarios.svelte";
     import Api from "../../../helpers/ApiCall";
@@ -16,6 +17,7 @@
     let previusComponent, previusProps;
     let usuarios = []
     let loading = false;
+    let startSearch = false
 
     //companies recibe id y name del getcompany, y en company se guardan los datos como label y value para usarlos en el select  
     let companiesDB= [], companiesSelect = []
@@ -133,6 +135,19 @@
     <div class="header-content">
         <div class="desktop-only">
             <Button label="Nuevo usuario" custom on:click={ createUser } />
+        </div>
+        <div>
+            <UsuarioSearch
+            bind:usuarios = {usuarios}
+            on:startSearch={ () => {
+                startSearch = true;
+                // companyBackup.set(empresas)
+            } }
+            on:removeSearch={ () => {
+                startSearch = false;
+                getUsers()
+                // empresas = [...$companyBackup]
+            } }/>
         </div>
     </div>
     <br>
