@@ -203,8 +203,6 @@
             /> -->
         </div>
 
-
-
         <ArticlesSearch
             bind:articles={articles} 
             on:startSearch={ () => {

@@ -4,7 +4,7 @@
   import { fly } from 'svelte/transition';
   import IconButton from "./IconButton.svelte";
   import { MDCDataTable } from "@material/data-table";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { createEventDispatcher, onMount, tick } from "svelte";
 
   export let limit = 0;
   export let count = 0;
@@ -52,19 +52,26 @@
     unselectedAll();
   }
 
+  const layotTable = async () => {
+    await tick();
+    dataTable.layout();
+  }
+
   onMount(() => {
     // const checkbox = new MDCCheckbox(checkboxComponent);
     dataTable = new MDCDataTable(dataTableComponent);
     dataTable.listen("MDCDataTable:rowSelectionChanged", checkedRow);
     dataTable.listen("MDCDataTable:selectedAll", selectedAll);
     dataTable.listen("MDCDataTable:unselectedAll", unselectedAll);
+    dataTable.layout();
     // dataTable.listen('MDCDataTable:rowSelectionChanged', (event) => {
     //     console.log(event.detail);
     // });
   });
 
   $: if (data.length > 0 && dataTable != undefined) {
-    dataTable.layout();
+    console.log(data)
+    layotTable();
   }
   
 </script>
@@ -238,6 +245,7 @@
           on:click={ () => {
             offset += limit;
             if (offset > count) offset = count - limit;
+            // setUnselectedAll();
             dispatch("changePage", offset);
           } }
         >

@@ -154,8 +154,6 @@
 
 </script>
 
-<!--  style="padding-top: 20px;" -->
-
 <div style="position: relative">
     <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 24px 0 10px">
         <div class="desktop-only">
@@ -179,7 +177,6 @@
             <Fab on:click={ createCompany } />
         </div>
     </div>
-    <!-- <br> -->
 
     <div class="companies-content" style="padding: 14px 0 10px;">
         {#if loading}

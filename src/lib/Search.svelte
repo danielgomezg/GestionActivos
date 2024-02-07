@@ -44,8 +44,9 @@
     }
 
     const removeText = () => {
-        value = ''
         console.log('remove text')
+        value = '';
+        isFocused = false
         dispatch('removeSearch')
     }
 

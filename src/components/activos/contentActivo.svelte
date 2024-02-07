@@ -2,6 +2,7 @@
     import Api from "../../../helpers/ApiCall";
     import { onMount, setContext } from "svelte";
     import ActivoForm from "./activoForm.svelte";	
+    import ActivoSearch from "./activoSearch.svelte";
     import ReportActivo from "../reports/report.svelte";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
@@ -26,6 +27,7 @@
     let officesFilter = []; // Array de id de oficinas para realizar la peticion.
     let backButton = false;
     let openActions = false;
+    let startSearch = false;
     let activosSelected = [];
     let messageSnackbar = '';
     let openSnackbar = false;
@@ -196,8 +198,11 @@
     }
 
     const getActivosByStore = async (store) => {
+        console.log('getActivosByStore > ')
+        if (startSearch) return;
         if (store == undefined) return;
         if (officesFilter.length > 0) return;
+        if (store.value == undefined) return;
 
         let response = (await Api.call(`http://127.0.0.1:9000/active/sucursal/${store.value}?limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE ACTIVOS BY STORE > ', response)
@@ -211,6 +216,8 @@
     }
 
     const getActivosByOffice = async (officesId) => {
+        console.log('getActivosByOffice > ')
+        if (startSearch) return;
         if (officesId.length == 0) {
             getActivosByStore(storeFilter);
             return;
@@ -245,11 +252,8 @@
         }
     })
 
-    $: getActivosByStore(storeFilter, offset, limit)
+    // $: getActivosByStore(storeFilter, offset, limit)
     $: getActivosByOffice(officesFilter, offset, limit)
-    $: if (!openModal) {
-        console.log(modalContent)
-    }
 
 </script>
 
@@ -324,17 +328,36 @@
             
         </div>
         <div class="flex-row gap-8" style="align-items: center;">
-            <div class="desktop-only">
-                <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
-            </div>
+            
             <!-- <ReportActivo 
                 id={ companyId } 
                 label="Exportar a PDF"
                 disabled={ newArticleDisabled }
             /> -->
             <div class="mobile-only" style="display: flex; align-items: center; justify-content: space-between;">
-                <Search slot="search" value="" />
-                <Menu
+                <ActivoSearch 
+                    bind:count={tableCount}
+                    bind:limit={limit}
+                    bind:offset={offset}
+                    bind:activos={activos} 
+                    bind:officesId={officesFilter}
+                    bind:storeId={storeFilter}
+                    on:startSearch={ () => {
+                        startSearch = true;
+                        // companyBackup.set(empresas)
+                    } }
+                    on:removeSearch={ () => {
+                        startSearch = false;
+                        
+                        if (offset == 0) {
+                            if (officesFilter.length > 0) getActivosByOffice(officesFilter)
+                            else getActivosByStore(storeFilter)
+                        }
+                        else offset = 0;
+                        // empresas = [...$companyBackup]
+                    } }
+                />
+                <!-- <Menu
                         bind:open={openActions}
                         options={
                             [
@@ -346,7 +369,10 @@
                         on:toExcel={() => console.log('toExcel') }
                     >
                       <IconButton icon="download" on:click={() => openActions = !openActions } />
-                </Menu>
+                </Menu> -->
+            </div>
+            <div class="desktop-only">
+                <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
             </div>
         </div>
         <!-- <Search value="" /> -->
@@ -415,9 +441,25 @@
                 activosSelected = [];
             } }
         >
-            <div class="desktop-only">
+            <!-- <div class="desktop-only">
                 <Search slot="search" value="" />
+            </div> -->
+            <div slot="search">
+                <Menu
+                    bind:open={openActions}
+                    options={
+                        [
+                            { label: "Exportar PDF", dispatch: "toPdf"},
+                            { label: "Exportar Excel", dispatch: "toExcel"}
+                        ]  
+                    }
+                    on:toPdf={() => console.log('toPdf') }
+                    on:toExcel={() => console.log('toExcel') }
+                >
+                    <IconButton icon="download" on:click={() => openActions = !openActions } />
+                </Menu>
             </div>
+            
         </Table>
     </div>
 

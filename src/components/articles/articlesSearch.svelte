@@ -32,7 +32,9 @@
     $: searchArticle(searchText)
 
 </script>
-<Search 
-    bind:value={searchText} 
-    on:removeSearch    
-/>
+<div>
+    <Search 
+        bind:value={searchText} 
+        on:removeSearch    
+    />
+</div>
