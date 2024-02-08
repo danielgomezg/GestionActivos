@@ -1,13 +1,14 @@
 <script>
+    import { Loading } from "$lib";
+    import { onMount } from "svelte";
+    import { user } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
-    import { onMount, setContext } from "svelte";
     import CardSucursal from "./sucursalCard.svelte";
     import FormSucursal from "./formSucursal.svelte";
-    import { Button, IconButton, Loading } from "$lib";
-    import FormSucursalSave from "./formSucursalSave.svelte";
-    import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-    import { user } from "../../stores/store";
     import SucursalSearch from "./sucursalSearch.svelte";
+    import OfficesInfo from "../offices/officesInfo.svelte";
+    // import FormSucursalSave from "./formSucursalSave.svelte";
+    import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
         
     let props;
     let company;
@@ -19,31 +20,33 @@
     let backButton = false;
     let startSearch = false;
 
-    const createSucursal = () => {
-        modalTitle = 'Crear Sucursal';
-        modalContent = FormSucursalSave;
-        props = { 
-            sucursal: {
-                number: '',
-                address: '',
-                description: '',
-                commune: '',
-                region: '',
-                company_id: 13
+    // const createSucursal = () => {
+    //     modalTitle = 'Crear Sucursal';
+    //     modalContent = FormSucursalSave;
+    //     props = { 
+    //         sucursal: {
+    //             number: '',
+    //             address: '',
+    //             description: '',
+    //             commune: '',
+    //             region: '',
+    //             company_id: 13
         
-            },
-            company
-        }
-        openModal = true
+    //         },
+    //         company
+    //     }
+    //     openModal = true
     
-    }
+    // }
 
 
     const editStore = (sucursal) => {
         console.log('edit store > ', company)
-        modalTitle = `Sucursal ${sucursal.number}`
-        modalContent = FormSucursal;
-        props = { sucursal, company }
+        // modalTitle = `Sucursal ${sucursal.number}`
+        modalTitle = 'Oficinas - Sucursal ' + sucursal.number
+        // modalContent = FormSucursal;
+        modalContent = OfficesInfo;
+        props = { sucursal, company, readinfo: true}
         openModal = true
     }
 

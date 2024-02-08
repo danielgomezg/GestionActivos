@@ -347,6 +347,7 @@
                         // companyBackup.set(empresas)
                     } }
                     on:removeSearch={ () => {
+                        if (!startSearch) return;
                         startSearch = false;
                         
                         if (offset == 0) {

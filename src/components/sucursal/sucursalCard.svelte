@@ -14,11 +14,22 @@
             <IconButton icon="visibility" readinfo on:click={ dispath("edit", sucursal) } />
         </div>
         <div class="card-content">
-            <div class="store-info__address">
-                { `${sucursal.address}.` }
-                <strong>{ `${sucursal.commune}, ${sucursal.region}` }</strong>
+            <div class="responsive-table">
+                <table>
+                    <tr>
+                        <td><span class="material-symbols-rounded">location_on</span></td>
+                        <td>{ `${sucursal.address}.`  }<strong>{ `${sucursal.commune}, ${sucursal.region}` }</strong></td>
+                    </tr>
+                    <tr>
+                        <td><span class="material-symbols-rounded">notes</span></td>
+                        <td>{ sucursal.description }</td>
+                    </tr>
+                    <tr>
+                        <td><span class="material-symbols-rounded"></span></td>
+                        <td>{ 'Oficinas: ' + sucursal.count_offices }</td>
+                    </tr>
+                </table>
             </div>
-            <div>{ sucursal.description }</div>
         </div>
         <div class="card-actions">
             <Button label="Ver oficinas" type="outlined" color="" custom on:click={ dispath("showStores", sucursal) } />
@@ -28,6 +39,11 @@
 </Card>
 
 <style>
+    .card-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 50px;
+    }
   .store-info {
     display: flex;
     align-items: center;
