@@ -1,13 +1,22 @@
 <script>
-    // @ts-ignore
     import { IconButton } from "$lib";
-    import { getContext } from "svelte";
+    import { createEventDispatcher, getContext } from "svelte";
 
-    let backModalContent = getContext('backModalContent');
-    
-
-    // @ts-nocheck
     export let open = false, title = '', backButton = false
+    
+    let backModalContent = getContext('backModalContent');
+    let dispatch = createEventDispatcher()
+
+    function handleScroll(event) {
+        const target = event.target;
+        const scrollTop = target.scrollTop;
+        const scrollHeight = target.scrollHeight;
+        const clientHeight = target.clientHeight;
+
+        if (scrollTop + clientHeight >= scrollHeight) {
+            dispatch('scrollEnd')
+        }
+    }
 
     $: if (open) {
         document.body.style.overflowY = "hidden";
@@ -27,7 +36,7 @@
             </div>
             <IconButton icon="close" on:click={ () => open = false }/>
         </div>
-        <div class="side-sheets__content">
+        <div class="side-sheets__content" on:scroll={ handleScroll }>
             <slot />
         </div>
     </div>

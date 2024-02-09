@@ -1,18 +1,17 @@
 <script>
     import { user } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
+    import { Button, Loading, Fab } from "$lib";
     import { setContext, onMount } from "svelte";
-    import { Button, Loading, Search, Fab } from "$lib";
-    import ArticlesSearch from "./articlesSearch.svelte";
-    import { articleBackup } from "../../stores/store";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
-    import ReportArticle from "../reports/report.svelte";
+    import { articleBackup } from "../../stores/store";
+    import ArticleHistory from "./articleHistory.svelte";
+    import ArticlesSearch from "./articlesSearch.svelte";
     import ActivoForm from "../activos/activoForm.svelte";
     import ActivoInfo from "../activos/activoInfo.svelte";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-  import ArticleCard from "./articleCard.svelte";
 
     let props;
     let message = "";
@@ -65,6 +64,18 @@
         articles = [...articles]
         openModal = false;
     })
+
+    const historyArticle = (article) => {
+        // previusComponent = modalContent;
+        // previusProps = { ...props };
+
+        modalTitle = `${article.name} - Historial`
+        // previusModelTitle = modalTitle;
+        modalContent = ArticleHistory;
+        props = { article }
+        backButton = false;
+        openModal = true;
+    }
 
     const editActivo = (activo, article, company_id) => {
         // Se guarda el contenido actual del modal.
@@ -235,6 +246,7 @@
                 on:edit={ (event) => editArticle(event.detail) } 
                 on:newActivo={ (event) => newActivo(event.detail, companyId) } 
                 on:showActivos={ (event) => showActivos(event.detail, companyId) } 
+                on:history={ (event) => historyArticle(event.detail) }
             />
         {:else}
             {#if startSearch}

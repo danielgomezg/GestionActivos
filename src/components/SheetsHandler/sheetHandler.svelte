@@ -11,6 +11,7 @@
         windowWidth = window.innerWidth;
         windowHeight = window.innerHeight;
     }
+    let endSroll = false;
 
     onMount(() => {
         
@@ -31,17 +32,25 @@
 
 {#if isMobile}
 
-    <BottomSheets bind:open={openModal}  title={modalTitle} {backButton} >
+    <BottomSheets bind:open={openModal}  title={modalTitle} {backButton} 
+        on:scrollEnd={ () => {
+            endSroll = !endSroll
+        } }>
 
-        <svelte:component this={modalContent} {...props} />
+        <svelte:component this={modalContent} {...props} {endSroll} />
 
     </BottomSheets>
 
 {:else}
 
-    <SideSheets bind:open={openModal} title={modalTitle} {backButton} >
+    <SideSheets bind:open={openModal} title={modalTitle} {backButton} 
+        on:scrollEnd={ () => {
+            console.log('endSroll 1')
+            endSroll = !endSroll
+        } }
+    >
 
-        <svelte:component this={modalContent} {...props} />
+        <svelte:component this={modalContent} {...props} {endSroll} />
         
     </SideSheets>
 
