@@ -29,12 +29,12 @@ class Api {
         .then(response => {
             // console.log(response)
 
-            console.log(response)
+            // console.log(response)
             let statusCode = response.status
 
             return response.json().then(data => {
                 
-                console.log(data)
+                // console.log(data)
                 
                 if (statusCode == 401 && data.message == 'token-exp') {
                     // localStorage.removeItem('user');

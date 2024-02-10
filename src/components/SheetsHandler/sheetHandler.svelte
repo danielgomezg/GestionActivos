@@ -34,9 +34,12 @@
 
     <BottomSheets bind:open={openModal}  title={modalTitle} {backButton} 
         on:scrollEnd={ () => {
-            endSroll = !endSroll
-        } }>
-
+            endSroll = true;
+        } }
+        on:scroll={ () => {
+            endSroll = false;
+        } }    
+    >
         <svelte:component this={modalContent} {...props} {endSroll} />
 
     </BottomSheets>
@@ -45,8 +48,10 @@
 
     <SideSheets bind:open={openModal} title={modalTitle} {backButton} 
         on:scrollEnd={ () => {
-            console.log('endSroll 1')
-            endSroll = !endSroll
+            endSroll = true
+        } }
+        on:scroll={ () => {
+            endSroll = false
         } }
     >
 

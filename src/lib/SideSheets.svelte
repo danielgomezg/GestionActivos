@@ -14,7 +14,11 @@
         const clientHeight = target.clientHeight;
 
         if (scrollTop + clientHeight >= scrollHeight) {
+            console.log('End scroll')
             dispatch('scrollEnd')
+        }
+        else {
+            dispatch('scroll')
         }
     }
 

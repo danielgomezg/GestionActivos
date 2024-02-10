@@ -2,7 +2,6 @@
     import { user } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     import { Button, Loading, Fab } from "$lib";
-    import { setContext, onMount } from "svelte";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
     import { articleBackup } from "../../stores/store";
@@ -10,10 +9,15 @@
     import ArticlesSearch from "./articlesSearch.svelte";
     import ActivoForm from "../activos/activoForm.svelte";
     import ActivoInfo from "../activos/activoInfo.svelte";
+    import { setContext, onMount, onDestroy } from "svelte";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
+    import ReportArticle from "../reports/report.svelte";
 
     let props;
+    let count = 0;
+    let limit = 25;
+    let offset = 0;
     let message = "";
     let modalContent;
     let companyId = 0;
@@ -21,9 +25,9 @@
     let loading = false;
     let openModal = false;
     let backButton = false;
+    let startSearch = false;
     let hideSelectCompany = false;
     let newArticleDisabled = true;
-    let startSearch = false;
 
     let previusComponent, previusProps, previusModelTitle = '';
 
@@ -158,9 +162,10 @@
     const findArticles = async (company_id) => {
         newArticleDisabled = true;
         companyId = company_id;
+        if (offset > count) return;
 
-        let response = (await Api.call(`http://127.0.0.1:9000/articles/company/${company_id}`, 'GET'));
-        console.log(response)
+        let response = (await Api.call(`http://127.0.0.1:9000/articles/company/${company_id}?limit=${limit}&offset=${offset}`, 'GET'));
+        console.log('RESPONSE GET ARTICLES --> ', response)
         if (response.success && response.statusCode == "200") {
             articles = response.data.result;
         }
@@ -173,9 +178,15 @@
 
     }
 
+    const handleScroll = () => {
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+            offset = offset + limit;
+            findArticles(companyId)
+        }
+    }
+
     onMount(() => {
         let user = JSON.parse(sessionStorage.getItem('user'));
-        console.log(user)
         if (user.profile_id == 2) {
             findArticles(user.company_id);
             hideSelectCompany = true;
@@ -185,6 +196,12 @@
             hideSelectCompany = false;
             message = "Selecciona una empresa para obtener sus articulos."
         }
+
+        window.addEventListener('scroll', handleScroll)
+    })
+
+    onDestroy(() => {
+        window.removeEventListener('scroll', handleScroll)
     })
 
 </script>
@@ -198,7 +215,12 @@
             {#if !hideSelectCompany}
             <CompanySelect 
                 customHeight
-                on:change={ (event) => findArticles(event.detail)  }
+                on:change={ (event) => {
+                    console.log(event.detail)
+                    offset = 0;
+                    count = 0;
+                    findArticles(event.detail)
+                }}
             />
             {/if}
             {#if $user.profile_id != 2}
@@ -207,11 +229,11 @@
                 </div>
             {/if}
                 <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
-            <!-- <ReportArticle 
+            <ReportArticle 
                 id={ companyId } 
                 label="Exportar a PDF"
                 disabled={ newArticleDisabled }
-            /> -->
+            />
         </div>
 
         <ArticlesSearch

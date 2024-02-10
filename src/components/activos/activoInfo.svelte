@@ -5,8 +5,13 @@
     import { estadosActivo } from "../../stores/store";
     import { Divider, IconButton, Snackbar } from "$lib";
 
-    export let article = {}, company_id = 0;
+    export let article = {};
+    export let company_id = 0;
+    export let endSroll = false;
 
+    let limit = 7;
+    let offset = 0;
+    let count = -1;
     let activos = [];
     let activeDocument;
     let activoToDelete = {};
@@ -17,10 +22,17 @@
     let addActivoCount = getContext('addActivoCount');
 
     const getActives = async () => {
-        let response = (await Api.call(`http://127.0.0.1:9000/activePorArticle/${article.id}`, 'GET'))
+        if (count != -1 && offset > count) return
+
+        let response = (await Api.call(`http://127.0.0.1:9000/activePorArticle/${article.id}?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET ACTIVES --> ', response)
         if (response.success && response.statusCode == '200') {
-            activos = response.data.result
+            count = response.data.count
+            if (response.data.count > 0) {
+                activos = [...activos, ...response.data.result] 
+                return
+            }
+            // activos = response.data.result
         } 
     }
 
@@ -65,9 +77,17 @@
             .catch(error => console.error(error));
     }
 
+    const updateOffset = (end) => {
+        if (!end) return
+        offset += limit;
+    }
+
     onMount(async () => {
-        getActives()
+        await getActives()
     })
+
+    $: updateOffset(endSroll);
+    $: if(offset != 0) getActives();
 
 </script>
 

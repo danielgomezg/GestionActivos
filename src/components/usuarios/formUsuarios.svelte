@@ -1,12 +1,16 @@
 <script>
     import { user} from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
-    import { getContext, onMount } from "svelte";
     import { snackbar } from "../../stores/store";
     import { TextField, Button, Select } from "$lib";
+    import { getContext, onDestroy, onMount } from "svelte";
     import CompanySelect from "../company/companySelect.svelte";
     
-    export let usuario = {}, accion = '', showPassword = false, editself = false
+    export let usuario = {};
+    export let accion = '';
+    export let showPassword = false;
+    export let editself = false;
+
     let message= ''
     let disabledSave = false
     let accionBtn = ''
@@ -271,7 +275,6 @@
         }else{
             accionBtn = editUser
             perfilUser = usuario.profile_id 
-            
         }
 
     })

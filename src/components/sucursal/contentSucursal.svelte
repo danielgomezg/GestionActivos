@@ -1,8 +1,8 @@
 <script>
     import { Loading } from "$lib";
-    import { onMount } from "svelte";
     import { user } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
+    import { onDestroy, onMount } from "svelte";
     import CardSucursal from "./sucursalCard.svelte";
     import FormSucursal from "./formSucursal.svelte";
     import SucursalSearch from "./sucursalSearch.svelte";
@@ -12,6 +12,9 @@
         
     let props;
     let company;
+    let limit = 6;
+    let count = 0;
+    let offset = 0;
     let stores = [];
     let modalContent;  
     let modalTitle = '';
@@ -19,25 +22,6 @@
     let openModal = false
     let backButton = false;
     let startSearch = false;
-
-    // const createSucursal = () => {
-    //     modalTitle = 'Crear Sucursal';
-    //     modalContent = FormSucursalSave;
-    //     props = { 
-    //         sucursal: {
-    //             number: '',
-    //             address: '',
-    //             description: '',
-    //             commune: '',
-    //             region: '',
-    //             company_id: 13
-        
-    //         },
-    //         company
-    //     }
-    //     openModal = true
-    
-    // }
 
 
     const editStore = (sucursal) => {
@@ -59,12 +43,21 @@
     }
 
     const getStores = async (companyId) => {
+        if (offset > count) return;
 
-        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${companyId}`, 'GET'))
+        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${companyId}?limit${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET Sucursales --> ', response)
         if (response.success && response.statusCode == '200') {
-            stores = response.data.result 
+            count = response.data.count
+            stores = [...stores, ...response.data.result] 
         } 
+    }
+
+    const handleScroll = () => {
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+            offset = offset + limit;
+            if ($user.company_id != undefined) getStores($user.company_id)
+        }
     }
 
     onMount(async () => {
@@ -74,6 +67,13 @@
             
             // getStores( $user.company_id)
         } 
+
+        window.addEventListener('scroll', handleScroll)
+
+    })
+
+    onDestroy(() => {
+        window.removeEventListener('scroll', handleScroll)
     })
 
 

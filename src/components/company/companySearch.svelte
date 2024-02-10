@@ -5,6 +5,9 @@
 
     export let empresas = [];
 
+    let limit = 50;
+    let offset = 0;
+    let count = 0;
     let searchText = '';
     let startSearch = false;
     let dispatch = createEventDispatcher();
@@ -20,7 +23,7 @@
         startSearch = true;
 
 
-        let response = (await Api.call(`http://127.0.0.1:9000/company/search?search=${text}`, 'GET'));
+        let response = (await Api.call(`http://127.0.0.1:9000/company/search?search=${text}&limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE SEARCH COMPANY -> ', response)
         if (response.success && response.statusCode == '200') {
             empresas = response.data.result

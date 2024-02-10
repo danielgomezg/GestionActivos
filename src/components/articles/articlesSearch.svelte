@@ -6,6 +6,7 @@
     export let articles = [];
     export let company_id
 
+    let limit = 50;
     let searchText = '';
     let startSearch = false;
     let dispatch = createEventDispatcher();
@@ -21,7 +22,7 @@
         startSearch = true;
 
 
-        let response = (await Api.call(`http://127.0.0.1:9000/articles/search/${company_id}?search=${text}`, 'GET'));
+        let response = (await Api.call(`http://127.0.0.1:9000/articles/search/${company_id}?search=${text}&limit=${limit}`, 'GET'));
         console.log('RESPONSE SEARCH ARTICLE-> ', response)
         if (response.success && response.statusCode == '200') {
             articles = response.data.result

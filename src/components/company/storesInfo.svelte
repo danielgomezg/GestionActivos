@@ -1,33 +1,40 @@
 <script>
-    import { Divider, IconButton, Snackbar } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import { onMount, getContext } from "svelte";
     import { snackbar } from "../../stores/store";
+    import { Divider, IconButton, Snackbar } from "$lib";
 
-    let editStore = getContext('editStore');
-    let addSucursalCount = getContext('addSucursalCount')
-    
-    export let company_id = 0, company = {}
-    let stores = []
+    export let company = {};
+    export let company_id = 0; 
+    export let endSroll = false;
+
+    let limit = 7;
+    let offset = 0;
+    let count = -1;
+    let stores = [];
+    let storeToDelete = {};
     let openSnackbar = false;
     let messageSnackbar = '';
-    let storeToDelete = {}
+
+    let editStore = getContext('editStore');
+    let addSucursalCount = getContext('addSucursalCount');
 
     const getSucursalePorCompany = async () => {
-        //loading = true;
-        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${company_id}`, 'GET'))
+        if (count != -1 && offset > count) return
+
+        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${company_id}?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET Sucursales --> ', response)
-        if (response.success) {
-            stores = response.data.result 
+        if (response.success && response.statusCode == '200') {
+            count = response.data.count
+            if (response.data.count > 0) {
+                stores = [...stores, ...response.data.result] 
+                return
+            }
+            // stores = response.data.result 
         } 
-        //loading = false;
     }
 
     const deleteStore = async (store) => {
-        console.log('deleteStore -> ', store)
-
-        // let confirmacion = confirm('Esta seguro que desea eliminar la sucursal ', store.number)
-        // if (!confirmacion) return;
         
         let response = (await Api.call(`http://127.0.0.1:9000/sucursal/${store.id}`, 'DELETE'));
         console.log('RESPONSE DELETE SUCURSAL -> ', response)
@@ -55,11 +62,18 @@
 
     }
 
+    const updateOffset = (end) => {
+        if (!end) return
+        offset += limit;
+    }
+
     onMount(async () => {
         await getSucursalePorCompany()  
     })
 
-  
+    $: updateOffset(endSroll);
+    $: if(offset != 0) getSucursalePorCompany();
+
 </script>
 
 <Snackbar 

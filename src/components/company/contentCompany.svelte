@@ -1,7 +1,6 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { Button, Loading, Fab } from "$lib";
-    import { onMount, setContext } from "svelte";
     import StoresInfo from "./storesInfo.svelte";
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
@@ -9,18 +8,22 @@
     import { companyBackup } from "../../stores/store";
     // import History from "../history/history.svelte";
     import HistoryCompany from "./companyHistory.svelte";
+    import { onMount, setContext, onDestroy } from "svelte";
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
  
-    let openModal = false, backButton = false;
-    let modalTitle = '', previusModelTitle = ''
-    let modalContent;  
     let props;
-    let previusComponent, previusProps;
-    let empresas = []
+    let count = 0;
+    let limit = 5;
+    let offset = 0;
+    let modalContent;  
+    let empresas = [];
     let loading = false;
     let startSearch = false;
+    let previusComponent, previusProps;
+    let openModal = false, backButton = false;
+    let modalTitle = '', previusModelTitle = '';
 
     setContext('backModalContent', (e) => {
         e.preventDefault();
@@ -129,11 +132,13 @@
     }
 
     const getCompanies = async () => {
+        if (offset > count) return;
         loading = true;
-        let response = (await Api.call('http://127.0.0.1:9000/companies', 'GET'))
+        let response = (await Api.call(`http://127.0.0.1:9000/companies?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
         if (response.success && response.statusCode == "200") {
-            empresas = response.data.result //empresas.set(response.data)
+            empresas = [...empresas, ...response.data.result] //empresas.set(response.data)
+            count = response.data.count
         } 
         loading = false;
     }
@@ -148,8 +153,21 @@
         openModal = true
     }
 
+    const handleScroll = () => {
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+            offset = offset + limit;
+            getCompanies()
+        }
+    }
+
     onMount(async () => {
         getCompanies() 
+
+        window.addEventListener('scroll', handleScroll)
+    })
+
+    onDestroy(() => {
+        window.removeEventListener('scroll', handleScroll)
     })
 
 </script>
@@ -165,7 +183,9 @@
             bind:empresas={empresas} 
             on:startSearch={ () => {
                 startSearch = true;
-                companyBackup.set(empresas)
+                // companyBackup.set(empresas)
+                offset = 0;
+                getCompanies();
             } }
             on:removeSearch={ () => {
                 startSearch = false;

@@ -1,32 +1,27 @@
 <script>
-    // @ts-ignore
-    import { Button, IconButton, Loading, Fab } from "$lib"
-    import { setContext, onMount } from "svelte";
-    import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-    //import { usuarios } from "../../stores/store";
-    import UsuarioSearch from "./usuarioSearch.svelte";
+    import Api from "../../../helpers/ApiCall";
+    import { Button, Loading, Fab } from "$lib";
     import CardUsuario from "./cardUsuario.svelte";
     import FormUsuarios from "./formUsuarios.svelte";
-    import Api from "../../../helpers/ApiCall";
+    import UsuarioSearch from "./usuarioSearch.svelte";
+    import { setContext, onMount, onDestroy } from "svelte";
+    import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     
-
-    let openModal = false, backButton = false;
-    let modalTitle = ''
-    let modalContent;  
     let props;
-    let previusComponent, previusProps;
-    let usuarios = []
+    let limit = 10;
+    let count = 0;
+    let offset = 0;
+    let modalContent;  
+    let usuarios = [];
+    let modalTitle = '';
     let loading = false;
-    let startSearch = false
+    let openModal = false;
+    let backButton = false;
+    let startSearch = false;
 
     //companies recibe id y name del getcompany, y en company se guardan los datos como label y value para usarlos en el select  
-    let companiesDB= [], companiesSelect = []
-    let perfilesDB = [], perfilesSelect = []
-
-    setContext('backModalContent', (e) => {
-        e.preventDefault();
-    
-    })
+    let companiesSelect = []
+    let perfilesSelect = []
 
     setContext('addUsuario', (usuario) => {
         console.log('in add User')
@@ -68,61 +63,41 @@
     const editUser = (usuario) => {
         modalTitle = 'Editar usuario'
         modalContent = FormUsuarios
-        props = { usuario,
-                companies: companiesSelect,
-                accion: 'edit' }
+        props = { 
+            usuario,
+            accion: 'edit' 
+        }
         openModal = true
     }
 
     const getUsers = async () => {
+        if (offset > count) return;
+
         loading = true;
-        let response = (await Api.call('http://127.0.0.1:9000/users', 'GET'))
+        let response = (await Api.call(`http://127.0.0.1:9000/users?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET USERS --> ', response)
         if (response.success && response.statusCode == '200') {
-            usuarios = response.data.result
+            count = response.data.count
+            usuarios = [...usuarios, ...response.data.result]
         } 
         loading = false;
     }
 
-    //Se obtiene las companias con el id y nombre solamente
-    const getCompanyNameId= async () => {
-        let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET'))
-        console.log('RESPONSE GET COMPANIES --> ', response)
-        if (response.success) {
-            companiesDB = response.data.result
-            for (let i = 0; i < companiesDB.length; i++) {
-                let company = {
-                    label: companiesDB[i].name,
-                    value: companiesDB[i].id
-                };
-                companiesSelect.push(company);
-            }
-            console.log(companiesSelect)
-        } 
+    const handleScroll = () => {
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+            offset = offset + limit;
+            getCompanies()
+        }
     }
-
-    //Se obtiene las companias con el id y nombre solamente
-    const getPerfiles= async () => {
-        let response = (await Api.call('http://127.0.0.1:9000/profiles', 'GET'))
-        console.log('RESPONSE GET PROFILES --> ', response)
-        if (response.success) {
-            perfilesDB = response.data.result
-            for (let i = 0; i < perfilesDB.length; i++) {
-                let perfil = {
-                    label: perfilesDB[i].name,
-                    value: perfilesDB[i].id
-                };
-                perfilesSelect.push(perfil);
-            }
-            console.log(perfilesSelect)
-        } 
-    }
-
 
     onMount(async () => {
         getUsers()
-        getCompanyNameId()
-        getPerfiles()
+        
+        window.addEventListener('scroll', handleScroll)
+    })
+
+    onDestroy(() => {
+        window.removeEventListener('scroll', handleScroll)
     })
 
 

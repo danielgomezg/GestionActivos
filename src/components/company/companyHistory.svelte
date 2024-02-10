@@ -4,10 +4,14 @@
     import Api from '../../../helpers/ApiCall';
 
     export let company = {};
+    export let endSroll = false;
+
+    let limit = 10;
+    let offset = 0;
+    let count = -1;
     let companyHistory = [];
 
     const getUserName = (user) => {
-        console.log(user)
         if (user == undefined) return ''
         return `${user.firstName} ${user.secondName} ${user.lastName} ${user.secondLastName}`;
     }
@@ -20,7 +24,7 @@
     const generateInfo = (history) => {
 
         let text = ''
-        console.log('HISTORY --> ', history)
+        // console.log('HISTORY --> ', history)
 
         switch (history.description) {
             case 'create-sucursal':
@@ -59,16 +63,32 @@
     }   
 
     const getHistory = async (company_id) => {
-        let response = (await Api.call(`http://127.0.0.1:9000/history/company/${company_id}`, 'GET'))
+        if (count != -1 && offset > count) return
+
+        let response = (await Api.call(`http://127.0.0.1:9000/history/company/${company_id}?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET Sucursales --> ', response)
         if (response.success && response.statusCode == '200') {
-            companyHistory = response.data.result 
+            count = response.data.count
+            if (response.data.count > 0) {
+                companyHistory = [...companyHistory, ...response.data.result] 
+                return
+            }
+            // companyHistory = response.data.result 
         } 
     }
 
+    const updateOffset = (end) => {
+        if (!end) return
+        offset += 10;
+    }
+
     onMount(async () => {
-        getHistory(company.id)
+        await getHistory(company.id)
     });
+
+    $: updateOffset(endSroll);
+    $: if(offset != 0) getHistory(company.id, offset);
+
 
 </script>
 
