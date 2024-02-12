@@ -238,6 +238,108 @@
         }
     }
 
+    const reportActivePdf = async (officesId) => {
+        console.log('toPdf')
+
+        if (storeFilter == undefined) return;
+        console.log(companyName)
+
+        let id, location
+        if(officesId.length == 0){
+            id = storeFilter.value
+            location = 'sucursal'
+            console.log("id ", id)
+        }else{
+            id = officesFilter.join(',')
+            location = 'offices'
+            console.log("ids: " , id)
+        }
+
+        try {
+            const response = await fetch(`http://127.0.0.1:9000/report/active/${location}/${id}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
+            });
+
+            console.log('RESPONSE ACTIVOS BY REPORT PDF > ', response)
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.blob();
+
+            const downloadUrl = URL.createObjectURL(data);
+            console.log(downloadUrl);
+
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = `Reporte de activos de ${companyName}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss';
+                snk.message = 'Error al descargar reporte.';
+                return snk;
+            });
+            console.error(error);
+        }
+    }
+
+    const reportActiveExcel = async (officesId) => {
+        console.log('toExcel')
+
+        if (storeFilter == undefined) return;
+        console.log(companyName)
+
+        let id, location
+        if(officesId.length == 0){
+            id = storeFilter.value
+            location = 'sucursal'
+            console.log("id ", id)
+        }else{
+            id = officesFilter.join(',')
+            location = 'offices'
+            console.log("ids: " , id)
+        }
+
+        try {
+            const response = await fetch(`http://127.0.0.1:9000/report/excel/active/${location}/${id}`, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
+            });
+
+            console.log('RESPONSE ACTIVOS BY REPORT EXCEL > ', response)
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.blob();
+
+            const downloadUrl = URL.createObjectURL(data);
+            console.log(downloadUrl);
+
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = `Reporte de activos de ${companyName}.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss';
+                snk.message = 'Error al descargar reporte.';
+                return snk;
+            });
+            console.error(error);
+        }
+    }
+
     onMount(() => {
         let user = JSON.parse(sessionStorage.getItem('user'));
         console.log(user)
@@ -450,12 +552,12 @@
                     bind:open={openActions}
                     options={
                         [
-                            { label: "Exportar PDF", dispatch: "toPdf"},
+                            { label: "Exportar PDF", dispatch: "toPdf"}, 
                             { label: "Exportar Excel", dispatch: "toExcel"}
                         ]  
                     }
-                    on:toPdf={() => console.log('toPdf') }
-                    on:toExcel={() => console.log('toExcel') }
+                    on:toPdf={ reportActivePdf(officesFilter) }
+                    on:toExcel={ reportActiveExcel(officesFilter) }
                 >
                     <IconButton icon="download" on:click={() => openActions = !openActions } />
                 </Menu>
