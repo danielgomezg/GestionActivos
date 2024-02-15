@@ -11,6 +11,7 @@
 
     import NotFound from "../../components/notFound/notFound.svelte";
     import UserAccount from "../../components/userAccount/userAccount.svelte";
+    import ContentActivo from "../../components/activos/contentActivo.svelte";
     import ContentCompany from "../../components/company/contentCompany.svelte";
     import ContentProfile from "../../components/profile/contentProfile.svelte";
     import ContentArticle from "../../components/articles/contentArticle.svelte";
@@ -34,10 +35,14 @@
 
         window.addEventListener('resize', handleResize);
 
-        let userSession = localStorage.getItem("user")
-        let token = localStorage.getItem("accessToken")
-        console.log(userSession)
-        console.log(token)
+        // let userSession = localStorage.getItem("user")
+        // let token = localStorage.getItem("accessToken")
+
+        let userSession = sessionStorage.getItem("user")
+        let token = sessionStorage.getItem("accessToken")
+
+        // console.log(userSession)
+        // console.log(token)
         if (user != null && token != null) {
             user.set(JSON.parse(userSession))
         }
@@ -90,6 +95,7 @@
                 {/if} 
                                 
                 <Route path="/articulos" component={ContentArticle} />
+                <Route path="/activos" component={ContentActivo} />
                 <Route path="/*" component={NotFound} />
             </Router>
         </div>

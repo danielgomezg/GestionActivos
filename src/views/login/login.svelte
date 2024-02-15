@@ -61,6 +61,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -75,6 +76,7 @@
         if(response == undefined){
             snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al iniciar sesión."
                     return snk
             })
@@ -87,7 +89,8 @@
                 usuario.password = ''
                 let _userLogged = response.data.result.user
                 
-                localStorage.setItem('accessToken', response.data.result.access_token);
+                // localStorage.setItem('accessToken', response.data.result.access_token);
+                sessionStorage.setItem('accessToken', response.data.result.access_token);
                 let profile = (await getProfile(_userLogged.profile_id))
                 _userLogged.profileActions = profile.profileActions.map(pa => pa.name)
                 
@@ -95,7 +98,8 @@
                     ..._userLogged
                 })
 
-                localStorage.setItem("user",  JSON.stringify(_userLogged))
+                // localStorage.setItem("user",  JSON.stringify(_userLogged))
+                sessionStorage.setItem("user",  JSON.stringify(_userLogged))
                
 
                 // dispatch('login')
@@ -115,6 +119,7 @@
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al iniciar sesión."
                     return snk
                 })
@@ -123,6 +128,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al iniciar sesión."
                 return snk
             })
@@ -130,12 +136,7 @@
     }
 
     onMount(() => {
-        console.log('On mount login')
-        let user  = localStorage.getItem("user")
-        let token = localStorage.getItem("token")
-        if (user == null) {
-            // navigate('/login')
-        }
+        
     })
 
     $: console.log('user store > ', $user)

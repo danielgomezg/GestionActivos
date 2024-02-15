@@ -26,8 +26,10 @@
     }
 
     const logout = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('accessToken');
+        // localStorage.removeItem('user');
+        // localStorage.removeItem('accessToken');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('accessToken');
         user.set({})
 
         navigate("/login", {replace: true})
@@ -44,9 +46,9 @@
     const getCompanyNameId = async () => {
         if (!$user.profileActions.includes('get-empresa')) return
         //loading = true;
-        let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET', {}))
+        let response = (await Api.call('http://127.0.0.1:9000/companiesIdName', 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
-        if (response.success) {
+        if (response.success && response.statusCode == "200") {
             companiesDB = response.data.result
             for (let i = 0; i < companiesDB.length; i++) {
                 let company = {
@@ -59,7 +61,7 @@
     }
 
     onMount(async () => {
-        await getCompanyNameId(); 
+        // await getCompanyNameId(); 
         window.addEventListener('click', handleAccountOptions)
     })
 
@@ -71,11 +73,12 @@
 </script>
 
 
-<div style="text-align: right;">{ $user.firstName + ' ' + $user.lastName }</div>
+<div class="account-username">{ $user.firstName + ' ' + $user.lastName }</div>
 <div class="account-container">
     <IconButton on:click={() => { openOptions=!openOptions }} icon="account_circle" />
     {#if openOptions}
     <div class="account-options">
+        <div class="account-username__secondary">{ $user.firstName + ' ' + $user.lastName }</div>
         <Button type="text" label="Editar" color="" on:click={ editUser } />
         <Button type="text" label="Cerrar Sesión" color="" on:click={ logout } />
     </div>  

@@ -1,32 +1,87 @@
 <script>
-    import { setContext } from 'svelte';
-    // @ts-ignore
-    import { Divider, IconButton } from "$lib";
-    import { onMount, getContext } from "svelte";
     import Api from "../../../helpers/ApiCall";
+    import { onMount, getContext } from "svelte";
+    import { snackbar } from "../../stores/store";
+    import { Divider, IconButton, Snackbar } from "$lib";
+
+    export let company = {};
+    export let company_id = 0; 
+    export let endSroll = false;
+
+    let limit = 7;
+    let offset = 0;
+    let count = -1;
+    let stores = [];
+    let storeToDelete = {};
+    let openSnackbar = false;
+    let messageSnackbar = '';
 
     let editStore = getContext('editStore');
-    
-    export let company_id = 0, company = {}
-    let stores = []
+    let addSucursalCount = getContext('addSucursalCount');
 
     const getSucursalePorCompany = async () => {
-        //loading = true;
-        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${company_id}`, 'GET'))
+        if (count != -1 && offset > count) return
+
+        let response = (await Api.call(`http://127.0.0.1:9000/sucursalPorCompany/${company_id}?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET Sucursales --> ', response)
-        if (response.success) {
-            stores = response.data.result 
+        if (response.success && response.statusCode == '200') {
+            count = response.data.count
+            if (response.data.count > 0) {
+                stores = [...stores, ...response.data.result] 
+                return
+            }
+            // stores = response.data.result 
         } 
-        //loading = false;
+    }
+
+    const deleteStore = async (store) => {
+        
+        let response = (await Api.call(`http://127.0.0.1:9000/sucursal/${store.id}`, 'DELETE'));
+        console.log('RESPONSE DELETE SUCURSAL -> ', response)
+        if (response.success && response.statusCode == '201') {
+
+            stores = stores.filter(st => store.id !== st.id);
+
+            addSucursalCount(company.id, -1)
+
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Sucursal eliminada con éxito."
+                return snk
+            })
+
+        } else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al eliminar sucursal."
+                return snk
+            })
+        }
+
+    }
+
+    const updateOffset = (end) => {
+        if (!end) return
+        offset += limit;
     }
 
     onMount(async () => {
-
-        await getSucursalePorCompany()
-        
+        await getSucursalePorCompany()  
     })
-  
+
+    $: updateOffset(endSroll);
+    $: if(offset != 0) getSucursalePorCompany();
+
 </script>
+
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={messageSnackbar}
+    on:confirm={ deleteStore(storeToDelete) }
+/>
 
 <div class="store-info__container">
     {#each stores as store}
@@ -37,8 +92,17 @@
                     { ` (${store.count_offices} oficinas)` }
                 </div>
                 <div>
-                    <IconButton icon="edit" on:click={ editStore(store, company) } />
-                    <IconButton icon="delete" />
+                    <IconButton icon="edit" tooltipId="btn-edit__{store.number}" tooltipText="Editar" on:click={ editStore(store, company) } />
+                    <IconButton 
+                        icon="delete" 
+                        tooltipId="btn-delete__{store.number}" 
+                        tooltipText="Eliminar" 
+                        on:click={ () => {
+                            storeToDelete = store;
+                            messageSnackbar = '¿Eliminar la sucursal ' + store.number + '?'
+                            openSnackbar = true;
+                        } }
+                    />
                 </div>
 
             </div>
@@ -47,7 +111,17 @@
             </div>
             <div class="store-info__address">
                 { `${store.address}.` }
-                <strong>{ `${store.commune}, ${store.region}` }</strong>
+                <!-- Condicion para mostrar la region, ciudad y comuna cuando company es chile -->
+                {#if company.country == 'Chile'}
+                    <!-- Condicion si city es null -->
+                    {#if store.city}
+                        <strong>{ `${store.commune}, ${store.city}. ${store.region}` }</strong>
+                    {:else}
+                        <strong>{ `${store.commune}. ${store.region}` }</strong>
+                    {/if}
+                {:else}
+                    <strong>{ `${store.commune}, ${store.region}` }</strong>
+                {/if}
             </div>
             <div class="store-info__description">
                 {store.description}

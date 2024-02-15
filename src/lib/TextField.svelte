@@ -4,7 +4,14 @@
     import '@material/web/textfield/outlined-text-field.js';
 
     export let version = 2
-    export let placeholder = '', required = false, type = 'text', value, label = "", id = ''
+    export let placeholder = ''
+    export let required = false
+    export let type = 'text'
+    export let value
+    export let label = ""
+    export let id = ''
+    export let trailing = ''
+    export let disabled = false
 
     let textfield
 
@@ -27,7 +34,12 @@
 </script>
 
 {#if version == 2}
-<label bind:this={textfield} class="mdc-text-field mdc-text-field--outlined textfield-custom">
+<label 
+    bind:this={textfield} 
+    class="mdc-text-field mdc-text-field--outlined mdc-text-field--custom"
+    class:mdc-text-field--with-trailing-icon={trailing != ''}
+    class:mdc-text-field--disabled={disabled}
+    >
     <span class="mdc-notched-outline">
         <span class="mdc-notched-outline__leading"></span>
         <span class="mdc-notched-outline__notch">
@@ -41,9 +53,19 @@
         {value}
         {required}
         {placeholder}
+        {disabled}
         class="mdc-text-field__input" 
         aria-labelledby="my-label-id" 
+        on:focus
         >
+        {#if trailing != ''}
+            <span style="margin: auto; padding: 10px">
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <i class="material-symbols-rounded" on:click>{trailing}</i>
+            </span>
+        {/if}
+        
 </label>
 {:else}
 
@@ -53,9 +75,11 @@
         {required}
         {type} 
     >
-        <!-- <md-icon-button toggle slot="trailing-icon">
-            <md-icon class="material-symbols-outlined">visibility</md-icon>
-            <md-icon class="material-symbols-outlined" slot="selected">visibility_off</md-icon>
-        </md-icon-button> -->
     </md-outlined-text-field>
 {/if}
+
+<style>
+    .mdc-text-field__input::-webkit-calendar-picker-indicator {
+       display: initial;
+    }
+</style>

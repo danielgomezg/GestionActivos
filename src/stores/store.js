@@ -1,9 +1,21 @@
 import { writable } from 'svelte/store'
 
+export const companyBackup = writable([])
+export const articleBackup = writable([])
+
 export const snackbar = writable({
+    id: 0,
+    action: '',
     open: false,
-    message: ''
+    message: '',
+    click: false,
+    type: 'dismiss'
 })
+
+export const lockStore = writable(0);
+export const lockOffice = writable(0);	
+
+
 
 export const user = writable({}) //createUser()
 export const session = writable({
@@ -39,7 +51,7 @@ export const menu = writable([
         ]
     },
     {
-        id: 1,
+        id: 3,
         name: 'Articulos',
         path: '/articulos',
         profiles: [
@@ -49,7 +61,17 @@ export const menu = writable([
         ]
     },
     {
-        id: 1,
+        id: 7,
+        name: 'Activos',
+        path: '/activos',
+        profiles: [
+            1,
+            2,
+            3
+        ]
+    },
+    {
+        id: 4,
         name: 'Usuarios',
         path: '/usuarios',
         profiles: [
@@ -57,136 +79,104 @@ export const menu = writable([
         ]
     },
     {
-        id: 1,
+        id: 5,
         name: 'Perfiles',
         path: '/perfiles',
         profiles: [
             1
         ]
     },
+    // {
+    //     id: 6,
+    //     name: 'Reportes',
+    //     path: '/reports',
+    //     profiles: [
+    //         1
+    //     ]
+    // }
 ])
   
-export const sideNavigationLinks = writable([
+export const estadosActivo = writable([
     {
-        link: 'empresas',
-        action: 'create-empresa',
-        profile: [1, 3]
+        label: 'Reparación',
+        value: 'Reparación'
     },
     {
-        link: 'sucursales',
-        action: 'create-sucursal',
-        profile: [2]
+        label: 'Nuevo',
+        value: 'Nuevo'
     },
     {
-        link: 'articulos',
-        action: 'get-articulo',
-        profile: [1, 2, 3]
+        label: 'Operativo',
+        value: 'Operativo'
     },
     {
-        link: 'usuarios',
-        action: 'get-usuario',
-        profile: [1, 2, 3]
+        label: 'Perdida o Robo',
+        value: 'Perdida o Robo'
     },
     {
-        link: 'perfiles',
-        action: 'get-perfil',
-        profile: [1]
+        label: 'Dañado',
+        value: 'Dañado'
+    },
+    {
+        label: 'Obsoleto',
+        value: 'Obsoleto'
+    },
+    {
+        label: 'Otro',
+        value: 'Otro'
     }
 ]);
 
-export const empresas = writable([
+
+export const headerTableActivos = writable([
     {
-        id: 1,
-        name: 'Adidas',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12,
-        offices: [
-            {
-                id: 1,
-                piso: 1,
-                descripcion: 'piso de tecnologia'
-            },
-            {
-                id: 2,
-                piso: 2,
-                descripcion: 'ropa de mujer'
-            },
-            {
-                id: 3,
-                piso: 3,
-                descripcion: 'ropa de hombre'
-            }
-        ]
+        name: 'bar_code',
+        label: 'Codigo de Barras',
+        numeric: false
     },
     {
-        id: 2,
-        name: 'Nike',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
+        name: 'serie',
+        label: 'Serie',
+        numeric: false
     },
     {
-        id: 3,
-        name: 'Coca-Cola',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
+        name: 'model',
+        label: 'Modelo',
+        numeric: false
     },
     {
-        id: 4,
-        name: 'OpenIA',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
+        name: 'acquisition_date',
+        label: 'Adquirido',
+        numeric: false
     },
     {
-        id: 5,
-        name: 'Amazon',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
+        name: 'creation_date',
+        label: 'Creado',
+        numeric: false
     },
     {
-        id: 6,
-        name: 'Google',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
+        name: 'state',
+        label: 'Estado',
+        numeric: false
     },
     {
-        id: 7,
-        name: 'Wom',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
+        name: 'comment',
+        label: 'Comentario',
+        numeric: false
     },
     {
-        id: 8,
-        name: 'Entel',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
+        name: 'name_in_charge_active',
+        label: 'Responsable',
+        numeric: false
     },
     {
-        id: 9,
-        name: 'Samsung',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
+        name: 'accounting_record_number',
+        label: 'N Registro',
+        numeric: false
     },
     {
-        id: 10,
-        name: 'Apple',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
-    },
-    {
-        id: 11,
-        name: 'Microsoft',
-        rut: '12.234.345-0',
-        pais: 'Chile',
-        totalSucursales: 12
+        name: 'accounting_document',
+        label: 'Documento',
+        numeric: false
     }
 ]);

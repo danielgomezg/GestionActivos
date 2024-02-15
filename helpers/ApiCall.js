@@ -1,13 +1,14 @@
 class Api {
 
     static getTokenFromLocalStorage() {
-        return localStorage.getItem('accessToken');
+        // return localStorage.getItem('accessToken');
+        return sessionStorage.getItem('accessToken');
     }
 
-    static call(url = '', method = 'GET', body = {}, token = "") {
+    static call(url = '', method = 'GET', body = {}, type = 'json') {
         
         
-        token = Api.getTokenFromLocalStorage()
+        let token = Api.getTokenFromLocalStorage()
 
         let params = { 
             headers: {
@@ -16,27 +17,39 @@ class Api {
             },
             ...body
         }
-
+        // Si type es file se quita Content-Type del header
+        if (type == 'file') {
+            delete params.headers['Content-Type']
+        }
 
         return fetch(url, {
             method,
             ...params
         })
         .then(response => {
-            console.log("logggg")
-            console.log(response)
+            // console.log(response)
 
+            // console.log(response)
             let statusCode = response.status
 
             return response.json().then(data => {
                 
+                // console.log(data)
                 
                 if (statusCode == 401 && data.message == 'token-exp') {
+                    // localStorage.removeItem('user');
+                    // localStorage.removeItem('accessToken');
+                    sessionStorage.removeItem('user');
+                    sessionStorage.removeItem('accessToken');
                     window.location.href = '/login'
                     return;
                 }
                 else {
                     if (data.code == '401' && data.message == 'token-exp') {
+                        // localStorage.removeItem('user');
+                        // localStorage.removeItem('accessToken');
+                        sessionStorage.removeItem('user');
+                        sessionStorage.removeItem('accessToken');
                         window.location.href = '/login'
                         return;
                     }

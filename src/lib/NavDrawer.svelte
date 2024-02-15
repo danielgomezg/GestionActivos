@@ -10,8 +10,8 @@
 
 
     const displayMenu = (menu) => {
-        console.log(menu)
-        console.log($user)
+        // console.log(menu)
+        // console.log($user)
         if (user == null) return
 
         let mnu_filter = menu.filter(mnu => mnu.profiles.includes(parseInt($user.profile_id)))
@@ -20,7 +20,6 @@
     }
 
     onMount(() => {
-        console.log()
         selected = window.location.pathname
     })
 
@@ -69,7 +68,8 @@
     .mdc-drawer--modal{
         box-shadow: none;
         /* top: 64px; */
-        z-index: 1;
+        /* z-index: 5; */
+        z-index: 11;
     }
 
     .mobile {

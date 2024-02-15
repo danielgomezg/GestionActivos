@@ -1,17 +1,20 @@
 <script>
     import { onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
-    import { TextField, Button, Divider, IconButton } from "$lib";
     import { snackbar } from "../../stores/store";
+    import { TextField, Button, Divider, IconButton, Snackbar } from "$lib";
     import SelectCountryLocations from "../selectCountry/selectCountryLocations.svelte";
 
-    export let sucursal = { }, company = { }
+    export let sucursal = { }, company = { }, readinfo = false;
 
     let message = ""
-
+    let offices = [];
+    let editing = -1
+    let officeEdit = {}
     let addOffice = false
-    let officeEdit = {}, editing = -1
-    let offices = []
+    let officeToDelete = {};
+    let openSnackbar = false;
+    let messageSnackbar = '';
 
     function toggleEdit(office, index) {
         if (editing == index) {
@@ -48,27 +51,33 @@
         return true
     }
 
-    const saveSucursal = async () => {
+    const editSucursal = async () => {
         // Validacion formulario
         let isValid = validForm();
         if (!isValid) return console.log(message)
-        //loading = true;
-        // Peticion
+       
         console.log(sucursal)   
         let body = JSON.stringify(sucursal)  
-        let response = (await Api.call('http://127.0.0.1:9000/sucursal', 'POST', { body }))
-        console.log('RESPONSE SAVE SUCURSAL --> ', response)
-        if (response.success) {
-            if (response.data.code == 201) {
-                message = "Sucursal agregada"
-                sucursal.desciption = '',
-                sucursal.number = ''
-                sucursal.address = ''
-                sucursal.region = ''
-                sucursal.commune= ''
-            }
+        let response = (await Api.call(`http://127.0.0.1:9000/sucursal/${sucursal.id}`, 'PUT', { body }))
+        console.log('RESPONSE EDIT SUCURSAL --> ', response)
+        if (response.success && response.statusCode == '201') {
+            
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Sucursal editada con exito"
+                return snk
+            })      
+        
+        } else {
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al editar sucursal"
+                return snk
+            })
         }
-        //loading = false
     }
     
     function validFormOficce() {
@@ -84,6 +93,7 @@
         let  isValid = validFormOficce()
         if (!isValid){
             snackbar.update(snk => {
+                snk.type = 'dismiss'
                 snk.open = true;
                 snk.message = message
                 return snk
@@ -100,6 +110,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Oficina creada con éxito."
                 return snk
             }) 
@@ -111,6 +122,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al crear oficina."
                 return snk
             })
@@ -119,12 +131,79 @@
 
     const getOffices = async (id_sucursal) => {
     
-        let response = (await Api.call(`http://127.0.0.1:9000/officePorSucursal/${id_sucursal}`, 'GET', {}))
+        let response = (await Api.call(`http://127.0.0.1:9000/officePorSucursal/${id_sucursal}`, 'GET'))
         console.log('RESPONSE GET Offices --> ', response)
         if (response.success) {
             offices = response.data.result
-            console.log(offices) 
         } 
+    }
+
+    const formatOfficeInfo = (office) => {
+        let name = office.name_in_charge == undefined ? '' : " - " + office.name_in_charge
+        return office.floor  + ' - ' + office.description + name
+    }
+
+    const deleteOffice = async (office) => {
+        console.log(office)
+        // let confirmacion = confirm(`Esta seguro que desea eliminar la Oficina ${office.floor} ${office.description}`)
+        // if (!confirmacion) return;
+
+        let response = (await Api.call(`http://127.0.0.1:9000/office/${office.id}`, 'DELETE'));
+        console.log('RESPONSE DELETE OFFICE -> ', response)
+        if (response.success && response.statusCode == '201') {
+
+            offices = offices.filter(of => of.id !== office.id);
+
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Oficina eliminada con éxito."
+                return snk
+            })
+
+        } else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al eliminar Oficina."
+                return snk
+            })
+        }
+    }
+
+    const editOffice = async () => {
+
+        let body = JSON.stringify(officeEdit)  
+        let response = (await Api.call(`http://127.0.0.1:9000/office/${officeEdit.id}`, 'PUT', { body }))
+        console.log('RESPONSE EDIT OFFICE --> ', response)
+        if (response.success && response.statusCode == '201') {
+            
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Oficina editada con exito"
+                return snk
+            })      
+
+            offices = offices.map(of => {
+                if (of.id == officeEdit.id) {
+                    return { ...officeEdit }
+                }
+                return of
+            })  
+
+            editing = -1
+        
+        } else {
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al editar oficina"
+                return snk
+            })
+        }
+
     }
 
     onMount(async () => {
@@ -135,6 +214,13 @@
     })
 
 </script>
+
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={messageSnackbar}
+    on:confirm={ deleteOffice(officeToDelete) }
+/>
 
 <div class="form">
     <TextField 
@@ -163,19 +249,23 @@
 
     <SelectCountryLocations 
         country={ company.country.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() }
+        disabledComuna
+        disabledRegion
+        disabledCity
         selectedRegion={ sucursal.region }
         selectedComuna={ sucursal.commune }
+        selectedCity={ sucursal.city }
         on:setRegion={ (event) => sucursal.region = event.detail }
         on:setComuna={ (event) => sucursal.commune = event.detail }
+        on:setCity={ (event) => sucursal.city = event.detail }
     />
 
-    <br>
-    <br>
-    <br>
-    <div class="company-actions grid-col-span-1">
+    <div class="grid-col-span-1">
         <Button 
             label="Guardar"
-            on:click={ saveSucursal }
+            disabled={ readinfo }
+            custom 
+            on:click={ editSucursal }
         />
     </div>
 
@@ -190,14 +280,22 @@
         <ul>
             {#each offices as office, index} 
             <tr>
-                <td style="width: 65%;"><li>{ office.floor  + ' - ' + office.description }</li></td>
+                <td style="width: 65%;"><li>{ formatOfficeInfo(office) }</li></td>
                 <td style="width: 65%;">
-                    <IconButton icon="edit" on:click={ () => toggleEdit(office, index) } />
-                    <IconButton icon="delete" on:click />
+                    <IconButton icon="edit" tooltipId="btn-edit__{index}" tooltipText="Editar" on:click={ () => toggleEdit(office, index) } />
+                    <IconButton 
+                        icon="delete" 
+                        tooltipId="btn-delete__{index}" 
+                        tooltipText="Eliminar" 
+                        on:click={ () => {
+                            officeToDelete = office;
+                            messageSnackbar = '¿Eliminar la oficina ' + office.floor + ' ' + office.description + '?'
+                            openSnackbar = true;
+                        } } />
                 </td>    
             </tr>
             {#if editing == index}
-                <tr style="display: block;">
+                <tr class="form-office-edit">
                     <TextField 
                         version=2
                         required 
@@ -212,7 +310,13 @@
                         label="Descripción" 
                         bind:value={officeEdit.description}
                     />
-                    <IconButton icon="save" />
+                    <TextField 
+                        version=2
+                        type="text"
+                        label="Responsable" 
+                        bind:value={officeEdit.name_in_charge}
+                    />
+                    <IconButton icon="save" on:click={ editOffice } />
                 </tr>
             {/if}
             {:else}
@@ -222,7 +326,6 @@
     </table>
 
     {#if addOffice}
-        <!-- <div class="grid-col-span-1"> -->
             <TextField 
                 version=2
                 required 
@@ -230,8 +333,6 @@
                 label="Número piso" 
                 bind:value={officeEdit.floor}
             />
-        <!-- </div> -->
-        <!-- <div class="grid-col-span-1"> -->
             <TextField 
                 version=2
                 required 
@@ -239,36 +340,47 @@
                 label="Descripción" 
                 bind:value={officeEdit.description}
             />
-        <!-- </div> -->
-            
+
+            <TextField 
+                version=2
+                type="text"
+                label="Responsable" 
+                bind:value={officeEdit.name_in_charge}
+            />
     {/if}
     
-    <div class="company-actions grid-col-span-1">
-        {#if addOffice}
+    {#if addOffice}
+        <div class="company-actions grid-col-span-1">
             <Button 
                 label="Guardar"
+                custom
+                disabled={ readinfo }
                 on:click={ saveOffice }
             />
         
             <Button 
                 label="Cancelar"
                 type="outlined"
+                custom
                 color=""
                 on:click={ () => addOffice = false}
             />
+        </div>
 
-        {:else}
-            <Button 
-                label="Agregar"
-                on:click={ () => {
-                    officeEdit = { floor: '', description: '' }
-                    addOffice = true
-                    editing = -1
-                }}
-            />
-        {/if}
+    {:else}
+        <Button 
+            label="Agregar"
+            custom
+            disabled={ readinfo }
+            on:click={ () => {
+                officeEdit = { floor: '', description: '', name_in_charge: '' }
+                addOffice = true
+                editing = -1
+            }}
+        />
+    {/if}
         
-    </div>
+    
     
     
 
@@ -282,5 +394,10 @@
         grid-column: 1;
     }
 
+    .form-office-edit {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+    }
 
 </style>

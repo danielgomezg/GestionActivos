@@ -13,6 +13,7 @@
 .card-title {
     font-size: 24px;
     font-weight: 600;
+    line-height: normal;
 }
 
 .capitalize {
@@ -40,7 +41,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 8px;
-    margin-top: 30px;
+    // margin-top: 30px;
 
     @media only screen and (max-width: 600px) {
         // display: block;
@@ -56,12 +57,31 @@
     }
 }
 
+.grid-col-2 {
+    grid-column: 2;
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        grid-column: 1;
+    }
+}
+
+.responsive-table {
+    
+    overflow-x: auto;
+    display: block;
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        width: 100%;
+    }
+}
+
 .grid-col-span-1 {
     grid-column: 1;
 }
 
-h4 {
+h4, h5 {
     margin: 0;
+    font-weight: 400;
 }
 
 .flex-column {
@@ -72,16 +92,22 @@ h4 {
 .flex-row {
     display: flex;
     flex-direction: row;
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        flex-direction: column;
+    }
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.flex-end {
+    align-items: flex-end;
 }
 
 .align-center {
     align-items: center;
-}
-
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .body-content {
@@ -106,3 +132,86 @@ h4 {
     }
 }
 
+.align-start {
+    align-items: flex-start;
+}
+
+.gap-8 {
+    gap: 8px;
+}
+
+.mb-8 {
+    margin-bottom: 8px;
+}
+
+.mt-8 {
+    margin-top: 8px;
+}
+
+.mt-18 {
+    margin-top: 18px;
+}
+
+p {
+    margin: 0;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+// Media queries para mobile class .header-content display: flex column
+@media only screen and (max-width: 600px) {
+    .header-content {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: normal;
+    }
+}
+
+.account-username {
+    text-align: right;
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        display: none;
+    }
+}
+
+.account-username__secondary {
+    display: none;
+    @media only screen and (max-width: 600px) {
+        // display: block;
+        display: block;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .mobile-fixed{
+        bottom: 0px;
+        width: 100%;
+        position: sticky;
+        padding-bottom: 5px;
+        background-color: white;
+    }
+}
+
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+@media only screen and (max-width: 600px) {
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+}

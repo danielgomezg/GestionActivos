@@ -1,10 +1,7 @@
 <script>
-        import { getContext } from "svelte";
-
-        // @ts-nocheck
-        import { fade, fly } from 'svelte/transition';
-        // @ts-ignore
         import { IconButton } from "$lib";
+        import { getContext } from "svelte";
+        import { fade, fly } from 'svelte/transition';
         
         
         export let open = false, persistance = false, height = '90%', drag = false, title = '', backButton = false
@@ -13,8 +10,6 @@
         let resize = false;
         let backModalContent = getContext('backModalContent');
         
-        
-        // @ts-ignore
         function dragging(event) {
             const touch = event.touches[0];
             if (!drag) return;
@@ -22,8 +17,22 @@
             height = window.innerHeight - touch.pageY + 'px';
     
         }
+
+        function handleScroll(event) {
+            const target = event.target;
+            const scrollTop = target.scrollTop;
+            const scrollHeight = target.scrollHeight;
+            const clientHeight = target.clientHeight;
+
+            if (scrollTop + clientHeight >= scrollHeight) {
+                console.log('End scroll')
+                dispatch('scrollEnd')
+            }
+            else {
+                dispatch('scroll')
+            }
+        }
         
-        // @ts-ignore
         const handleDragging = (e) => {
             if (e.target.slot == "header") resize = true;
             else resize = false
@@ -69,7 +78,7 @@
                 </div>
                 <IconButton icon="close" on:click={ () => open = persistance } />
             </div>
-            <div class="body">
+            <div class="body" on:scroll={ handleScroll }>
                 <!-- <slot name="content" /> -->
                 <slot />
             </div>

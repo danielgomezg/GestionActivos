@@ -17,10 +17,12 @@
         }
     ]
     let addCompany = getContext('addCompany');
+    let replaceCompany = getContext('replaceCompany');
 
     function formatRut(code) {
         if (code == undefined) return ''
-        if (company.country != 'Chile') return code.replace(/[.-]/g, '');
+        // if (company.country != 'Chile') return code.replace(/[.-]/g, '');
+        if (company.country != 'Chile') return code.replace(/\D/g, '');
         if (code.length >= 13) return code.slice(0, -1);
         
         let rut = code.replace(/[^\dkK]/g, '')
@@ -61,6 +63,42 @@
     const editCompany = async () => {
         console.log('edit company')
         console.log(company)
+
+        let isValid = validForm();
+        if (!isValid) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = message
+                return snk
+            })
+            return console.log(message)
+        }
+
+        // Peticion
+        let body = JSON.stringify(company)  
+        let response = (await Api.call(`http://127.0.0.1:9000/company/${company.id}`, 'PUT', { body }))
+        console.log('RESPONSE EDIT COMPANY --> ', response)
+        if (response.success && response.statusCode == "201") {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Empresa editada con éxito."
+                return snk
+            })
+
+            replaceCompany(response.data.result)
+
+        }
+        else {
+            //aviso
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al editar empresa."
+                return snk
+            })
+        }
     }
 
     const saveCompany = async () => {
@@ -69,6 +107,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -85,9 +124,13 @@
                 company.name = '',
                 company.rut = ''
                 company.country = ''
+                company.contact_name = ''
+                company.contact_phone = ''
+                company.contact_email = ''
 
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Empresa creada con éxito."
                     return snk
                 })
@@ -98,6 +141,7 @@
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al crear empresa."
                     return snk
                 })
@@ -106,6 +150,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al crear empresa."
                 return snk
             })
@@ -131,67 +176,71 @@
     <Select 
         label="País"
         options={paises}
+        disabled={isEdit}
         selected={company.country}
         on:change={ (event) => company.country = event.detail }
     />
 
     <TextField 
         version=2
+        disabled={isEdit}
         required 
         type="text"
         label={ company.country == 'Chile'? 'RUT': 'DNI' } 
         bind:value={company.rut}
     />
 
-    <br>
-    <br>
-    <br>
-    <div class="company-actions grid-col-1">
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Nombre responsable"
+        bind:value={company.contact_name}
+    />
+
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Teléfono responsable"
+        bind:value={company.contact_phone}
+    />
+
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Correo responsable"
+        bind:value={company.contact_email}
+    />
+
+    <div>
         {#if !isEdit}
             <Button 
-                leading
                 label="Guardar"
+                custom 
                 {loading}
                 on:click={ saveCompany }
             />
         {:else}
 
             <Button 
-                leading
                 label="Guardar"
+                custom
                 {loading}
                 on:click={ editCompany }
             />
 
         {/if}
-        <!-- <Button 
-            type="outlined"
-            label="Cancelar"
-            color=""
-            on:click={ () => openModal = false }
-        /> -->
     </div>
 
     {#if showSucursalesBtn}
-        <div class="grid-col-1">
+        <!-- <div class="grid-col-1"> -->
             <Button 
                 label="Agregar Sucursales"
                 color="#4F5DDB"
             />
-        </div>
+        <!-- </div> -->
 
     {/if}
 </div>
-
-<style>
-    .company-actions {
-        display: flex;
-        gap: 8px;
-        grid-column: 1;
-    }
-
-    .grid-col-1 {
-        grid-column: 1;
-    }
-
-</style>

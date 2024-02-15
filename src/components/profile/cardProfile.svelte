@@ -44,33 +44,6 @@
             </div>
         </div>
         <Divider />
-        <!-- <table style="width: 100%;">
-            <thead>
-                <tr>
-                  <th colSpan="2" style="text-align: left;">Tabla</th>
-                  <th colSpan="3" style="text-align: left;">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {#each $modulos as modulo }
-                    <tr>
-                        <td colSpan="2"><li>{ modulo }</li></td>
-                        {#each ['get', 'create', 'update', 'delete'] as action, index }
-                            <td>
-                                {#if hasAction(modulo, action)}
-                                    <Chip chip={ { id: index, label: translate[action], color: action } } />
-                                {:else}
-                                    <Chip chip={ { id: index, label: translate[action] } } />
-                                {/if}
-                            </td>   
-                        {:else}
-                            <p>perfil sin acciones</p>
-                        {/each}
-                    </tr>
-                {/each}
-            </tbody>
-        </table> -->
-
         <table style="width: 100%;">
             <thead>
                 <tr>
@@ -89,10 +62,10 @@
                             <td colspan="{index + 3}" style="text-align: center;">
                                 {#if hasAction(modulo, action)}
                                     <!-- <Chip chip={ { id: index, label: translate[action], color: action } } /> -->
-                                    <span class="material-symbols-outlined" style="color: #4CAF50;">check_circle</span>
+                                    <span class="material-symbols-rounded" style="color: #4CAF50;">check_circle</span>
                                 {:else}
                                     <!-- <Chip chip={ { id: index, label: translate[action] } } /> -->
-                                    <span class="material-symbols-outlined" style="color: #FF0000;">block</span>
+                                    <span class="material-symbols-rounded" style="color: #FF0000;">block</span>
                                 {/if}
                             </td>   
                         {:else}

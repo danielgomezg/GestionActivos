@@ -13,7 +13,8 @@
     let offices = [
         {
             floor: '', 
-            description: ''
+            description: '',
+            name_in_charge: ''
         }
     ]
 
@@ -52,6 +53,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -74,6 +76,7 @@
                         // Error al crear algunas oficinas
                         snackbar.update(snk => {
                             snk.open = true;
+                            snk.type = 'dismiss'
                             snk.message = "Error al crear algunas oficinas, pueden volver a intentar en edicion sucursal. 1"
                             return snk
                         })
@@ -82,6 +85,7 @@
                         // Error al crear las oficinas
                         snackbar.update(snk => {
                             snk.open = true;
+                            snk.type = 'dismiss'
                             snk.message = "Error al crear las oficinas, pueden volver a intentar en edicion sucursal. 2"
                             return snk
                         })
@@ -91,15 +95,17 @@
                     // TODO GUARDADO CORRECTAMENTE.
                     snackbar.update(snk => {
                         snk.open = true;
+                        snk.type = 'dismiss'
                         snk.message = "Sucursal creada con éxito."
                         return snk
                     })
-                    addSucursalCount(company.id)
+                    addSucursalCount(company.id, + 1)
                 }
             }
             else {
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al crear sucursal."
                     return snk
                 })
@@ -109,6 +115,7 @@
         else {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al crear sucursal."
                 return snk
             })
@@ -121,10 +128,12 @@
             sucursal.address = ''
             sucursal.region = ''
             sucursal.commune = ''
+            sucursal.city = ''
             offices = [ 
                 {
                     floor: '', 
-                    description: ''
+                    description: '',
+                    name_in_charge: ''
                 }
             ]
         }
@@ -185,6 +194,7 @@
         selectedComuna={ sucursal.commune }
         on:setRegion={ (event) => sucursal.region = event.detail }
         on:setComuna={ (event) => sucursal.commune = event.detail }
+        on:setCity={ (event) => sucursal.city = event.detail }
     />
 
     <div class="grid-col-span-2">
@@ -194,33 +204,45 @@
     <div></div>
 
     {#each offices as office }
-        <TextField 
-            version=2
-            required 
-            type="text"
-            label="Número piso" 
-            bind:value={office.floor}
-        />
+        <div class="grid-col-span-2 container-office" >
+            <TextField 
+                version=2
+                required 
+                type="text"
+                label="Número piso" 
+                bind:value={office.floor}
+            />
 
-        <TextField 
-            version=2
-            type="text"
-            label="Descripción" 
-            bind:value={office.description}
-        />
+            <TextField 
+                version=2
+                type="text"
+                label="Descripción" 
+                bind:value={office.description}
+            />
+
+            <TextField 
+                version=2
+                type="text"
+                required
+                label="Responsable" 
+                bind:value={office.name_in_charge}
+            />
+        </div>  
     {/each}
 
-    <div class="company-actions grid-col-span-1">
+    <div class="grid-col-2 new-office-actions">
       
         <Button 
-            label="Agregar oficina"
+            label="Nueva oficina"
+            custom
             on:click={ () => {
-                offices = [ ...offices, { floor: '', description: '' } ]
+                offices = [ ...offices, { floor: '', description: '', name_in_charge: '' } ]
             }}
         />
         {#if offices.length != 1}
 
             <Button 
+                custom
                 type="outlined"
                 label="Cancelar"
                 color=""
@@ -232,10 +254,9 @@
         {/if}
     </div>
 
-    <br>
-    <br>
-    <div class="company-actions grid-col-span-1">
+    <div class="grid-col-span-1">
         <Button 
+            custom
             label="Guardar"
             on:click={ saveSucursal }
         />
@@ -245,11 +266,16 @@
 
 <style>
 
-    .company-actions {
+    .new-office-actions {
         display: flex;
+        flex-direction: row-reverse;
         gap: 8px;
-        grid-column: 1;
     }
 
+    .container-office {
+        display: grid;
+        grid-template-columns: .5fr 1fr 1fr;
+        grid-gap: 8px;
+    }
 
 </style>

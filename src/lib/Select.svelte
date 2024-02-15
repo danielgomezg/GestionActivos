@@ -2,7 +2,11 @@
     import { onMount, createEventDispatcher, onDestroy  } from 'svelte';
     import { MDCSelect } from '@material/select';
 
-    export let label = '', options = [], selected = ''
+    export let label = ''
+    export let options = []
+    export let selected = ''
+    export let disabled = false
+    export let customHeight = false
 
     let dispatch = createEventDispatcher()
 
@@ -16,22 +20,21 @@
         if(selected == null) return;
         
         select.value = selected.toString();
-        dispatch("change", select.value)
+        // dispatch("change", select.value)
 
         // selectedIndex = select.selectedIndex = options.findIndex(option => option.value == selectedValue);
     }
 
     const setDispatch = () => {
-            
         dispatch("change", select.value)
     }
 
     onMount(() => {
         
         select = new MDCSelect(selectComponent);
-        if (selected != '') updateValue(selected)
-       
         select.listen('MDCSelect:change', setDispatch);
+        
+        if (selected != '') updateValue(selected)
 
     })
 
@@ -45,12 +48,17 @@
     })
 
 </script>
-<div bind:this={selectComponent} class="mdc-select mdc-select--outlined">
-    <div class="mdc-select__anchor" aria-labelledby="outlined-select-label">
+<div bind:this={selectComponent} class="mdc-select mdc-select--outlined mdc-select-custom"
+    class:mdc-select--disabled={disabled}
+    class:mdc-select--no-label={label == ''}
+    >
+    <div class="mdc-select__anchor mdc-select-custom" aria-labelledby="outlined-select-label" class:custom-height={customHeight}>
         <span class="mdc-notched-outline">
             <span class="mdc-notched-outline__leading"></span>
             <span class="mdc-notched-outline__notch">
-                <span id="outlined-select-label" class="mdc-floating-label">{label}</span>
+                {#if label != ''}
+                    <span id="outlined-select-label" class="mdc-floating-label">{label}</span>
+                {/if}
             </span>
             <span class="mdc-notched-outline__trailing"></span>
         </span>
@@ -107,5 +115,9 @@
 
     .mdc-list {
         text-transform: capitalize;
+    }
+    
+    .custom-height {
+        height: 40px;
     }
 </style>

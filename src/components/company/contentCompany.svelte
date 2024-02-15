@@ -1,21 +1,29 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { onMount, setContext } from "svelte";
+    import { Button, Loading, Fab } from "$lib";
     import StoresInfo from "./storesInfo.svelte";
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
-    import { Button, IconButton, Loading } from "$lib";
+    import CompanySearch from "./companySearch.svelte";
+    import { companyBackup } from "../../stores/store";
+    // import History from "../history/history.svelte";
+    import HistoryCompany from "./companyHistory.svelte";
+    import { onMount, setContext, onDestroy } from "svelte";
     import FormSucursal from "../sucursal/formSucursal.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import FormSucursalSave from "../sucursal/formSucursalSave.svelte";
-
-    let openModal = false, backButton = false;
-    let modalTitle = '', previusModelTitle = []
-    let modalContent;  
+ 
     let props;
-    let previusComponent, previusProps;
-    let empresas = []
+    let count = 0;
+    let limit = 5;
+    let offset = 0;
+    let modalContent;  
+    let empresas = [];
     let loading = false;
+    let startSearch = false;
+    let previusComponent, previusProps;
+    let openModal = false, backButton = false;
+    let modalTitle = '', previusModelTitle = '';
 
     setContext('backModalContent', (e) => {
         e.preventDefault();
@@ -27,23 +35,33 @@
         // openModal = true
     })
 
-    setContext('addSucursalCount', (companyId) => {
-        let empresa = empresas.find(emp => emp.id == companyId);
-        empresa.count_sucursal++;
-        console.log('empresa found > ', empresa)
+    setContext('replaceCompany', (company) => {
+        let index = empresas.findIndex(emp => emp.id == company.id);
+        let count = empresas[index].count_sucursal
+        empresas[index] = company;
+        empresas[index].count_sucursal = count
         empresas = [...empresas]
+        openModal = false;
+    })
+
+    setContext('addSucursalCount', (companyId, cont) => {
+        let empresa = empresas.find(emp => emp.id == companyId);
+        empresa.count_sucursal = empresa.count_sucursal + cont;
+        empresas = [...empresas]
+        openModal = false;
     })
 
     setContext('addCompany', (company) => {
-        console.log('in add company')
-        console.log(company)
         empresas = [company, ...empresas]
+        openModal = false;
     })
 
     setContext('editStore', (store, company) => {
-        // Esta funcion cambia el contenido del side sheets o bottom.
-        // guardamos el componente que se esta mostrando
         editStore(store, company)
+    })
+
+    setContext('removeCompany', (companyId) => {
+        empresas = empresas.filter(emp => companyId !== emp.id);
     })
 
     const createCompany = () => {
@@ -52,9 +70,13 @@
         props = { company: {
             name: '',
             rut: '',
-            country: ''
+            country: '',
+            contact_name: '',
+            contact_phone: '',
+            contact_email: ''
         } }
         openModal = true
+        backButton = false;
     }
 
     const editCompany = (company) => {
@@ -62,13 +84,14 @@
         modalContent = FormCompany;
         props = { company, isEdit: true }
         openModal = true
+        backButton = false;
     }
 
     const showStores = (company) => {
         // Se guarda componente actual para boton back 
         previusComponent = modalContent;
         previusProps = { ...props };
-
+        
         modalTitle = `${company.name} - sucursales`
         previusModelTitle = modalTitle
         modalContent = StoresInfo;
@@ -109,30 +132,73 @@
     }
 
     const getCompanies = async () => {
+        if (offset > count) return;
         loading = true;
-        let response = (await Api.call('http://127.0.0.1:9000/companies', 'GET'))
+        let response = (await Api.call(`http://127.0.0.1:9000/companies?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
         if (response.success && response.statusCode == "200") {
-            empresas = response.data.result //empresas.set(response.data)
+            empresas = [...empresas, ...response.data.result] //empresas.set(response.data)
+            count = response.data.count
         } 
         loading = false;
     }
 
+    const history = (company) => {
+        console.log('HISTORY COMPANY -> ', company)
+        modalTitle = `${company.name} - Historial`;
+        modalContent = HistoryCompany;
+        props = { 
+            company
+        }
+        openModal = true
+    }
+
+    const handleScroll = () => {
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+            offset = offset + limit;
+            getCompanies()
+        }
+    }
+
     onMount(async () => {
         getCompanies() 
+
+        window.addEventListener('scroll', handleScroll)
+    })
+
+    onDestroy(() => {
+        window.removeEventListener('scroll', handleScroll)
     })
 
 </script>
 
-<div style="padding-top: 20px;">
-    <div class="header-company">
-        <Button label="Nueva empresa" on:click={ createCompany } />
-        <IconButton icon="tune" />
-        <!-- <div class="title">Empresas</div> -->
+<div style="position: relative">
+    <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 24px 0 10px">
+        <div class="desktop-only">
+            <Button label="Nueva empresa" custom on:click={ createCompany } />
+        </div>
+        <!-- <Search value="" /> -->
+        <div>
+        <CompanySearch 
+            bind:empresas={empresas} 
+            on:startSearch={ () => {
+                startSearch = true;
+                // companyBackup.set(empresas)
+                offset = 0;
+                getCompanies();
+            } }
+            on:removeSearch={ () => {
+                startSearch = false;
+                empresas = [...$companyBackup]
+            } }
+        />
+        </div>
+        <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
+            <Fab on:click={ createCompany } />
+        </div>
     </div>
-    <br>
 
-    <div class="companies-content">
+    <div class="companies-content" style="padding: 14px 0 10px;">
         {#if loading}
             <Loading />
         {/if}
@@ -142,7 +208,14 @@
                 on:edit={ (event) => editCompany(event.detail) } 
                 on:newStore={ (event) => newStore(event.detail) } 
                 on:showStores={ (event) => showStores(event.detail) } 
+                on:history={ (event) => history(event.detail) }
             />
+        {:else}
+            {#if startSearch}
+                <p>No se encontraron empresas para tu búsqueda</p>
+            {:else}
+                <p>No hay empresas registradas</p>
+            {/if}
         {/each}
     </div>
 </div>
@@ -156,11 +229,6 @@
 />
 
 <style>
-    .header-company {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
 
     .companies-content {
         display: flex;

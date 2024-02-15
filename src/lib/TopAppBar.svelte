@@ -1,18 +1,36 @@
 <script>
     // @ts-ignore
     import { IconButton } from "$lib";
-    import { user } from "../stores/store";
+    import Api from "../../helpers/ApiCall";
+    // import { user } from "../stores/store";
     import { MDCTopAppBar } from '@material/top-app-bar';
     import { createEventDispatcher, onMount } from 'svelte';
 
     export let isMobile = false
     let topAppBarComponent
+    let nameCompany = ''
 
     let dispatch = createEventDispatcher();
+
+    const getNameCompany = async (companyId) => {
+      
+      const response = await Api.call(`http://127.0.0.1:9000/company/${companyId}`, 'GET');
+      console.log("company name", response);
+      if (response.success && response.statusCode == '200') {
+        nameCompany = response.data.result.name;
+      }
+    }
 
     onMount(() => {  
       if (topAppBarComponent == undefined) return;   
       const topAppBar = new MDCTopAppBar(topAppBarComponent);
+
+      let user = sessionStorage.getItem("user");
+      user = JSON.parse(user);
+      console.log("top app bar user", user);
+      if (user.profile_id == 2) {
+        getNameCompany(user.company_id)
+      }
     })
 
 
@@ -33,6 +51,11 @@
             alt="logo"
           />
         </div>
+        <!-- <div class="company-name"> -->
+          {#if nameCompany != ''}
+            <h1 class="company-name">{nameCompany}</h1>
+          {/if}
+        <!-- </div> -->
 
       </section>
       <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
@@ -52,6 +75,13 @@
 
   img {
     height: 100%;
+  }
+
+  .company-name {
+    margin: 0;
+    margin-left: 20px;
+    border-left: solid 1px white;
+    padding-left: 20px;
   }
 
 </style>

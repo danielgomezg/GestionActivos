@@ -1,11 +1,16 @@
 <script>
-    import { user, usuarios } from "../../stores/store";
+    import { user} from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
-    import { getContext, onMount } from "svelte";
     import { snackbar } from "../../stores/store";
     import { TextField, Button, Select } from "$lib";
+    import { getContext, onDestroy, onMount } from "svelte";
+    import CompanySelect from "../company/companySelect.svelte";
     
-    export let usuario = {}, companies = {}, accion = '', showPassword = false, editself = false
+    export let usuario = {};
+    export let accion = '';
+    export let showPassword = false;
+    export let editself = false;
+
     let message= ''
     let disabledSave = false
     let accionBtn = ''
@@ -106,6 +111,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -142,6 +148,7 @@
                 //aviso
                 snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Usuario creado con éxito."
                 return snk
                 })
@@ -150,6 +157,7 @@
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al crear usuario."
                     return snk
                 })
@@ -158,6 +166,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al crear usuario."
                 return snk
             })
@@ -172,6 +181,7 @@
         if (!isValid) {
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = message
                 return snk
             })
@@ -217,7 +227,8 @@
                     let userEdited = {...response.data.result, ...$user}
                     console.log(userEdited)
                     user.set(userEdited)
-                    localStorage.setItem("user",  JSON.stringify(userEdited))
+                    // localStorage.setItem("user",  JSON.stringify(userEdited))
+                    sessionStorage.setItem("user",  JSON.stringify(userEdited))
 
 
                 }else{
@@ -230,6 +241,7 @@
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Usuario actualizado con éxito."
                     return snk
                 })
@@ -237,6 +249,7 @@
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
+                    snk.type = 'dismiss'
                     snk.message = "Error al editar usuario."
                     return snk
                 })
@@ -245,6 +258,7 @@
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
+                snk.type = 'dismiss'
                 snk.message = "Error al editar usuario."
                 return snk
             })
@@ -261,7 +275,6 @@
         }else{
             accionBtn = editUser
             perfilUser = usuario.profile_id 
-            
         }
 
     })
@@ -349,19 +362,24 @@
 
     {#if $user.profileActions.includes('create-empresa')}
 
-    <Select 
+    <!-- <Select 
         label="Compañias"
         selected={ usuario.company_id }
         options={companies}
         on:change={ (event) => usuario.company_id = event.detail }
+    /> -->
+    <CompanySelect 
+        selected={ usuario.company_id }
+        on:change={ (event) => usuario.company_id = event.detail }
     />
+
 
     {/if}
 
     <br>
-    <div class="grid-col-span-1">
+    <div class="grid-col-span-1 mobile-fixed">
         <Button 
-            trailing
+            custom
             disabled={disabledSave}
             label="Guardar"
             on:click={ accionBtn }
