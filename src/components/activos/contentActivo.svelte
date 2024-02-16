@@ -149,7 +149,7 @@
         }
 
         let response = (await Promise.all(activosSelected.map(activo => {
-            return Api.call(`http://127.0.0.1:9000/active/${activo.id}`, 'DELETE');
+            return Api.call(`/active/${activo.id}`, 'DELETE');
         })))
 
         console.log('RESPONSE DELETE ACTIVOS > ', response)
@@ -187,7 +187,11 @@
     }
 
     const getDocument = (url) => {
-        fetch(`http://127.0.0.1:9000/file_active/${url}`)
+        let host = '';
+        if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+        else host = `http://127.0.0.1:9000`	
+        
+        fetch(`${host}/file_active/${url}`)
             .then(response => response.blob())
             .then(document => {
                 let objectURL = URL.createObjectURL(document);
@@ -204,7 +208,7 @@
         if (officesFilter.length > 0) return;
         if (store.value == undefined) return;
 
-        let response = (await Api.call(`http://127.0.0.1:9000/active/sucursal/${store.value}?limit=${limit}&offset=${offset}`, 'GET'));
+        let response = (await Api.call(`/active/sucursal/${store.value}?limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE ACTIVOS BY STORE > ', response)
         if (response.success && response.statusCode == '200') {
             activos = response.data.result
@@ -223,7 +227,7 @@
             return;
         } 
 
-        let response = (await Api.call(`http://127.0.0.1:9000/active/offices/${officesId.join(',')}?limit=${limit}&offset=${offset}`, 'GET'));
+        let response = (await Api.call(`/active/offices/${officesId.join(',')}?limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE ACTIVOS BY OFFICE > ', response)
         if (response.success && response.statusCode == '200') {
             if (response.data.result.length == 0) {
@@ -256,7 +260,10 @@
         }
 
         try {
-            const response = await fetch(`http://127.0.0.1:9000/report/active/${location}/${id}`, {
+            let host = '';
+            if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+            else host = `http://127.0.0.1:9000`	
+            const response = await fetch(`${host}/report/active/${location}/${id}`, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
             });
@@ -307,7 +314,10 @@
         }
 
         try {
-            const response = await fetch(`http://127.0.0.1:9000/report/excel/active/${location}/${id}`, {
+            let host = '';
+            if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+            else host = `http://127.0.0.1:9000`	
+            const response = await fetch(`${host}/report/excel/active/${location}/${id}`, {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
             });

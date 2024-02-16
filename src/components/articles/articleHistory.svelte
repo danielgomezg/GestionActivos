@@ -47,7 +47,7 @@
 
     const getHistory = async (company_id) => {
         if (count != -1 && offset > count) return
-        let response = (await Api.call(`http://127.0.0.1:9000/history/article/${company_id}?limit=${limit}&offset=${offset}`, 'GET'))
+        let response = (await Api.call(`/history/article/${company_id}?limit=${limit}&offset=${offset}`, 'GET'))
         console.log(`RESPONSE GET HISTORY ARTICLE (${company_id}) -->`, response)
         if (response.success && response.statusCode == '200') {
             count = response.data.count

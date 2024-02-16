@@ -10,9 +10,10 @@
     let downloadUrl = '';
 
     const reportArticle = async () => {
-        
-        // let response = (await Api.call(`http://127.0.0.1:9000/generation_catalogo/${companyId}`, 'GET'));
-        fetch(`http://127.0.0.1:9000/report/article/${id}`, { method: 'GET', headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }})
+        let host = '';
+        if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+        else host = `http://127.0.0.1:9000`	
+        fetch(`${host}/report/article/${id}`, { method: 'GET', headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }})
             .then(response => response.blob())
             .then(data => {
                 downloadUrl = URL.createObjectURL(data);

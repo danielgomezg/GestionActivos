@@ -74,7 +74,7 @@
         if (offset > count) return;
 
         loading = true;
-        let response = (await Api.call(`http://127.0.0.1:9000/users?limit=${limit}&offset=${offset}`, 'GET'))
+        let response = (await Api.call(`/users?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET USERS --> ', response)
         if (response.success && response.statusCode == '200') {
             count = response.data.count

@@ -24,7 +24,7 @@
     const getActives = async () => {
         if (count != -1 && offset > count) return
 
-        let response = (await Api.call(`http://127.0.0.1:9000/activePorArticle/${article.id}?limit=${limit}&offset=${offset}`, 'GET'))
+        let response = (await Api.call(`/activePorArticle/${article.id}?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET ACTIVES --> ', response)
         if (response.success && response.statusCode == '200') {
             count = response.data.count
@@ -38,7 +38,7 @@
 
     const deleteActive = async (activo) => {
 
-        let response = (await Api.call(`http://127.0.0.1:9000/active/${activo.id}`, 'DELETE'));
+        let response = (await Api.call(`/active/${activo.id}`, 'DELETE'));
         console.log('RESPONSE DELETE ACTIVE -> ', response)
         if (response.success && response.statusCode == '201') {
 
@@ -65,8 +65,11 @@
 
     const downloadDocument = async (activo) => {
         console.log(activo)
+        let host = '';
+        if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+        else host = `http://127.0.0.1:9000`	
 
-        fetch(`http://127.0.0.1:9000/file_active/${activo.accounting_document}`)
+        fetch(`${host}/file_active/${activo.accounting_document}`)
             .then(response => response.blob())
             .then(document => {
                 let objectURL = URL.createObjectURL(document);

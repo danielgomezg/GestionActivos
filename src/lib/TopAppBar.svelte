@@ -14,7 +14,7 @@
 
     const getNameCompany = async (companyId) => {
       
-      const response = await Api.call(`http://127.0.0.1:9000/company/${companyId}`, 'GET');
+      const response = await Api.call(`/company/${companyId}`, 'GET');
       console.log("company name", response);
       if (response.success && response.statusCode == '200') {
         nameCompany = response.data.result.name;

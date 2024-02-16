@@ -22,7 +22,7 @@
         console.log('deleteCompany -> ', company)
         // let confirmacion = confirm('Esta seguro que desea eliminar la empresa ', company.name)
         // if (!confirmacion) return;
-        let response = (await Api.call(`http://127.0.0.1:9000/company/${company.id}`, 'DELETE'));
+        let response = (await Api.call(`/company/${company.id}`, 'DELETE'));
         console.log('RESPONSE DELETE COMPANY -> ', response)
         if (response.success && response.statusCode == '201') {
 

@@ -22,7 +22,7 @@
         startSearch = true;
 
 
-        let response = (await Api.call(`http://127.0.0.1:9000/sucursal/search/${companyId}?search=${text}&limit=${limit}`, 'GET'));
+        let response = (await Api.call(`/sucursal/search/${companyId}?search=${text}&limit=${limit}`, 'GET'));
         console.log('RESPONSE SEARCH SUCURSAL -> ', response)
         if (response.success && response.statusCode == '200') {
             sucursales = response.data.result

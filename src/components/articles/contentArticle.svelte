@@ -164,7 +164,7 @@
         companyId = company_id;
         if (offset > count) return;
 
-        let response = (await Api.call(`http://127.0.0.1:9000/articles/company/${company_id}?limit=${limit}&offset=${offset}`, 'GET'));
+        let response = (await Api.call(`/articles/company/${company_id}?limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE GET ARTICLES --> ', response)
         if (response.success && response.statusCode == "200") {
             articles = response.data.result;

@@ -101,7 +101,7 @@
 
         let formData = new FormData();
         formData.append('file', image);
-        let response = await Api.call('http://127.0.0.1:9000/file_active', 'POST', { body: formData }, 'file');
+        let response = await Api.call('/file_active', 'POST', { body: formData }, 'file');
         console.log(response)
         if (response.success && response.statusCode == "201") {
             return response.data.result;
@@ -132,7 +132,7 @@
 
         let body = JSON.stringify(activo);
         console.log(body)
-        let response = (await Api.call('http://127.0.0.1:9000/active', 'POST', { body }))
+        let response = (await Api.call('/active', 'POST', { body }))
         console.log(response)
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {
@@ -198,7 +198,7 @@
         delete activo.office
         let body = JSON.stringify(activo)  
         console.log('BODY EDIT ACTIVE --> ', body)  
-        let response = (await Api.call(`http://127.0.0.1:9000/active/${activo.id}`, 'PUT', { body }))
+        let response = (await Api.call(`/active/${activo.id}`, 'PUT', { body }))
         console.log('RESPONSE EDIT ACTIVE--> ', response)
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {

@@ -31,7 +31,7 @@
 
         let formData = new FormData();
         formData.append('file', image);
-        let response = await Api.call('http://127.0.0.1:9000/image_article', 'POST', { body: formData }, 'file');
+        let response = await Api.call('/image_article', 'POST', { body: formData }, 'file');
         console.log(response)
         if (response.success && response.statusCode == "201") {
             return response.data.result;
@@ -60,7 +60,7 @@
         article.photo = imageUrl == null ? '' : imageUrl;
         let body = JSON.stringify(article);
         
-        let response = (await Api.call('http://127.0.0.1:9000/article', 'POST', { body }))
+        let response = (await Api.call('/article', 'POST', { body }))
         console.log(response)
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {
@@ -103,7 +103,7 @@
         // Peticion
         let body = JSON.stringify(article)  
         console.log('BODY EDIT ARTICLE--> ', body)
-        let response = (await Api.call(`http://127.0.0.1:9000/article/${article.id}`, 'PUT', { body }))
+        let response = (await Api.call(`/article/${article.id}`, 'PUT', { body }))
         console.log('RESPONSE EDIT ARTICLE--> ', response)
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {

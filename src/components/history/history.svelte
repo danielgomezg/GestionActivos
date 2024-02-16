@@ -42,7 +42,7 @@
     }
 
     const getCompanyHistory = async (company_id) => {
-        let response = (await Api.call(`http://127.0.0.1:9000/history/company/${company_id}`, 'GET'))
+        let response = (await Api.call(`/history/company/${company_id}`, 'GET'))
         console.log('RESPONSE GET Sucursales --> ', response)
         if (response.success && response.statusCode == '200') {
             companyHistory = response.data.result 

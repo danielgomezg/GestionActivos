@@ -21,7 +21,7 @@
         if (!startSearch) dispatch('startSearch')
         startSearch = true;
 
-        let response = (await Api.call(`http://127.0.0.1:9000/active/search/sucursal/${storeId.value}?search=${text}&limit=${limit}&offset=${offset}`, 'GET'));
+        let response = (await Api.call(`/active/search/sucursal/${storeId.value}?search=${text}&limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE SEARCH ACTIVE -> ', response)
         if (response.success && response.statusCode == '200') {
             activos = response.data.result
@@ -46,7 +46,7 @@
         if (!startSearch) dispatch('startSearch')
         startSearch = true;
 
-        let response = (await Api.call(`http://127.0.0.1:9000/active/search/offices/${officesId.join(',')}?search=${text}&limit=${limit}&offset=${offset}`, 'GET'));
+        let response = (await Api.call(`/active/search/offices/${officesId.join(',')}?search=${text}&limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE SEARCH ACTIVE-> ', response)
         if (response.success && response.statusCode == '200') {
             activos = response.data.result

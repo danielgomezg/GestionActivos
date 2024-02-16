@@ -39,7 +39,7 @@
     }
 
     async function getProfile(id) {
-        let response = (await Api.call(`http://127.0.0.1:9000/profile/${id}`))
+        let response = (await Api.call(`/profile/${id}`))
         console.log('RESPONSE PROFILE --> ', response)
         if (response.success && response.statusCode == "200") {
             return response.data.result[0]
@@ -69,7 +69,7 @@
         }
 
         let body = JSON.stringify(usuario) 
-        let response = (await Api.call('http://127.0.0.1:9000/login', 'POST', { body }))
+        let response = (await Api.call('/login', 'POST', { body }))
         console.log('RESPONSE LOGIN --> ', response)
         
         //cuando el usuario o la contraseña son incorrecto responde undefined

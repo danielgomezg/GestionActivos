@@ -22,6 +22,15 @@ class Api {
             delete params.headers['Content-Type']
         }
 
+        // url = `${process.env.REACT_APP_API_URL}${url}`
+        console.log(import.meta.env.MODE)
+        if (import.meta.env.MODE == 'production') {
+            url = `http://45.33.99.148:8000${url}`
+        }
+        else {
+            url = `http://127.0.0.1:9000${url}`	
+        }
+        
         return fetch(url, {
             method,
             ...params

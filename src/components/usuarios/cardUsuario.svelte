@@ -19,7 +19,7 @@
         if (!confirmacion) return;
 
         //loading = true;
-        let response = (await Api.call(`http://127.0.0.1:9000/user/${usuario.id}`, 'DELETE'))
+        let response = (await Api.call(`/user/${usuario.id}`, 'DELETE'))
         console.log('RESPONSE DELETE USER --> ', response)
         if (response.success) {
             console.log(response.data.message)

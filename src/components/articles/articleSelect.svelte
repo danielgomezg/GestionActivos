@@ -12,7 +12,7 @@
 
     //Se obtiene las companias con el id y nombre solamente
     const getArticleByCompanyId = async () => {
-        let response = (await Api.call('http://127.0.0.1:9000/articles/company/' + companyId, 'GET'))
+        let response = (await Api.call('/articles/company/' + companyId, 'GET'))
         console.log('RESPONSE GET ARTICLES --> ', response)
         if (response.success && response.statusCode == '200') {
             articles = response.data.result.map(r => { return { label: r.name, value: r.id } })

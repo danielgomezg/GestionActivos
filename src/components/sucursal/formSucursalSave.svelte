@@ -64,7 +64,7 @@
         let clean = true
         console.log(sucursal)   
         let body = JSON.stringify(sucursal)  
-        let response = (await Api.call('http://127.0.0.1:9000/sucursal', 'POST', { body }))
+        let response = (await Api.call('/sucursal', 'POST', { body }))
         console.log('RESPONSE SAVE SUCURSAL --> ', response)
         if (response.success) {
             if (response.data.code == 201) {
@@ -151,7 +151,7 @@
         
         let response = (await Promise.all(offices.map(of => {
             let body = JSON.stringify(of)
-            return Api.call(`http://127.0.0.1:9000/office`, 'POST', { body })
+            return Api.call(`/office`, 'POST', { body })
         })));
         console.log('RESPONSE SAVE OFFICES --> ', response)
 

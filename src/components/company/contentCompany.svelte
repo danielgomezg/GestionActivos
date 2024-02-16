@@ -134,7 +134,7 @@
     const getCompanies = async () => {
         if (offset > count) return;
         loading = true;
-        let response = (await Api.call(`http://127.0.0.1:9000/companies?limit=${limit}&offset=${offset}`, 'GET'))
+        let response = (await Api.call(`/companies?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
         if (response.success && response.statusCode == "200") {
             empresas = [...empresas, ...response.data.result] //empresas.set(response.data)

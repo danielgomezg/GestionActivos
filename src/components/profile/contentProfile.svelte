@@ -39,7 +39,7 @@
 
     const getProfiles = async () => {
         loading = true;
-        let response = (await Api.call('http://127.0.0.1:9000/profiles', 'GET'))
+        let response = (await Api.call('/profiles', 'GET'))
         console.log('RESPONSE GET PROFILES --> ', response)
         if (response.success && response.statusCode == "200") {
             profiles = response.data.result //empresas.set(response.data)

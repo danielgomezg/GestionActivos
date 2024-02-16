@@ -18,8 +18,10 @@
         if (name == '') return null;
 
         try {
-        
-            fetch(`http://127.0.0.1:9000/image_article/${name}`)
+            let host = '';
+            if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+            else host = `http://127.0.0.1:9000`	
+            fetch(`${host}/image_article/${name}`)
                 .then(response => response.blob())
                 .then(images => {
                     console.log('IMAGES -> ', images)
@@ -39,7 +41,7 @@
         // let confirmacion = confirm('Esta seguro que desea eliminar el articulo ', article.name)
         // if(!confirmacion) return;
 
-        let response = (await Api.call(`http://127.0.0.1:9000/article/${article.id}`, 'DELETE'));
+        let response = (await Api.call(`/article/${article.id}`, 'DELETE'));
         console.log('RESPONSE DELETE ARTICLE -> ', response)
         if (response.success && response.statusCode == '201') {
             removeArticle(article.id)

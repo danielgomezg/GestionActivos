@@ -21,6 +21,9 @@
     console.log("usuario: " + username + " password: " + password)
 
     if(username != "" && password != ""){
+      let host = '';
+      if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+      else host = `http://127.0.0.1:9000`	
       const res = await fetch('http://127.0.0.1:5000/app/login',{
       method: 'POST',
       headers: {

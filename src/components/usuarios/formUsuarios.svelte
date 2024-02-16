@@ -25,7 +25,7 @@
 
     const getProfiles = async () => {
         
-        let response = (await Api.call('http://127.0.0.1:9000/profiles', 'GET'))
+        let response = (await Api.call('/profiles', 'GET'))
         console.log('RESPONSE GET PROFILES --> ', response)
         if (response.success && response.statusCode == "200") {
             profiles = response.data.result //empresas.set(response.data)
@@ -127,7 +127,7 @@
         // Peticion
         console.log(usuario)   
         let body = JSON.stringify(usuario)  
-        let response = (await Api.call('http://127.0.0.1:9000/user', 'POST', { body }))
+        let response = (await Api.call('/user', 'POST', { body }))
         console.log('RESPONSE SAVE USER --> ', response)
         if (response.success) {
             if (response.data.code == 201) {
@@ -214,7 +214,7 @@
             }) 
         }   
          
-        let response = (await Api.call(`http://127.0.0.1:9000/user/${usuario.id}`, 'PUT', { body }))
+        let response = (await Api.call(`/user/${usuario.id}`, 'PUT', { body }))
         console.log('RESPONSE EDIT USER --> ', response)
         if (response.success) {
             if (response.data.code == 201) {

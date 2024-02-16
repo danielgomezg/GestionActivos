@@ -77,7 +77,7 @@
 
         // Peticion
         let body = JSON.stringify(company)  
-        let response = (await Api.call(`http://127.0.0.1:9000/company/${company.id}`, 'PUT', { body }))
+        let response = (await Api.call(`/company/${company.id}`, 'PUT', { body }))
         console.log('RESPONSE EDIT COMPANY --> ', response)
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {
@@ -117,7 +117,7 @@
 
         // Peticion
         let body = JSON.stringify(company)  
-        let response = (await Api.call('http://127.0.0.1:9000/company', 'POST', { body }))
+        let response = (await Api.call('/company', 'POST', { body }))
         console.log('RESPONSE SAVE COMPANY --> ', response)
         if (response.success) {
             if (response.data.code == 201) {

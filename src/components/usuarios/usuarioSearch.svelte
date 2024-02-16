@@ -21,7 +21,7 @@
         startSearch = true;
 
 
-        let response = (await Api.call(`http://127.0.0.1:9000/users/search?search=${text}&limit=${limit}`, 'GET'));
+        let response = (await Api.call(`/users/search?search=${text}&limit=${limit}`, 'GET'));
         console.log('RESPONSE SEARCH USER -> ', response)
         if (response.success && response.statusCode == '200') {
             usuarios = response.data.result
