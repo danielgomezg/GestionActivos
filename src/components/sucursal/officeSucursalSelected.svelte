@@ -5,7 +5,7 @@
     import { lockOffice, lockStore } from "../../stores/store";
     import { onMount, createEventDispatcher, tick, onDestroy } from "svelte";
 
-  
+    export let isKeep = false;
     export let keep = false;
     export let companyId = 0;
     export let custom = false;
@@ -32,6 +32,7 @@
         lockOffice.set(selectedOffice);
 
         keepOfficeIcon = !keepOfficeIcon;
+        isKeep = !isKeep;
     };
 
     const getSucursales = async () => {

@@ -1,8 +1,8 @@
 <script>
     import Api from "../../../helpers/ApiCall";
+    import { getContext, onDestroy, onMount } from "svelte";
     import { snackbar, estadosActivo } from "../../stores/store";
     import ArticleSelect from "../articles/articleSelect.svelte";
-    import { createEventDispatcher, getContext, onDestroy, onMount } from "svelte";
     import { TextField, Button, Select, FileInput, DatePicker } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
@@ -10,11 +10,13 @@
     export let article_id = 0;
     export let company_id = 0;
     export let isEdit = false;
-    export let showArticles = false;
+    export let showArticles = false; //Es true cuando lo llama el contentActivo. Se necesita mostrar el select de articulos
 
+    let isKeep = false;
     let accionBtn;
     let message= '';
     let office_id = 0;
+    let fileComponent;
     let document = null;
     let selectedOffice = 0;
     let selectedSucursal = 0;
@@ -23,10 +25,9 @@
         offices: []
     };
 
-    let dispatch = createEventDispatcher();
-    let addActivoCount = getContext('addActivoCount');
-    let reloadActivo = getContext('reloadActivo');
     let newActivo = getContext('newActivo');
+    let reloadActivo = getContext('reloadActivo');
+    let addActivoCount = getContext('addActivoCount');
     
     function formatRut(code) {
         if (code == undefined) return ''
@@ -113,9 +114,8 @@
 
     const saveActivo = async () => {
         activo.article_id = parseInt(article_id)
-        activo.office_id = parseInt(office_id)
+        activo.office_id = parseInt(selectedOffice)
         
-        //console.log(activo.office_id)
         let isValid = validForm();
         if (!isValid) {
             snackbar.update(snk => {
@@ -141,6 +141,7 @@
                 snk.message = "Activo agregado con éxito."
                 return snk
             })
+            console.log('showArticles', showArticles)
 
             if (!showArticles) addActivoCount(article_id, 1);
 
@@ -158,9 +159,17 @@
                 // article_id: '',
                 office_id: ''
             };
-            if (showArticles) activo.article_id = 0;
+            if (showArticles) {
+                activo.article_id = 0;
+                article_id = 0;
+            } 
+            fileComponent.cleanValue();
+            console.log('isKeep', isKeep)
+            if (!isKeep) {
+                selectedOffice = 0;
+                selectedSucursal = 0;
+            }
 
-            article_id = 0;
 
             locationsActivesNew.offices.push(selectedOffice);
             locationsActivesNew.stores.push(selectedSucursal);
@@ -178,7 +187,7 @@
 
     const editActivo = async () => {
         console.log('edit active')
-        activo.office_id = parseInt(office_id)
+        activo.office_id = parseInt(selectedOffice)
 
         let isValid = validForm();
         if (!isValid) {
@@ -226,7 +235,7 @@
 
     onMount(async () => {
         if(isEdit){
-            office_id = activo.office_id
+            selectedOffice = activo.office_id
             accionBtn = editActivo
         }else{
             accionBtn = saveActivo
@@ -246,9 +255,11 @@
 
     <OfficeSucursalSelected 
         keep 
+        {isKeep}
         isEdit={isEdit} 
         companyId={company_id} 
-        bind:selectedOffice={office_id}
+        bind:selectedOffice={selectedOffice}
+        bind:selectedSucursal={selectedSucursal}
         on:changeOffice={e => selectedOffice = e.detail.selectedOffice}
         on:changeSucursal={e => selectedSucursal = e.detail.selectedSucursal}
     />
@@ -329,6 +340,7 @@
     />
 
     <FileInput 
+        bind:this={ fileComponent }
         label="Documento contable" 
         required 
         accept={ ['pdf', 'png', 'jpg'] }

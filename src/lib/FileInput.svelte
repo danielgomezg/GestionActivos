@@ -2,7 +2,6 @@
     import { createEventDispatcher } from 'svelte';
 
     export let accept = [];
-    export let multiple = true;
     export let placeholder = ''
     export let required = false
     export let type = 'file'
@@ -10,11 +9,17 @@
     export let id = ''
     export let trailing = ''
     export let helperText = ''
+    export { cleanValue }
 
     let value = '';
     let textfield;
     let invalid = false;
     let dispatch = createEventDispatcher();
+
+    function cleanValue() {
+        value = '';
+        label = '';
+    }
     
     function handleChange(event) {
         
