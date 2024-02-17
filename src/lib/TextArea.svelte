@@ -16,7 +16,7 @@
     })
 
 </script>
-<label bind:this={textfield} class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea">
+<label bind:this={textfield} class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--custom">
     <span class="mdc-notched-outline">
       <span class="mdc-notched-outline__leading"></span>
       <span class="mdc-notched-outline__notch">
@@ -33,3 +33,9 @@
     ></textarea>
     </span>
 </label>
+
+<style>
+  .mdc-text-field--textarea {
+    height: 100%;
+  }
+</style>

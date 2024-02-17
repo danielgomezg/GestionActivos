@@ -150,7 +150,8 @@
         props = {
             article: {
                 name: '',
-                description: ''
+                description: '',
+                code: ''
             },
             companyId
         }

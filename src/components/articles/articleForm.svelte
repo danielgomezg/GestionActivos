@@ -2,7 +2,7 @@
     import Api from "../../../helpers/ApiCall";
     import { onMount, getContext } from "svelte";
     import { snackbar } from "../../stores/store";
-    import { TextField, Button, FileInput } from "$lib";
+    import { TextField, Button, FileInput, TextArea } from "$lib";
 
     export let article = {};
     export let companyId = 0;
@@ -150,12 +150,19 @@
         bind:value={ article.name }
     />
 
+    <div class="content-description">
+        <TextArea 
+            label="Descripción" 
+            bind:value={ article.description }
+        />    
+    </div>
+
     <TextField 
         version=2
-        id="descripcion-article" 
+        id="code-article" 
         type="text"
-        label="Descripción" 
-        bind:value={ article.description }
+        label="Código"
+        bind:value={ article.code }
     />
  
     <FileInput 
@@ -199,5 +206,10 @@
         height: 100px;
         overflow: hidden;
         /* border: 1px solid #ccc; */
+    }
+
+    .content-description {
+        grid-column: 2;
+        grid-row: 1 / 3;
     }
 </style>
