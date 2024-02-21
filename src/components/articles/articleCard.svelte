@@ -16,24 +16,12 @@
 
     const getImage = async (name) => {
         if (name == '') return null;
+        name = name.split(',')[0];
 
-        try {
-            let host = '';
-            if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
-            else host = `http://127.0.0.1:9000`	
-            fetch(`${host}/image_article/${name}`)
-                .then(response => response.blob())
-                .then(images => {
-                    console.log('IMAGES -> ', images)
-                    let objectURL = URL.createObjectURL(images);
-                    console.log('OBJECT URL -> ', objectURL)
-                    imageUrl = objectURL;
-
-                })
-                .catch(error => console.error(error));
-
-        } catch (error) {
-            console.error(error)
+        let response = (await Api.callImage('/image_article/' + name));
+        console.log('RESPONSE GET IMAGE -> ', response)
+        if (response != null) {
+            imageUrl = response;
         }
     }
 

@@ -1,8 +1,11 @@
 <script>    
     import { createEventDispatcher } from 'svelte';
+    import IconButton from './IconButton.svelte';
 
+    export let btnIcon = false;
     export let accept = [];
     export let placeholder = ''
+    export let multiple = false
     export let required = false
     export let type = 'file'
     export let label = ""
@@ -11,8 +14,9 @@
     export let helperText = ''
     export { cleanValue }
 
-    let value = '';
     let textfield;
+    let fileInput;
+    let value = '';
     let invalid = false;
     let dispatch = createEventDispatcher();
 
@@ -21,8 +25,33 @@
         label = '';
     }
     
+    function handleMultiple(event) {
+        let files = event.target.files;
+        console.log(files)
+        let filesArray = Array.from(files);
+        let filesFiltered = filesArray.filter(file => {
+            let type = file.type.split('/')[1]
+            if (!accept.includes(type)) {
+                return false;
+            }
+            return true;
+        })
+        if (filesFiltered.length != filesArray.length) {
+            label = ''
+            invalid = true;
+            return;
+        }
+        invalid = false;
+        label += ', ' + filesFiltered.map(file => file.name).join(', ');
+        dispatch('change', filesFiltered);
+    }
+
     function handleChange(event) {
-        
+        if (multiple) {
+            handleMultiple(event)
+            return;
+        }
+
         let file = event.target.files[0];
         console.log(file)
         let type = file.type.split('/')[1]
@@ -34,16 +63,21 @@
 
         invalid = false;
         label = file.name
-        dispatch('change', file);
+        dispatch('change', Array.from(file));
     }
 
 </script>
 <div>
+    {#if btnIcon}
+        <IconButton icon="add_a_photo" on:click={ () => fileInput.click() } />
+    {/if}
+
     <label 
         bind:this={textfield} 
         class="mdc-text-field mdc-text-field--outlined mdc-text-field--custom "
         class:mdc-text-field--with-trailing-icon={trailing != ''}
         class:mdc-text-field--invalid={invalid}
+        class:mdc-text-field--hidden={btnIcon}
         >
         <span class="mdc-notched-outline">
             <span class="mdc-notched-outline__leading"></span>
@@ -53,11 +87,13 @@
             <span class="mdc-notched-outline__trailing"></span>
         </span>
         <input 
+            bind:this={fileInput}
             {id}
             {type} 
             {required}
             {value}
             {placeholder}
+            {multiple}
             class="mdc-text-field__input" 
             aria-labelledby="my-label-id"
             aria-controls="my-helper-id"
@@ -71,15 +107,20 @@
                     <i class="material-symbols-rounded" on:click>{trailing}</i>
                 </span>
             {/if}
-            
-    </label>    
-    <div class="mdc-text-field-helper-line">
-        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent" id="my-helper-id" >{helperText}</div>
-    </div>
+    </label>   
+    {#if !btnIcon} 
+        <div class="mdc-text-field-helper-line">
+            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent" id="my-helper-id" >{helperText}</div>
+        </div>
+    {/if}
 </div>
 <style>
     input{
         /* display: none; */
         visibility: hidden;
+    }
+
+    .mdc-text-field--hidden {
+        display: none;
     }
 </style>

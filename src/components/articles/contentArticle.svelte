@@ -100,7 +100,7 @@
         console.log(article)
         modalTitle = `${article.name} - editando`
         modalContent = FormArticle;
-        props = { article, isEdit: true, imageUrl }
+        props = { article, isEdit: true }
         openModal = true;
         backButton = false;
     }
@@ -161,14 +161,16 @@
     }
 
     const findArticles = async (company_id) => {
+        if (offset > count) return;
+
         newArticleDisabled = true;
         companyId = company_id;
-        if (offset > count) return;
 
         let response = (await Api.call(`/articles/company/${company_id}?limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE GET ARTICLES --> ', response)
         if (response.success && response.statusCode == "200") {
             articles = response.data.result;
+            count = response.data.count;
         }
         else {
             message = "La empresa no tiene articulos registrados."

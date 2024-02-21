@@ -346,7 +346,7 @@
         accept={ ['pdf', 'png', 'jpg'] }
         trailing="upload_file"
         helperText="Documento con formato pdf, png o jpg"
-        on:change={ (e) => document = e.detail }
+        on:change={ (e) => document = e.detail[0] }
     />
 
     {#if showArticles}

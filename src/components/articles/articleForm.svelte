@@ -2,15 +2,15 @@
     import Api from "../../../helpers/ApiCall";
     import { onMount, getContext } from "svelte";
     import { snackbar } from "../../stores/store";
-    import { TextField, Button, FileInput, TextArea } from "$lib";
-
+    import { TextField, Button, FileInput, TextArea, IconButton } from "$lib";
+  
     export let article = {};
     export let companyId = 0;
-    export let imageUrl = '';
     export let isEdit = false;
     
     let accionBtn;
-    let image = null;
+    let images = []; //Array donde se agregan imagenes nuevas
+    let imagesURL = {}; //Objeto estan las imagenes guardades del articulo
 
     let addArticle = getContext('addArticle');
     let replaceArticle = getContext('replaceArticle');
@@ -25,22 +25,44 @@
         return true
     }
 
-    // FUNCION QUE SUBE LA IMAGEN AL SERVIDOR
-    const uploadImage = async (image) => {
-        if (image == null) return null;
+    // 
+    const getImage = async (photos = '') => {
+        console.log('PHOTOS A-> ', photos)
+        if (photos == '') return null;
+        photos = photos.split(',');
+        console.log('PHOTOS B-> ', photos)
 
-        let formData = new FormData();
-        formData.append('file', image);
-        let response = await Api.call('/image_article', 'POST', { body: formData }, 'file');
-        console.log(response)
-        if (response.success && response.statusCode == "201") {
-            return response.data.result;
-        }
-        else {
-            return null;
+        // Por cada url de photos hacer la peticion Api.callImage
+        for (let i = 0; i < photos.length; i++) {
+            let response = (await Api.callImage('/image_article/' + photos[i]));
+            console.log('RESPONSE GET IMAGE -> ', response)
+            if (response != null) {
+                // images = [response, ...images];
+                // imagesURL[photos[i]] = response;
+                imagesURL[response] = photos[i];
+            }
         }
     }
 
+    // FUNCION QUE SUBE LA IMAGEN AL SERVIDOR
+    const uploadImage = async (images) => {
+        // if (image == null) return null;
+        if (images.length == 0) return null;
+
+        let response = (await Promise.all(images.map(image => {
+            let formData = new FormData();
+            formData.append('file', image);
+            return Api.call('/image_article', 'POST', { body: formData }, 'file');
+        })));
+
+        console.log('RESPONSE UPLOAD IMAGE --> ', response)
+        let success = response.filter(res => res.success == true && res.statusCode == "201");
+        if (success.length == 0) return null;
+        return success.map(res => res.data.result).join(',');
+
+    }
+
+    // FUNCION QUE GUARDA EL ARTICULO
     const saveArticle = async () => {
         
         let isValid = validForm();
@@ -54,7 +76,7 @@
             return console.log(message)
         }
 
-        let imageUrl = await uploadImage(image)
+        let imageUrl = await uploadImage(images)
         
         article.company_id = companyId;
         article.photo = imageUrl == null ? '' : imageUrl;
@@ -83,9 +105,9 @@
 
     }
 
+    // FUNCION QUE EDITA EL ARTICULO
     const editArticle = async () => {
-        console.log('edit article')
-
+        
         let isValid = validForm();
         if (!isValid) {
             snackbar.update(snk => {
@@ -97,8 +119,9 @@
             return console.log(message)
         }
 
-        let imageUrl = await uploadImage(image)
-        article.photo = imageUrl == null ? article.photo : imageUrl;
+        let imageUrl = await uploadImage(images)
+        let imagesNames = Object.values(imagesURL).join(',')        
+        article.photo = imageUrl == null ? imagesNames : imagesNames + ',' + imageUrl;
 
         // Peticion
         let body = JSON.stringify(article)  
@@ -127,11 +150,12 @@
         }
     }
 
-    
+
 
     onMount(async ()=> {
         if (isEdit) {
             accionBtn = editArticle
+            getImage(article.photo)
         } else {
             accionBtn = saveArticle
         }
@@ -164,15 +188,30 @@
         label="Código"
         bind:value={ article.code }
     />
- 
+
+    <div class="flex-row grid-col-span-2 gap-8">
+    
     <FileInput 
+        btnIcon
         label="Imagen"
         trailing="image"
         accept={ ['png', 'jpg', 'jpeg'] }
         helperText="Imagen con formato png, jpg o jpeg"
+        multiple
         on:change={ (e) => {
-            image = e.detail
-            imageUrl = URL.createObjectURL(image)
+            console.log('new image > ', e.detail)
+            if ((images.length + e.detail.length > 4 && !isEdit) || (Object.keys(imagesURL).length + e.detail.length + images.length > 4 && isEdit)){
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.type = 'dismiss'
+                    snk.message = "Solo se pueden agregar hasta 4 imagenes."
+                    return snk
+                }) 
+                return;
+            } 
+
+            if (images.length > 0) images = [...images, ...e.detail]
+            else images = [...e.detail]
         }}
     />
 
@@ -180,36 +219,69 @@
         {#if article.photo == ''}
             <img src="https://via.placeholder.com/150" class="article-image" alt={article.name} />
         {:else}
-            <img src={ imageUrl } class="article-image" alt={article.name} />
-        {/if}
+            <!-- {#if isEdit} -->
+                {#each Object.keys(imagesURL) as img}
+                    <div class="image">
+                        <IconButton 
+                            icon="remove" 
+                            custom 
+                            on:click={ () => {
+                                delete imagesURL[img]
+                                imagesURL = {...imagesURL}
+                                article.photo = Object.values(imagesURL).join(',')
+                            } } 
+                        />
+                        <img src={ img } class="article-image" alt={article.name} />
+                        
+                    </div>
+                {/each}
+            <!-- {:else} -->
+                {#each images as img}
+                    <div class="image">
+                        <IconButton 
+                            icon="remove" 
+                            custom 
+                            on:click={ () => {
+                                // Quitar img de images
+                                images = images.filter(image => image != img)
+                            } } 
+                        />
+                        
+                        <img src={ URL.createObjectURL(img) } class="article-image" alt={article.name} />
+                        
+                    </div>
+                {/each}
+            {/if}
+            
+            <!-- <img src={ imageUrl } class="article-image" alt={article.name} /> -->
+        <!-- {/if} -->
     </div>
 
-    <Button 
-        label="Guardar"
-        custom
-        on:click={ accionBtn }
-    />
+    </div>
+
+    <div class="grid-col-span-1 mobile-fixed">
+        <Button 
+            label="Guardar"
+            custom
+            on:click={ accionBtn }
+        />
+    </div>
 
 </div>
 
 <style>
+    .image {
+        position: relative;
+        height: 100px;
+        box-sizing: border-box;
+        aspect-ratio: 1 / 1;
+    }
     .article-image {
-        width: 100%;
         height: 100%;
         object-fit: contain;
-        /* display: block; */
-        /* border-radius: 3px; */
+        border-radius: 5px; 
+        border: 1px solid #ccc;
+    
     }
-
-    .content-image {
-        width: 100px;
-        height: 100px;
-        overflow: hidden;
-        /* border: 1px solid #ccc; */
-    }
-
-    .content-description {
-        grid-column: 2;
-        grid-row: 1 / 3;
-    }
+    
 </style>
