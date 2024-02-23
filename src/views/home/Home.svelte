@@ -17,12 +17,14 @@
     import ContentArticle from "../../components/articles/contentArticle.svelte";
     import ContentUsuarios from "../../components/usuarios/contentUsuarios.svelte";
     import ContentSucursal from "../../components/sucursal/contentSucursal.svelte";
+    // import ContentCategory from "../../components/categories/contentCategory.svelte";
 
 
-    let isMobile = false, open = true;
-
+    let open = true;
+    let isMobile = false; 
     let windowWidth = window.innerWidth;
     let windowHeight = window.innerHeight;
+
     function handleResize() {
         windowWidth = window.innerWidth;
         windowHeight = window.innerHeight;
@@ -35,14 +37,9 @@
 
         window.addEventListener('resize', handleResize);
 
-        // let userSession = localStorage.getItem("user")
-        // let token = localStorage.getItem("accessToken")
-
         let userSession = sessionStorage.getItem("user")
         let token = sessionStorage.getItem("accessToken")
 
-        // console.log(userSession)
-        // console.log(token)
         if (user != null && token != null) {
             user.set(JSON.parse(userSession))
         }
@@ -58,19 +55,17 @@
 
 
     $: isMobile = windowWidth < 500 
-
-    // $: console.log('usuario > ', $user)
     
 </script>
 
 {#if Object.keys($user).length != 0 }
-<TopAppBar bind:isMobile={isMobile} on:openNav={ () => open = !open }  >
+<TopAppBar on:openNav={ () => open = !open }  >
     <div slot="account" class="flex-row align-center">
         <UserAccount />
     </div>
 </TopAppBar>
 {/if}
-<main class="main" class:main-mobile={isMobile}>
+<main class="main">
         {#if Object.keys($user).length != 0 }
             <NavigationDrawer     
                 props={ { open, isMobile } } 
@@ -96,27 +91,9 @@
                                 
                 <Route path="/articulos" component={ContentArticle} />
                 <Route path="/activos" component={ContentActivo} />
+                <!-- <Route path="/categorias" component={ContentCategory} /> -->
                 <Route path="/*" component={NotFound} />
             </Router>
         </div>
 </main>
 
-
-<style>
-    .main {
-        position: relative;
-        top: 64px;
-    }
-
-    .main-mobile {
-        top: 57px;
-    }
-    .main-content {
-        max-width: 1230px;
-        margin: 0px auto;
-        padding: 0 16px;
-    }
-
-
-
-</style>

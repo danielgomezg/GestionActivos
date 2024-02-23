@@ -31,6 +31,7 @@ export const modulos = writable([
     "articulo",
     "usuario",
     "empresa",
+    // "categoria",
 ])
 
 export const menu = writable([
@@ -38,6 +39,7 @@ export const menu = writable([
         id: 1,
         name: 'Empresas',
         path: '/empresas',
+        icon: 'apartment',	
         profiles: [
             1
         ]
@@ -46,14 +48,27 @@ export const menu = writable([
         id: 2,
         name: 'Sucursales',
         path: '/sucursales',
+        icon: 'store',
         profiles: [
             2
         ]
     },
+    // {
+    //     id: 6,
+    //     name: 'Categorias',
+    //     path: '/categorias',
+    //     icon: 'category',
+    //     profiles: [
+    //         1,
+    //         2,
+    //         3
+    //     ]
+    // },
     {
         id: 3,
         name: 'Articulos',
         path: '/articulos',
+        icon: 'pallet',
         profiles: [
             1,
             2,
@@ -64,6 +79,7 @@ export const menu = writable([
         id: 7,
         name: 'Activos',
         path: '/activos',
+        icon: 'inventory_2',
         profiles: [
             1,
             2,
@@ -74,6 +90,7 @@ export const menu = writable([
         id: 4,
         name: 'Usuarios',
         path: '/usuarios',
+        icon: 'manage_accounts',
         profiles: [
             1
         ]
@@ -82,6 +99,7 @@ export const menu = writable([
         id: 5,
         name: 'Perfiles',
         path: '/perfiles',
+        icon: 'admin_panel_settings',
         profiles: [
             1
         ]

@@ -228,6 +228,19 @@ p {
     display: block;
 }
 
+.main {
+    position: relative;
+    // top: 64px;
+}
+
+.mdc-drawer { 
+    top: 64px;
+}
+
+.mdc-drawer {
+    display: block;
+}
+
 @media only screen and (max-width: 600px) {
     .mobile-only {
         display: block;
@@ -235,5 +248,60 @@ p {
     
     .desktop-only {
         display: none;
+    }
+
+    .mdc-drawer {
+        width: 100%;
+        top: 56px;	
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .mdc-drawer--size {
+        width: 100%;	
+    }
+}
+
+// Media para pantallas mediaanas
+@media only screen and (min-width: 600px) and (max-width: 1800px) {
+    .mdc-drawer--size {
+        width: 80px;
+    }
+}
+
+.mdc-list-item--drawer {
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.main-content {
+    max-width: 1230px;
+    margin: 0px auto;
+    padding: 0 16px;
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1800px) {
+    .mdc-list-item--drawer {
+        padding: 6px 16px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-sizing: border-box;
+        /* aspect-ratio: 1 / 1; */
+        /* height: 60px; */
+        flex-direction: column;
+        /* text-align: center; */
+        font-size: 12px;
+        /* width: 100%; */	
+    }
+
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1410px) {
+    .main-content {
+        margin: 0px 80px;
     }
 }

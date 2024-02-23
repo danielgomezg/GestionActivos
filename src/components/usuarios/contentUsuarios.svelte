@@ -107,7 +107,7 @@
     <Fab on:click={ createUser } />
 </div>
 <div style="padding: 20px 0;">
-    <div class="header-content">
+    <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
         <div class="desktop-only">
             <Button label="Nuevo usuario" custom on:click={ createUser } />
         </div>
@@ -127,7 +127,7 @@
     </div>
     <br>
 
-    <div class="body-content grid-columns-3">
+    <div class="body-content grid-columns-3" style="padding: 0 0 10px;">
         {#if loading}
             <Loading />
         {/if}

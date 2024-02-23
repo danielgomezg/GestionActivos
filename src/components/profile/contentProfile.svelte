@@ -57,7 +57,7 @@
 </script>
 
 <div style="padding-top: 20px;">
-    <div class="header-content">
+    <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
         <!-- <Button label="Nuevo perfil" on:click={ () => alert('En construcción.') } /> -->
         <!-- <IconButton icon="tune" /> -->
     </div>

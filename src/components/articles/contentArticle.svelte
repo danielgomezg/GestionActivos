@@ -213,7 +213,7 @@
     <Fab disabled={ newArticleDisabled } on:click={ createArticle(companyId) } />
 </div>
 <div style="padding-top: 20px;">
-    <div class="header-content">
+    <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
         <div class="flex-row gap-8 space-between">
             {#if !hideSelectCompany}
             <CompanySelect 
@@ -251,17 +251,10 @@
             } }
             company_id = {companyId}
         />
-        
-       <!-- <Search value="" />
-
-         <div class="">
-        </div> -->
-        <!-- <IconButton icon="tune" /> -->
-        <!-- <div class="title">Empresas</div> -->
+    
     </div>
-    <!-- <br> -->
-
-    <div class="flex-column gap-8 mt-8">
+    
+    <div class="flex-column gap-8 mt-8" style="padding: 44px 0 10px;">
         {#if loading}
             <Loading />
         {/if}

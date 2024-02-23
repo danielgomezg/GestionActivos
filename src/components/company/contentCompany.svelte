@@ -173,7 +173,7 @@
 </script>
 
 <div style="position: relative">
-    <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 24px 0 10px">
+    <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
         <div class="desktop-only">
             <Button label="Nueva empresa" custom on:click={ createCompany } />
         </div>
@@ -198,7 +198,7 @@
         </div>
     </div>
 
-    <div class="companies-content" style="padding: 14px 0 10px;">
+    <div class="flex-column gap-8" style="padding: 44px 0 10px;">
         {#if loading}
             <Loading />
         {/if}

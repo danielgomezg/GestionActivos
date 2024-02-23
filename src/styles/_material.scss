@@ -20,7 +20,6 @@
 @use "@material/snackbar";
 
 // Menu
-@use "@material/list/mdc-list";
 @use "@material/menu-surface/mdc-menu-surface";
 @use "@material/menu/mdc-menu";
 
@@ -42,7 +41,6 @@
 
 // Drawer
 @use "@material/drawer";
-@use "@material/list";
 
 // Chip
 @use "@material/chips/styles" as chipset;
@@ -54,11 +52,18 @@
 // Table
 @use "@material/data-table/data-table";
 
+// Checkbox
 @use "@material/checkbox";
 
+// Form Field
 @use "@material/form-field";
 
+// Fab
 @use "@material/fab";
+
+// List
+@use "@material/list/mdc-list";
+// @use "@material/list";
 
 // **** Include
 @include card.core-styles;
@@ -72,12 +77,6 @@
 @include checkbox.core-styles;
 @include form-field.core-styles;
 @include fab.core-styles;
-// @include select.core-styles;
-// @include chipset.core-styles;
-// @include button.core-styles;
-// @include list.core-styles;
-// @include icon.icon-core-styles;
-// @import "@material/icon-button/mdc-icon-button";
 
 // Other styles
 .mdc-text-field--custom {

@@ -1,12 +1,16 @@
 <script>
-  import { onMount } from "svelte";
+    import { onMount } from "svelte";
     import { user, menu } from "../stores/store";
     import { Link, Router } from "svelte-routing";
+    import { MDCDrawer } from "@material/drawer";
+    import { MDCList } from "@material/list";
 
     export let props = {}
 
-    let menuProfile = []
-    let drawerList, selected = '';
+    let drawerList;
+    let selected = '';
+    let drawerComponent;
+    let menuProfile = [];
 
 
     const displayMenu = (menu) => {
@@ -20,36 +24,54 @@
     }
 
     onMount(() => {
+        // const drawer = MDCDrawer.attachTo(drawerComponent);
+        // const list = MDCList.attachTo(drawerList);
+        // list.wrapFocus = true;
+
+        // const listEl = document.querySelector('.mdc-drawer .mdc-list');
+        // const mainContentEl = document.querySelector('.main-content');
+
+        // listEl.addEventListener('click', (event) => {
+        //     mainContentEl.querySelector('input, button').focus();
+        // });
+
+        // document.body.addEventListener('MDCDrawer:closed', () => {
+        //     mainContentEl.querySelector('input, button').focus();
+        // });
+
         selected = window.location.pathname
     })
 
     $: if($user != {}) displayMenu($menu) 
 
 </script>
-<aside class="mdc-drawer mdc-drawer--modal" class:open={ props.open } class:mobile={ props.isMobile }>
+<aside 
+    bind:this={drawerComponent}
+    class="mdc-drawer mdc-drawer--modal mdc-drawer--size" 
+    class:open={ props.open }
+    >
     <div class="mdc-drawer__content">
-    <nav bind:this={drawerList} class="mdc-list">
-        <Router>
-            {#each menuProfile as navigation }
-                <!-- {#if checkPermision(navigation.action) } -->
-                <Link 
-                    to="{navigation.path}" 
-                    style="color: inherit; text-decoration: none;" 
-                    on:click={() => {
-                        // props.open = false
-                        selected = navigation.path
-                    } }>
-                    <div class="mdc-list-item" class:mdc-list-item--activated={ selected == navigation.path } >
-                        <span class="mdc-list-item__ripple"></span>
-                        <!-- <i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i> -->
-                        <span class="mdc-list-item__text">{navigation.name}</span>
-                    </div>
-                </Link>
-                <!-- {/if} -->
-            {/each}
+        <nav bind:this={drawerList} class="mdc-list">
+            <Router>
+                {#each menuProfile as navigation }
+                    
+                    <Link 
+                        to="{navigation.path}" 
+                        style="color: inherit; text-decoration: none;" 
+                        on:click={() => {
+                            selected = navigation.path
+                        } }>
+                        <div class="mdc-list-item--drawer" class:mdc-list-item--activated={ selected == navigation.path } >
+                            <span class="mdc-list-item__ripple"></span>
+                            <span class="material-symbols-rounded">{navigation.icon}</span>
+                            <span class="mdc-list-item__text">{navigation.name}</span>
+                        </div>
+                    </Link>
+                    
+                {/each}
 
-        </Router>   
-    </nav>
+            </Router>   
+        </nav>
     </div>
 </aside>
 
@@ -58,22 +80,13 @@
         display: block;
     }
 
-    .mdc-list-item {
-        padding: 6px 16px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
+    /* .mdc-drawer { 
+        top: 64px;
+    } */
 
     .mdc-drawer--modal{
         box-shadow: none;
-        /* top: 64px; */
-        /* z-index: 5; */
         z-index: 11;
-    }
-
-    .mobile {
-        width: 100%;
     }
 
     .mdc-list-item__text {
