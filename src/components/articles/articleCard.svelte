@@ -29,7 +29,7 @@
         // let confirmacion = confirm('Esta seguro que desea eliminar el articulo ', article.name)
         // if(!confirmacion) return;
 
-        let response = (await Api.call(`/article/${article.id}`, 'DELETE'));
+        let response = (await Api.call(`/article/${article.id}`, 'DELETE', {}, 'json', article.company_id));
         console.log('RESPONSE DELETE ARTICLE -> ', response)
         if (response.success && response.statusCode == '201') {
             removeArticle(article.id)

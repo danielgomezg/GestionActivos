@@ -36,7 +36,7 @@
 
     const deleteStore = async (store) => {
         
-        let response = (await Api.call(`/sucursal/${store.id}`, 'DELETE'));
+        let response = (await Api.call(`/sucursal/${store.id}`, 'DELETE', {}, 'json', company_id));
         console.log('RESPONSE DELETE SUCURSAL -> ', response)
         if (response.success && response.statusCode == '201') {
 

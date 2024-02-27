@@ -51,7 +51,7 @@
     };
 
     const getOfficesBySucursal = async (sucursalId) => {
-        let response = await Api.call(`/officePorSucursal/${sucursalId}`, 'GET');
+        let response = await Api.call(`/officePorSucursal/${sucursalId}`, 'GET', {}, 'json', companyId);
         console.log('RESPONSE GET OFFICES --> ', response);
         if (response.success && response.statusCode === '200') {
             offices = response.data.result.map(r => ({ label: `${r.floor} - ${r.description}`, value: r.id }));
@@ -61,7 +61,7 @@
     };
 
     const getOffice = async (selectedOffice)=>{
-        let response = await Api.call(`/office/${selectedOffice}`,'GET')
+        let response = await Api.call(`/office/${selectedOffice}`,'GET', {}, 'json', companyId)
         console.log('RESPONSE GET OFFICE --> ', response);
         if (response.success && response.statusCode === '200') {
             console.log("200")

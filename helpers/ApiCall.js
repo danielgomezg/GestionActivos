@@ -5,15 +5,17 @@ class Api {
         return sessionStorage.getItem('accessToken');
     }
 
-    static call(url = '', method = 'GET', body = {}, type = 'json') {
+    static call(url = '', method = 'GET', body = {}, type = 'json', cpnId = 0) {
         
         
-        let token = Api.getTokenFromLocalStorage()
+        let token = Api.getTokenFromLocalStorage();
+        
 
         let params = { 
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'companyId': cpnId
             },
             ...body
         }
@@ -95,6 +97,31 @@ class Api {
                     console.error(error)
                     return null;
                 });
+    }
+
+    static getReport(path = '', params = {}) {
+
+        let host = '';
+        if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+        else host = `http://127.0.0.1:9000`
+
+        let token = Api.getTokenFromLocalStorage();
+
+        let headers = { 'Authorization': `Bearer ${token}` }
+        // Merge headers with params.headers
+        if (params.headers) {
+            headers = { ...headers, ...params.headers }
+        }
+        
+        return fetch(`${host}/${path}`, { method: 'GET', headers })
+            .then(response => response.blob())
+            .then(data => {
+                return data;
+            })
+            .catch(error => {
+                console.log(error)
+                return null;
+            });
     }
 
 }

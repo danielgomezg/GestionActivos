@@ -100,7 +100,7 @@
         console.log(article)
         modalTitle = `${article.name} - editando`
         modalContent = FormArticle;
-        props = { article, isEdit: true }
+        props = { article, isEdit: true, companyId: article.company_id }
         openModal = true;
         backButton = false;
     }

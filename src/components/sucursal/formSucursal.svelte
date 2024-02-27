@@ -58,7 +58,7 @@
        
         console.log(sucursal)   
         let body = JSON.stringify(sucursal)  
-        let response = (await Api.call(`/sucursal/${sucursal.id}`, 'PUT', { body }))
+        let response = (await Api.call(`/sucursal/${sucursal.id}`, 'PUT', { body }, 'json', company.id))
         console.log('RESPONSE EDIT SUCURSAL --> ', response)
         if (response.success && response.statusCode == '201') {
             
@@ -103,7 +103,7 @@
         console.log(isValid)
 
         let body = JSON.stringify({ ...officeEdit, sucursal_id: sucursal.id })  
-        let response = (await Api.call(`/office`, 'POST', { body }))
+        let response = (await Api.call(`/office`, 'POST', { body }, 'json', company.id))
         console.log('RESPONSE POST OFFICE --> ', response)
         if (response.success, response.statusCode == "201") {
             console.log(offices)
@@ -131,7 +131,7 @@
 
     const getOffices = async (id_sucursal) => {
     
-        let response = (await Api.call(`/officePorSucursal/${id_sucursal}`, 'GET'))
+        let response = (await Api.call(`/officePorSucursal/${id_sucursal}`, 'GET', { }, 'json', company.id))
         console.log('RESPONSE GET Offices --> ', response)
         if (response.success) {
             offices = response.data.result
@@ -148,7 +148,7 @@
         // let confirmacion = confirm(`Esta seguro que desea eliminar la Oficina ${office.floor} ${office.description}`)
         // if (!confirmacion) return;
 
-        let response = (await Api.call(`/office/${office.id}`, 'DELETE'));
+        let response = (await Api.call(`/office/${office.id}`, 'DELETE', {}, 'json', company.id));
         console.log('RESPONSE DELETE OFFICE -> ', response)
         if (response.success && response.statusCode == '201') {
 
@@ -174,7 +174,7 @@
     const editOffice = async () => {
 
         let body = JSON.stringify(officeEdit)  
-        let response = (await Api.call(`/office/${officeEdit.id}`, 'PUT', { body }))
+        let response = (await Api.call(`/office/${officeEdit.id}`, 'PUT', { body }, 'json', company.id))
         console.log('RESPONSE EDIT OFFICE --> ', response)
         if (response.success && response.statusCode == '201') {
             

@@ -9,6 +9,7 @@
     export let limit = 0;
     export let count = 0;
     export let offset = 0;
+    export let companyId = 0;
 
     let searchText = '';
     let startSearch = false;
@@ -21,7 +22,7 @@
         if (!startSearch) dispatch('startSearch')
         startSearch = true;
 
-        let response = (await Api.call(`/active/search/sucursal/${storeId.value}?search=${text}&limit=${limit}&offset=${offset}`, 'GET'));
+        let response = (await Api.call(`/active/search/sucursal/${storeId.value}?search=${text}&limit=${limit}&offset=${offset}`, 'GET', {}, 'json', companyId));
         console.log('RESPONSE SEARCH ACTIVE -> ', response)
         if (response.success && response.statusCode == '200') {
             activos = response.data.result
@@ -46,7 +47,7 @@
         if (!startSearch) dispatch('startSearch')
         startSearch = true;
 
-        let response = (await Api.call(`/active/search/offices/${officesId.join(',')}?search=${text}&limit=${limit}&offset=${offset}`, 'GET'));
+        let response = (await Api.call(`/active/search/offices/${officesId.join(',')}?search=${text}&limit=${limit}&offset=${offset}`, 'GET', {}, 'json', companyId));
         console.log('RESPONSE SEARCH ACTIVE-> ', response)
         if (response.success && response.statusCode == '200') {
             activos = response.data.result

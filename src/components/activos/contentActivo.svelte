@@ -149,7 +149,7 @@
         }
 
         let response = (await Promise.all(activosSelected.map(activo => {
-            return Api.call(`/active/${activo.id}`, 'DELETE');
+            return Api.call(`/active/${activo.id}`, 'DELETE', {}, 'json', companyId);
         })))
 
         console.log('RESPONSE DELETE ACTIVOS > ', response)
@@ -208,7 +208,7 @@
         if (officesFilter.length > 0) return;
         if (store.value == undefined) return;
 
-        let response = (await Api.call(`/active/sucursal/${store.value}?limit=${limit}&offset=${offset}`, 'GET'));
+        let response = (await Api.call(`/active/sucursal/${store.value}?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', companyId));
         console.log('RESPONSE ACTIVOS BY STORE > ', response)
         if (response.success && response.statusCode == '200') {
             activos = response.data.result
@@ -227,7 +227,7 @@
             return;
         } 
 
-        let response = (await Api.call(`/active/offices/${officesId.join(',')}?limit=${limit}&offset=${offset}`, 'GET'));
+        let response = (await Api.call(`/active/offices/${officesId.join(',')}?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', companyId));
         console.log('RESPONSE ACTIVOS BY OFFICE > ', response)
         if (response.success && response.statusCode == '200') {
             if (response.data.result.length == 0) {
@@ -260,31 +260,53 @@
         }
 
         try {
-            let host = '';
-            if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
-            else host = `http://127.0.0.1:9000`	
-            const response = await fetch(`${host}/report/active/${location}/${id}`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
-            });
 
-            console.log('RESPONSE ACTIVOS BY REPORT PDF > ', response)
+            let response = (await Api.getReport(`report/active/${location}/${id}`, { headers: { companyId }}));
+            if (response != null) {
+                const downloadUrl = URL.createObjectURL(response);
+                console.log(downloadUrl);
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = `Reporte de activos de ${companyName}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            else {
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.type = 'dismiss';
+                    snk.message = 'Error al descargar reporte.';
+                    return snk;
+                });
             }
 
-            const data = await response.blob();
+            // let host = '';
+            // if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+            // else host = `http://127.0.0.1:9000`	
+            // const response = await fetch(`${host}/report/active/${location}/${id}`, {
+            //     method: 'GET',
+            //     headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
+            // });
 
-            const downloadUrl = URL.createObjectURL(data);
-            console.log(downloadUrl);
+            // console.log('RESPONSE ACTIVOS BY REPORT PDF > ', response)
 
-            const link = document.createElement('a');
-            link.href = downloadUrl;
-            link.download = `Reporte de activos de ${companyName}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // if (!response.ok) {
+            //     throw new Error('Network response was not ok');
+            // }
+
+            // const data = await response.blob();
+
+            // const downloadUrl = URL.createObjectURL(data);
+            // console.log(downloadUrl);
+
+            // const link = document.createElement('a');
+            // link.href = downloadUrl;
+            // link.download = `Reporte de activos de ${companyName}.pdf`;
+            // document.body.appendChild(link);
+            // link.click();
+            // document.body.removeChild(link);
         } catch (error) {
             snackbar.update(snk => {
                 snk.open = true;
@@ -314,31 +336,53 @@
         }
 
         try {
-            let host = '';
-            if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
-            else host = `http://127.0.0.1:9000`	
-            const response = await fetch(`${host}/report/excel/active/${location}/${id}`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
-            });
 
-            console.log('RESPONSE ACTIVOS BY REPORT EXCEL > ', response)
+            let response = (await Api.getReport(`report/excel/active/${location}/${id}`, { headers: { companyId }}));
+            if (response != null) {
+                const downloadUrl = URL.createObjectURL(response);
+                console.log(downloadUrl);
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = `Reporte de activos de ${companyName}.xlsx`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            else {
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.type = 'dismiss';
+                    snk.message = 'Error al descargar reporte.';
+                    return snk;
+                });
             }
 
-            const data = await response.blob();
+            // let host = '';
+            // if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+            // else host = `http://127.0.0.1:9000`	
+            // const response = await fetch(`${host}/report/excel/active/${location}/${id}`, {
+            //     method: 'GET',
+            //     headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
+            // });
 
-            const downloadUrl = URL.createObjectURL(data);
-            console.log(downloadUrl);
+            // console.log('RESPONSE ACTIVOS BY REPORT EXCEL > ', response)
 
-            const link = document.createElement('a');
-            link.href = downloadUrl;
-            link.download = `Reporte de activos de ${companyName}.xlsx`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // if (!response.ok) {
+            //     throw new Error('Network response was not ok');
+            // }
+
+            // const data = await response.blob();
+
+            // const downloadUrl = URL.createObjectURL(data);
+            // console.log(downloadUrl);
+
+            // const link = document.createElement('a');
+            // link.href = downloadUrl;
+            // link.download = `Reporte de activos de ${companyName}.xlsx`;
+            // document.body.appendChild(link);
+            // link.click();
+            // document.body.removeChild(link);
         } catch (error) {
             snackbar.update(snk => {
                 snk.open = true;
@@ -381,7 +425,7 @@
     <Fab disabled={ newArticleDisabled } on:click={ newActivo(companyId) } />
 </div>
 
-<div style="padding-top: 20px;">
+<div style="padding-top: 80px;">
     {#if !hideSelectCompany}
         <CompanySelect 
             customHeight
@@ -448,6 +492,7 @@
             /> -->
             <div class="mobile-only" style="display: flex; align-items: center; justify-content: space-between;">
                 <ActivoSearch 
+                    {companyId}
                     bind:count={tableCount}
                     bind:limit={limit}
                     bind:offset={offset}

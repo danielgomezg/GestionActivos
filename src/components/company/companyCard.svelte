@@ -108,8 +108,8 @@
                         <td>{ company.country }</td>
                     </tr>
                     <tr>
-                        <td><span class="material-symbols-rounded">store</span></td>
-                        <td>{ company.count_sucursal || 0 } sucursales</td>
+                        <!-- <td><span class="material-symbols-rounded">store</span></td>
+                        <td>{ company.count_sucursal || 0 } sucursales</td> -->
                     </tr>
                 </table>
             </div>

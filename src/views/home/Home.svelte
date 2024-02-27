@@ -17,7 +17,7 @@
     import ContentArticle from "../../components/articles/contentArticle.svelte";
     import ContentUsuarios from "../../components/usuarios/contentUsuarios.svelte";
     import ContentSucursal from "../../components/sucursal/contentSucursal.svelte";
-    // import ContentCategory from "../../components/categories/contentCategory.svelte";
+    import ContentCategory from "../../components/categories/contentCategory.svelte";
 
 
     let open = true;
@@ -91,7 +91,7 @@
                                 
                 <Route path="/articulos" component={ContentArticle} />
                 <Route path="/activos" component={ContentActivo} />
-                <!-- <Route path="/categorias" component={ContentCategory} /> -->
+                <Route path="/categorias" component={ContentCategory} />
                 <Route path="/*" component={NotFound} />
             </Router>
         </div>

@@ -24,7 +24,7 @@
     const getActives = async () => {
         if (count != -1 && offset > count) return
 
-        let response = (await Api.call(`/activePorArticle/${article.id}?limit=${limit}&offset=${offset}`, 'GET'))
+        let response = (await Api.call(`/activePorArticle/${article.id}?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', company_id))
         console.log('RESPONSE GET ACTIVES --> ', response)
         if (response.success && response.statusCode == '200') {
             count = response.data.count
@@ -38,7 +38,7 @@
 
     const deleteActive = async (activo) => {
 
-        let response = (await Api.call(`/active/${activo.id}`, 'DELETE'));
+        let response = (await Api.call(`/active/${activo.id}`, 'DELETE', {}, 'json', company_id));
         console.log('RESPONSE DELETE ACTIVE -> ', response)
         if (response.success && response.statusCode == '201') {
 

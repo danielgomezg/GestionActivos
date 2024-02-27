@@ -1,5 +1,6 @@
 <script>
     import { Button, IconButton } from '$lib';
+    import Api from '../../../helpers/ApiCall';
     import { snackbar } from '../../stores/store';
 
     export let id = 0;
@@ -10,33 +11,26 @@
     let downloadUrl = '';
 
     const reportArticle = async () => {
-        let host = '';
-        if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
-        else host = `http://127.0.0.1:9000`	
-        fetch(`${host}/report/article/${id}`, { method: 'GET', headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }})
-            .then(response => response.blob())
-            .then(data => {
-                downloadUrl = URL.createObjectURL(data);
-                console.log(downloadUrl)
-
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = 'report.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+        
+        let response = await Api.getReport(`report/article/${id}`);
+        console.log('GET REPORT RESPONSE', response);
+        if (response != null) {
+            downloadUrl =  URL.createObjectURL(response);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = 'report.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al descargar reporte."
+                return snk
             })
-            .catch(error => {
-                snackbar.update(snk => {
-                    snk.open = true;
-                    snk.type = 'dismiss'
-                    snk.message = "Error al descargar reporte."
-                    return snk
-                })
-                console.error(error)
-            });
-        // console.log('GET REPORT RESPONSE', response);
-
+        }
     }
 
 </script>

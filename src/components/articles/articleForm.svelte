@@ -126,7 +126,8 @@
         // Peticion
         let body = JSON.stringify(article)  
         console.log('BODY EDIT ARTICLE--> ', body)
-        let response = (await Api.call(`/article/${article.id}`, 'PUT', { body }))
+        console.log('ARTICLE EDIT ARTICLE--> ', companyId)
+        let response = (await Api.call(`/article/${article.id}`, 'PUT', { body }, 'json', companyId))
         console.log('RESPONSE EDIT ARTICLE--> ', response)
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {

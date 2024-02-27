@@ -10,8 +10,8 @@
     onMount(() => {
         new MDCTextField(textfield)
         textfield.addEventListener('input', function() {
-            // var valorInput = textfield.querySelector('input')
-            // value = valorInput.value
+            var valorInput = textfield.querySelector('textarea')
+            value = valorInput.value
         });
     })
 

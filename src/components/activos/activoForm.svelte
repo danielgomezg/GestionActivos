@@ -132,7 +132,7 @@
 
         let body = JSON.stringify(activo);
         console.log(body)
-        let response = (await Api.call('/active', 'POST', { body }))
+        let response = (await Api.call('/active', 'POST', { body }, 'json', company_id))
         console.log(response)
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {
@@ -207,7 +207,7 @@
         delete activo.office
         let body = JSON.stringify(activo)  
         console.log('BODY EDIT ACTIVE --> ', body)  
-        let response = (await Api.call(`/active/${activo.id}`, 'PUT', { body }))
+        let response = (await Api.call(`/active/${activo.id}`, 'PUT', { body }, 'json', company_id))
         console.log('RESPONSE EDIT ACTIVE--> ', response)
         if (response.success && response.statusCode == "201") {
             snackbar.update(snk => {
