@@ -13,7 +13,7 @@
 
     const getUserName = (user) => {
         if (user == undefined) return ''
-        return `${user.firstName} ${user.secondName} ${user.lastName} ${user.secondLastName}`;
+        return user.name //`${user.firstName} ${user.secondName} ${user.lastName} ${user.secondLastName}`;
     }
 
     const generateInfo = (history) => {
@@ -30,7 +30,7 @@
                 text = `Se elimina activo ${history.active.bar_code}`
                 break;
             case 'create-article':
-                text = `Se creado articulo ${history.article.code}`
+                text = `Se crea articulo ${history.article.code}`
                 break;
             case 'update-article':
                 text = `Se actualiza articulo ${history.article.code}`
@@ -45,10 +45,10 @@
         return text
     }   
 
-    const getHistory = async (company_id) => {
+    const getHistory = async (article_id) => {
         if (count != -1 && offset > count) return
-        let response = (await Api.call(`/history/article/${company_id}?limit=${limit}&offset=${offset}`, 'GET'))
-        console.log(`RESPONSE GET HISTORY ARTICLE (${company_id}) -->`, response)
+        let response = (await Api.call(`/history/article/${article_id}?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', article.company_id))
+        console.log(`RESPONSE GET HISTORY ARTICLE (${article_id}) -->`, response)
         if (response.success && response.statusCode == '200') {
             count = response.data.count
             if (response.data.count > 0) {
@@ -97,7 +97,7 @@
                     {/if} -->
                     <tr class="centered-row">
                         <td><span class="material-symbols-rounded">person_edit</span></td>
-                        <td>{ getUserName(history.user) }</td>
+                        <td>{ history.name_user }</td>
                     </tr>
                 </table>
             </div>

@@ -137,7 +137,7 @@
 
                 addCompany(response.data.result)
 
-            }else{
+            } else {
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
@@ -146,7 +146,7 @@
                     return snk
                 })
             }
-        }else{
+        } else {
             //aviso
             snackbar.update(snk => {
                 snk.open = true;
@@ -219,7 +219,6 @@
             <Button 
                 label="Guardar"
                 custom 
-                {loading}
                 on:click={ saveCompany }
             />
         {:else}
@@ -227,7 +226,6 @@
             <Button 
                 label="Guardar"
                 custom
-                {loading}
                 on:click={ editCompany }
             />
 

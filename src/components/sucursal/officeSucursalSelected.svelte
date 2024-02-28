@@ -5,7 +5,6 @@
     import { lockOffice, lockStore } from "../../stores/store";
     import { onMount, createEventDispatcher, tick, onDestroy } from "svelte";
 
-    export let isKeep = false;
     export let keep = false;
     export let companyId = 0;
     export let custom = false;
@@ -24,6 +23,7 @@
     let dispatch = createEventDispatcher();
 
     const keepOffice = () => {
+        console.log('KEEP OFFICE')
 
         disabledSucursal = !disabledSucursal;
         disabledOffice = !disabledOffice;
@@ -32,7 +32,8 @@
         lockOffice.set(selectedOffice);
 
         keepOfficeIcon = !keepOfficeIcon;
-        isKeep = !isKeep;
+        
+        dispatch('keep', keepOfficeIcon);
     };
 
     const getSucursales = async () => {
@@ -157,13 +158,13 @@
 {/if}
 
 {#if keep}
-<div style="margin-left: auto; grid-column: 1 / -1;">
-    <Button 
-        disabled={disabledKeep}
-        custom
-        label={ keepOfficeIcon ? "Cambiar oficina" : "Mantener oficina"}
-        trailing={ keepOfficeIcon ? 'lock' : 'lock_open'}
-        on:click={ keepOffice }
-    />
-</div>  
+    <div style="margin-left: auto; grid-column: 1 / -1;">
+        <Button 
+            disabled={disabledKeep}
+            custom
+            label={ keepOfficeIcon ? "Cambiar oficina" : "Mantener oficina"}
+            trailing={ keepOfficeIcon ? 'lock' : 'lock_open'}
+            on:click={ keepOffice }
+        />
+    </div>  
 {/if}	

@@ -7,6 +7,7 @@
     import { setContext, onMount, onDestroy } from "svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     
+    let userSelf = JSON.parse(sessionStorage.getItem('user'));
     let props;
     let limit = 10;
     let count = 0;
@@ -100,6 +101,8 @@
         window.removeEventListener('scroll', handleScroll)
     })
 
+    console.log('user self --> ', userSelf)
+
 
 </script>
 
@@ -133,6 +136,7 @@
         {/if}
         {#each usuarios as usuario }    
             <CardUsuario 
+                disabled={userSelf.id === usuario.id}
                 {usuario} 
                 on:edit={ (event) => editUser(event.detail) } 
             />

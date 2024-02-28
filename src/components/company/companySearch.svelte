@@ -5,7 +5,7 @@
 
     export let empresas = [];
 
-    let limit = 50;
+    let limit = 100;
     let offset = 0;
     let count = 0;
     let searchText = '';

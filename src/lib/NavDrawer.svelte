@@ -86,7 +86,8 @@
 
     .mdc-drawer--modal{
         box-shadow: none;
-        z-index: 11;
+        /* z-index: 11; */
+        z-index: 3;
     }
 
     .mdc-list-item__text {

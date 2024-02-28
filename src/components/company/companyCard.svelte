@@ -1,8 +1,8 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
-    import { Card, IconButton, Button, Snackbar, Menu } from "$lib";
     import { createEventDispatcher, getContext } from "svelte";
+    import { Card, IconButton, Button, Snackbar, Menu } from "$lib";
 
     export let company = {}
 

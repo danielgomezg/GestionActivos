@@ -1,22 +1,24 @@
 <script>
-    import { Card, IconButton, Divider, Menu, Search } from "$lib"
-    import { createEventDispatcher } from "svelte";
-    import { snackbar } from "../../stores/store";
     import { getContext } from "svelte";
     import Api from "../../../helpers/ApiCall";
+    import { snackbar } from "../../stores/store";
+    import { createEventDispatcher } from "svelte";
+    import { Card, IconButton, Divider, Menu, Snackbar } from "$lib";
 
     export let usuario = {}
+    export let disabled = false;
 
-    //Contexto para actualizar users
     let openActions = false;
+    let openSnackbar = false;
+    let messageSnackbar = '';
     let removeUsuario = getContext('removeUsuario');
 
     let dispath = createEventDispatcher();
 
     const deleteUsuario = async () => {
 
-        let confirmacion = confirm(`Esta seguro que desea eliminar el usuario ${usuario.firstName} ${usuario.lastName}`)
-        if (!confirmacion) return;
+        // let confirmacion = confirm(`Esta seguro que desea eliminar el usuario ${usuario.firstName} ${usuario.lastName}`)
+        // if (!confirmacion) return;
 
         //loading = true;
         let response = (await Api.call(`/user/${usuario.id}`, 'DELETE'))
@@ -46,6 +48,13 @@
 
 </script>
 
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={messageSnackbar}
+    on:confirm={ deleteUsuario }
+/>
+
 <Card>
     <div class="card-container">
         <div class="card-header">
@@ -54,8 +63,17 @@
                 <div>{ usuario.secondName + ' ' + usuario.secondLastName }</div>
             </div>
             <div class="desktop-only">
-                <IconButton icon="edit" tooltipId="btn-edit__{usuario.rut}" tooltipText="Editar" on:click={ dispath("edit", usuario) } />
-                <IconButton icon="delete" tooltipId="btn-delete__{usuario.rut}" tooltipText="Eliminar" on:click={ deleteUsuario }/>
+                <IconButton {disabled} icon="edit" tooltipId="btn-edit__{usuario.rut}" tooltipText="Editar" on:click={ dispath("edit", usuario) } />
+                <IconButton 
+                    icon="delete" 
+                    {disabled}
+                    tooltipId="btn-delete__{usuario.rut}" 
+                    tooltipText="Eliminar" 
+                    on:click={ () => {
+                        messageSnackbar = '¿Eliminar el usuario ' + usuario.firstName + ' ' + usuario.lastName + '?'
+                        openSnackbar = true;
+                    } }
+                />
             </div>
             <div class="mobile-only">
                 <!-- <IconButton icon="more_vert" /> -->
@@ -68,9 +86,12 @@
                         ]  
                     }
                     on:edit={() => dispath("edit", usuario) }
-                    on:delete={() => deleteUsuario }
+                    on:delete={() => {
+                        messageSnackbar = '¿Eliminar el usuario ' + usuario.firstName + ' ' + usuario.lastName + '?'
+                        openSnackbar = true;
+                    } }
                 >
-                  <IconButton icon="more_vert" on:click={() => openActions = !openActions } />
+                  <IconButton {disabled} icon="more_vert" on:click={() => openActions = !openActions } />
                 </Menu>
             </div>
         </div>

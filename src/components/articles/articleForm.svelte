@@ -211,15 +211,22 @@
                 return;
             } 
 
-            if (images.length > 0) images = [...images, ...e.detail]
-            else images = [...e.detail]
+            if (images.length > 0) {
+                console.log('images if > ', images)	
+                images = [...images, ...e.detail]
+            } 
+            else {
+                console.log('images else > ', images)
+                console.log(...e.detail)
+                images = [...e.detail]
+            } 
         }}
     />
 
     <div class="content-image">
-        {#if article.photo == ''}
-            <img src="https://via.placeholder.com/150" class="article-image" alt={article.name} />
-        {:else}
+        <!-- {#if article.photo == '' } -->
+            <!-- <img src="https://via.placeholder.com/150" class="article-image" alt={article.name} /> -->
+        <!-- {:else} -->
             <!-- {#if isEdit} -->
                 {#each Object.keys(imagesURL) as img}
                     <div class="image">
@@ -252,7 +259,7 @@
                         
                     </div>
                 {/each}
-            {/if}
+        <!-- {/if} -->
             
             <!-- <img src={ imageUrl } class="article-image" alt={article.name} /> -->
         <!-- {/if} -->
@@ -278,7 +285,8 @@
         aspect-ratio: 1 / 1;
     }
     .article-image {
-        height: 100%;
+        /* height: 100%; */
+        width: 100%;
         object-fit: contain;
         border-radius: 5px; 
         border: 1px solid #ccc;

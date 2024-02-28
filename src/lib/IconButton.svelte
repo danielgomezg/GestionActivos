@@ -38,6 +38,7 @@
     position: absolute;
     top: 0px;
     right: -12%;
+    /* left: 115%; */
     border: solid 1px;
     border-radius: 50%;
     padding: 0;

@@ -11,7 +11,6 @@
     export let trailing = ''
     export let leading = ''
     export let disabled = false
-    export let loading = false
     export let custom = false
     export let report = false
 
@@ -21,8 +20,6 @@
     onMount(() => {
         new MDCRipple(button);
     })
-
-    $: if (loading) disabled = loading
 
 </script>
 
@@ -46,14 +43,7 @@
         {#if leading}
             <i class="material-symbols-rounded">{leading}</i>
         {/if}
-        <span class="mdc-button__label">
-            {#if loading}
-                <Loading />
-            {:else}
-                {label}
-            {/if}
-        
-        </span>
+        <span class="mdc-button__label">{label}</span>
         {#if trailing}
             <i class="material-symbols-rounded">{trailing}</i>
         {/if}

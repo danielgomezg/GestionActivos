@@ -103,7 +103,7 @@
         let formData = new FormData();
         formData.append('file', image);
         let response = await Api.call('/file_active', 'POST', { body: formData }, 'file');
-        console.log(response)
+        console.log('RESPONSE UPLOAD DOCUMENT --> ', response)
         if (response.success && response.statusCode == "201") {
             return response.data.result;
         }
@@ -201,6 +201,7 @@
         }
 
         let documentUrl = await uploadDocument(document)
+        console.log('documentUrl', documentUrl	)
         activo.accounting_document = documentUrl == null ? '' : documentUrl;
 
         // Peticion
@@ -249,17 +250,17 @@
 
     $: activo.rut_in_charge_active = formatRut(activo.rut_in_charge_active)
 
-
 </script>
 <div class="form">
 
     <OfficeSucursalSelected 
         keep 
-        {isKeep}
         isEdit={isEdit} 
+        bind:iskeep={isKeep}
         companyId={company_id} 
         bind:selectedOffice={selectedOffice}
         bind:selectedSucursal={selectedSucursal}
+        on:keep={e => isKeep = e.detail}
         on:changeOffice={e => selectedOffice = e.detail.selectedOffice}
         on:changeSucursal={e => selectedSucursal = e.detail.selectedSucursal}
     />
@@ -346,7 +347,11 @@
         accept={ ['pdf', 'png', 'jpg'] }
         trailing="upload_file"
         helperText="Documento con formato pdf, png o jpg"
-        on:change={ (e) => document = e.detail[0] }
+        on:change={ (e) => {
+            console.log('file selected')
+            console.log(e.detail)
+            document = e.detail 
+        }}
     />
 
     {#if showArticles}

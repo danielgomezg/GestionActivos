@@ -112,7 +112,7 @@
                     {/if} -->
                     <tr class="centered-row">
                         <td><span class="material-symbols-rounded">person_edit</span></td>
-                        <td>{ getUserName(history.user) }</td>
+                        <td>{ history.name_user }</td>
                     </tr>
                 </table>
             </div>

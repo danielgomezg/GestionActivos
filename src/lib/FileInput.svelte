@@ -63,7 +63,9 @@
 
         invalid = false;
         label = file.name
-        dispatch('change', Array.from(file));
+        console.log('label', label)
+        console.log('file', file)
+        dispatch('change',file);
     }
 
 </script>
