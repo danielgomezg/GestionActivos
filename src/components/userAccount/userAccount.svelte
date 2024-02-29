@@ -1,6 +1,6 @@
 <script>
     import { IconButton, Button } from "$lib";
-    import { user } from "../../stores/store";
+    import { user, lockStore, lockOffice } from "../../stores/store";
     import { navigate } from "svelte-routing";
     import Api from "../../../helpers/ApiCall";
     import { onMount, onDestroy } from "svelte";
@@ -31,6 +31,8 @@
         sessionStorage.removeItem('user');
         sessionStorage.removeItem('accessToken');
         user.set({})
+        lockStore.set(0)
+        lockOffice.set(0)
 
         navigate("/login", {replace: true})
         return;

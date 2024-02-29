@@ -8,11 +8,12 @@
     let textfield
 
     onMount(() => {
-        new MDCTextField(textfield)
+        let mdcTextArea = new MDCTextField(textfield)
         textfield.addEventListener('input', function() {
             var valorInput = textfield.querySelector('textarea')
             value = valorInput.value
         });
+        console.log('mdcTextArea -> ', mdcTextArea)
     })
 
 </script>
@@ -24,9 +25,9 @@
       </span>
       <span class="mdc-notched-outline__trailing"></span>
     </span>
-    <span class="">
+    <span class="span-custom">
       <textarea 
-        class="mdc-text-field__input" 
+        class="mdc-text-field__input textarea-custom" 
         {value}
         cols="40" 
         aria-label="Label"
@@ -35,7 +36,19 @@
 </label>
 
 <style>
-  .mdc-text-field--textarea {
+  .mdc-text-field--textarea, .span-custom {
     height: 100%;
   }
+
+  .textarea-custom {
+    height: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 11px 16px;
+  }
+
+  .mdc-text-field--textarea.mdc-text-field--outlined .mdc-text-field__input {
+    margin: 0;
+  }
+
 </style>

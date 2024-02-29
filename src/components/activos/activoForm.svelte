@@ -202,7 +202,7 @@
 
         let documentUrl = await uploadDocument(document)
         console.log('documentUrl', documentUrl	)
-        activo.accounting_document = documentUrl == null ? '' : documentUrl;
+        if (documentUrl != null) activo.accounting_document = documentUrl;
 
         // Peticion
         delete activo.office

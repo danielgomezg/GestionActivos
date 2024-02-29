@@ -68,6 +68,8 @@
     } else {
         trailing = ''
     }
+    $: if (value.trim() === '') dispatch('removeSearch')
+    
 
 </script>
 

@@ -18,7 +18,6 @@
     let loading = false;
     let openModal = false;
     let backButton = false;
-    let startSearch = false;
 
     //companies recibe id y name del getcompany, y en company se guardan los datos como label y value para usarlos en el select  
     let companiesSelect = []
@@ -73,7 +72,8 @@
 
     const getUsers = async () => {
         if (offset > count) return;
-
+        console.log('GET USERS')
+        console.log(usuarios)
         loading = true;
         let response = (await Api.call(`/users?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET USERS --> ', response)
@@ -87,7 +87,7 @@
     const handleScroll = () => {
         if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
             offset = offset + limit;
-            getCompanies()
+            getUsers()
         }
     }
 
@@ -101,9 +101,6 @@
         window.removeEventListener('scroll', handleScroll)
     })
 
-    console.log('user self --> ', userSelf)
-
-
 </script>
 
 <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
@@ -116,16 +113,19 @@
         </div>
         <div>
             <UsuarioSearch
-            bind:usuarios = {usuarios}
-            on:startSearch={ () => {
-                startSearch = true;
-                // companyBackup.set(empresas)
-            } }
-            on:removeSearch={ () => {
-                startSearch = false;
-                getUsers()
-                // empresas = [...$companyBackup]
-            } }/>
+                bind:usuarios = {usuarios}
+                on:startSearch={ () => {
+                    offset = 0;
+                } }
+                on:removeSearch={ () => {
+                    offset = 0
+                    usuarios = []
+                    getUsers()
+                } }
+                on:notFound={ () => {
+                    usuarios = []
+                } }    
+            />
         </div>
     </div>
     <br>
@@ -140,6 +140,8 @@
                 {usuario} 
                 on:edit={ (event) => editUser(event.detail) } 
             />
+        {:else}
+            <p>No se encontraron usuarios</p>
         {/each}
     </div>
 </div>

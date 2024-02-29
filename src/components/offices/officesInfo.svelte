@@ -29,8 +29,8 @@
     }
 
     const getOffices = async (id_sucursal) => {
-        
-        let response = (await Api.call(`/officePorSucursal/${id_sucursal}`, 'GET'))
+        console.log(company)
+        let response = (await Api.call(`/officePorSucursal/${id_sucursal}`, 'GET', {}, 'json', company.result.id ))
         console.log('RESPONSE GET Offices --> ', response)
         if (response.success) {
             offices = response.data.result

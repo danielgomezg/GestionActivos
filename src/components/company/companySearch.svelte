@@ -9,24 +9,21 @@
     let offset = 0;
     let count = 0;
     let searchText = '';
-    let startSearch = false;
     let dispatch = createEventDispatcher();
 
     const searchCompany = async (text) => {
         if (text == '') {
-            startSearch = false;
-            dispatch('removeSearch')
             return;
         } 
-
-        if (!startSearch) dispatch('startSearch')
-        startSearch = true;
-
 
         let response = (await Api.call(`/company/search?search=${text}&limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE SEARCH COMPANY -> ', response)
         if (response.success && response.statusCode == '200') {
             empresas = response.data.result
+            count = response.data.count
+            if (count == 0) {
+                dispatch('notFound')
+            }
         }
        
     }

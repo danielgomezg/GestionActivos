@@ -75,20 +75,28 @@
                 </div>
                 <div class="flex-column">
                     <div class="card-title">{ article.name }</div>
-                    <table>
-                        <tr>
-                            <td><span class="material-symbols-rounded">event</span></td>
-                            <td>{ article.creation_date }</td>
-                        </tr>
-                        <tr>
-                            <td><span class="material-symbols-rounded">inventory_2</span></td>
-                            <td>{ article.count_actives || 0 } activos</td>
-                        </tr>
-                        <tr>
-                            <td><span class="material-symbols-rounded">notes</span></td>
-                            <td>{ article.description }</td>
-                        </tr>
-                    </table>
+
+                    <div class="responsive-table">
+                        <table>
+                            <tr>
+                                <td><span class="material-symbols-rounded">barcode</span></td>
+                                <td>{ article.code }</td>
+                                <td><span class="material-symbols-rounded">event</span></td>
+                                <td>{ article.creation_date }</td>
+                            </tr>
+                            <tr>
+                                
+                            </tr>
+                            <tr>
+                                <td><span class="material-symbols-rounded">inventory_2</span></td>
+                                <td>{ article.count_actives || 0 } activos</td>
+                                <td><span class="material-symbols-rounded">notes</span></td>
+                                <td class="description">{ article.description }</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                   
                     <!-- <p> Agregado el { article.creation_date }</p>
                     <p> { article.count_actives || 0 } activos</p> -->
                 </div>
@@ -153,32 +161,16 @@
 </Card>
 
 <style>
-    .article-image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        /* display: block; */
-        /* border-radius: 3px; */
+    .description {
+        display: flex;
+        /* max-height: 50px; */
+        height: 65px;
+        overflow-y: auto;
+        width: 500px;
+        flex-flow: wrap;
     }
 
-    .content-image {
-        width: 100px;
-        height: 100px;
-        overflow: hidden;
-        /* border: 1px solid #ccc; */
-    }
-
-    .contenedor {
-        width: 60%; /* ajusta según el tamaño deseado */
-        height: 35px; /* ajusta según el tamaño deseado */
-        overflow: hidden;
-        /* border: 1px solid #ccc; */
-        padding: 10px 0;
-    }
-
-    .contenedor p {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    td {
+        vertical-align: top;
     }
 </style>

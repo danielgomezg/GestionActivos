@@ -144,7 +144,7 @@ h4, h5 {
     }
 }
 
-.content-image {
+.image-list {
     width: 100%;
     display: flex;
     gap: 20px;
@@ -152,6 +152,23 @@ h4, h5 {
     @media only screen and (max-width: 600px) {
         justify-content: space-evenly;
     }
+}
+
+.article-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* display: block; */
+    /* border-radius: 3px; */
+}
+
+.content-image {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+    overflow: visible;
+    /* border: 1px solid #ccc; */
 }
 
 .align-start {

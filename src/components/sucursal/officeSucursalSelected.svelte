@@ -9,6 +9,7 @@
     export let companyId = 0;
     export let custom = false;
     export let isEdit = false;
+    export let cleanStore = false;
     export let selectedOffice = '';
     export let selectedSucursal = '';  
     export let show = ['sucursal', 'office'];
@@ -73,6 +74,10 @@
 
     onMount(async () => {
         console.log('MOUNT OFFICE SUCURSAL')
+        if (cleanStore) {
+            lockStore.set(0);
+            lockOffice.set(0);
+        }   
         
         await getSucursales();
         
@@ -88,9 +93,6 @@
             disabledOffice = true;
             disabledSucursal = true;
         }
-
-        console.log($lockOffice)
-        console.log($lockStore)
         
         if(isEdit){
             let office = await getOffice(selectedOffice)

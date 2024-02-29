@@ -20,7 +20,6 @@
     let modalContent;  
     let empresas = [];
     let loading = false;
-    let startSearch = false;
     let previusComponent, previusProps;
     let openModal = false, backButton = false;
     let modalTitle = '', previusModelTitle = '';
@@ -132,7 +131,12 @@
     }
 
     const getCompanies = async () => {
+        console.log('GET COMPANIES')
+        console.log('offset -> ', offset)
+        console.log('count -> ', count)
+        console.log('limit -> ', limit)
         if (offset > count) return;
+
         loading = true;
         let response = (await Api.call(`/companies?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET COMPANIES --> ', response)
@@ -155,6 +159,7 @@
 
     const handleScroll = () => {
         if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+            console.log('SCROLL')
             offset = offset + limit;
             getCompanies()
         }
@@ -182,14 +187,16 @@
         <CompanySearch 
             bind:empresas={empresas} 
             on:startSearch={ () => {
-                startSearch = true;
-                // companyBackup.set(empresas)
                 offset = 0;
-                getCompanies();
             } }
             on:removeSearch={ () => {
-                startSearch = false;
-                empresas = [...$companyBackup]
+                console.log('REMOVE SEARCH')
+                offset = 0
+                empresas = []
+                getCompanies()
+            } }
+            on:notFound={ () => {
+                empresas = []
             } }
         />
         </div>
@@ -211,11 +218,7 @@
                 on:history={ (event) => history(event.detail) }
             />
         {:else}
-            {#if startSearch}
-                <p>No se encontraron empresas para tu búsqueda</p>
-            {:else}
-                <p>No hay empresas registradas</p>
-            {/if}
+            <p>No se encontraron empresas</p>
         {/each}
     </div>
 </div>

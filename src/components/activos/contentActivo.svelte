@@ -450,6 +450,7 @@
             
             <OfficeSucursalSelected 
                 custom
+                cleanStore
                 {companyId}
                 show={ ['sucursal', 'office']}
                 on:changeStore={ (event) => {

@@ -120,8 +120,10 @@
         }
 
         let imageUrl = await uploadImage(images)
-        let imagesNames = Object.values(imagesURL).join(',')        
-        article.photo = imageUrl == null ? imagesNames : imagesNames + ',' + imageUrl;
+        let imagesNames = Object.values(imagesURL).join(',')    
+        
+        if (imagesNames != '') article.photo = imageUrl == null ? imagesNames : imagesNames + ',' + imageUrl;
+        else article.photo = imageUrl == null ? '' : imageUrl;
 
         // Peticion
         let body = JSON.stringify(article)  
@@ -223,13 +225,13 @@
         }}
     />
 
-    <div class="content-image">
+    <div class="image-list">
         <!-- {#if article.photo == '' } -->
             <!-- <img src="https://via.placeholder.com/150" class="article-image" alt={article.name} /> -->
         <!-- {:else} -->
             <!-- {#if isEdit} -->
                 {#each Object.keys(imagesURL) as img}
-                    <div class="image">
+                    <div class="content-image">
                         <IconButton 
                             icon="remove" 
                             custom 
@@ -245,7 +247,7 @@
                 {/each}
             <!-- {:else} -->
                 {#each images as img}
-                    <div class="image">
+                    <div class="content-image">
                         <IconButton 
                             icon="remove" 
                             custom 
@@ -278,19 +280,29 @@
 </div>
 
 <style>
-    .image {
+    /* .image {
         position: relative;
         height: 100px;
         box-sizing: border-box;
         aspect-ratio: 1 / 1;
     }
     .article-image {
-        /* height: 100%; */
         width: 100%;
         object-fit: contain;
         border-radius: 5px; 
         border: 1px solid #ccc;
-    
+    } */
+
+    /* .article-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
     }
+
+    .content-image {
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+    } */
     
 </style>

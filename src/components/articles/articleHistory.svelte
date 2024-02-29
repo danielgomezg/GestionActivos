@@ -46,6 +46,8 @@
     }   
 
     const getHistory = async (article_id) => {
+        console.log(`GET HISTORY ARTICLE`)
+        console.log(article)
         if (count != -1 && offset > count) return
         let response = (await Api.call(`/history/article/${article_id}?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', article.company_id))
         console.log(`RESPONSE GET HISTORY ARTICLE (${article_id}) -->`, response)

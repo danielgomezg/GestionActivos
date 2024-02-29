@@ -5,26 +5,24 @@
 
     export let usuarios = [];
 
+    let count = 0;
     let limit = 50;
     let searchText = '';
-    let startSearch = false;
     let dispatch = createEventDispatcher();
 
     const searchUser = async (text) => {
         if (text == '') {
-            startSearch = false;
-            dispatch('removeSearch')
             return;
         } 
-
-        if (!startSearch) dispatch('startSearch')
-        startSearch = true;
-
 
         let response = (await Api.call(`/users/search?search=${text}&limit=${limit}`, 'GET'));
         console.log('RESPONSE SEARCH USER -> ', response)
         if (response.success && response.statusCode == '200') {
             usuarios = response.data.result
+            count = response.data.count
+            if (count == 0) {
+                dispatch('notFound')
+            }
         }
        
     }
