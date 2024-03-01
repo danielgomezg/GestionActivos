@@ -18,10 +18,10 @@
             downloadUrl =  URL.createObjectURL(response);
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.download = 'report.pdf';
+            link.download = `Reporte de artículos.pdf`//'report.pdf';
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
+            document.body.removeChild(link); 
         }
         else {
             snackbar.update(snk => {

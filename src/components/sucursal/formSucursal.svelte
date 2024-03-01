@@ -85,6 +85,10 @@
             message = "Falta agregar un piso a la oficina."
             return false; 
         }
+        if (officeEdit.name_in_charge == ''){
+            message = "Falta agregar el nombre del responsable de la oficina."
+            return false; 
+        }
         return true
     }
 
@@ -172,6 +176,17 @@
     }
 
     const editOffice = async () => {
+
+        let  isValid = validFormOficce()
+        if (!isValid){
+            snackbar.update(snk => {
+                snk.type = 'dismiss'
+                snk.open = true;
+                snk.message = message
+                return snk
+            })
+            return
+        }
 
         let body = JSON.stringify(officeEdit)  
         let response = (await Api.call(`/office/${officeEdit.id}`, 'PUT', { body }, 'json', company.id))

@@ -8,6 +8,7 @@
     export let companyId = 0;
     export let isEdit = false;
     
+    let message=''
     let accionBtn;
     let images = []; //Array donde se agregan imagenes nuevas
     let imagesURL = {}; //Objeto estan las imagenes guardades del articulo
@@ -17,11 +18,13 @@
 
     function validForm() {
         if (article.name == ''){
-            message = "Falta agregar el nombre del articulo."
+            message = "Falta agregar el nombre del artículo."
             return false;
-        } 
-        
-        
+        }
+        if (article.code == ''){
+            message = "Falta agregar el código del artículo."
+            return false;
+        }  
         return true
     }
 
@@ -98,7 +101,7 @@
             snackbar.update(snk => {
                 snk.open = true;
                 snk.type = 'dismiss'
-                snk.message = "Error al agregar el articulo."
+                snk.message = response.data.message //"Error al agregar el articulo."
                 return snk
             })
         }
@@ -147,7 +150,7 @@
             snackbar.update(snk => {
                 snk.open = true;
                 snk.type = 'dismiss'
-                snk.message = "Error al editar articulo."
+                snk.message = response.data.message //"Error al editar articulo."
                 return snk
             })
         }

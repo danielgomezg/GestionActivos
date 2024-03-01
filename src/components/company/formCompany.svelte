@@ -56,6 +56,18 @@
             message = "Falta agregar el país a la empresa."
             return false
         }
+        if (company.contact_name == ''){
+            message = "Falta agregar el nombre del responsable de la empresa."
+            return false
+        }
+        if (company.contact_phone == ''){
+            message = "Falta agregar el teléfono del responsable de la empresa."
+            return false
+        }
+        if (company.contact_email == ''){
+            message = "Falta agregar el correo del responsable de la empresa."
+            return false
+        }
         
         return true
     }
@@ -95,7 +107,7 @@
             snackbar.update(snk => {
                 snk.open = true;
                 snk.type = 'dismiss'
-                snk.message = "Error al editar empresa."
+                snk.message = response.data.message //"Error al editar empresa."
                 return snk
             })
         }
@@ -138,11 +150,13 @@
                 addCompany(response.data.result)
 
             } else {
+                console.log("msj")
+                console.log(response.data.message)
                 //aviso
                 snackbar.update(snk => {
                     snk.open = true;
                     snk.type = 'dismiss'
-                    snk.message = "Error al crear empresa."
+                    snk.message = response.data.message
                     return snk
                 })
             }

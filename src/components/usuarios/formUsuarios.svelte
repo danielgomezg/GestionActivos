@@ -86,7 +86,6 @@
             return false; 
         }
         if (usuario.profile_id == 2 && usuario.company_id == ''){
-            console.log("wwww")
             console.log(usuario.company_id)
             message = "Falta agregarle una compañia al usuario cliente."
             return false; 
@@ -158,7 +157,7 @@
                 snackbar.update(snk => {
                     snk.open = true;
                     snk.type = 'dismiss'
-                    snk.message = "Error al crear usuario."
+                    snk.message = response.data.message //"Error al crear usuario."
                     return snk
                 })
             }
@@ -250,7 +249,7 @@
                 snackbar.update(snk => {
                     snk.open = true;
                     snk.type = 'dismiss'
-                    snk.message = "Error al editar usuario."
+                    snk.message = response.data.message //"Error al editar usuario."
                     return snk
                 })
             }
