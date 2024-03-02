@@ -24,7 +24,7 @@
             return false;
         }
         if (sucursal.number == ''){
-            message = "Falta agregar un numero a la sucursal."
+            message = "Falta agregar un número a la sucursal."
             return false;
         } 
         if (sucursal.address == ''){
@@ -40,7 +40,7 @@
             return false; 
         }   
         if (offices[0].floor == ''){
-            message = "Falta agregar al menos un piso."
+            message = "Falta agregar al menos un piso a la sucursal."
             return false; 
         } 
 
@@ -106,7 +106,7 @@
                 snackbar.update(snk => {
                     snk.open = true;
                     snk.type = 'dismiss'
-                    snk.message = "Error al crear sucursal."
+                    snk.message = response.data.message//"Error al crear sucursal."
                     return snk
                 })
                 clean = false

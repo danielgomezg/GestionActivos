@@ -65,11 +65,11 @@
             return false;
         }
         if (activo.name_in_charge_active == ''){
-            message = "Falta agregar el nombre del responsable del activo."
+            message = "Falta agregar el nombre del encargado del activo."
             return false;
         }
         if (activo.rut_in_charge_active == ''){
-            message = "Falta agregar el rut del responsable del activo."
+            message = "Falta agregar el rut del encargado del activo."
             return false;
         }
         if (activo.serie == ''){
@@ -88,8 +88,12 @@
             message = "Falta agregar el articulo al activo."
             return false;
         }
-        if (activo.office_id == ''){
+        if (activo.office_id == '' || activo.office_id == null){
             message = "Falta agregar una oficina al activo."
+            return false;
+        }
+        if (activo.article_id == ''){
+            message = "Falta agregar un artículo al activo."
             return false;
         }
         
@@ -178,7 +182,7 @@
             snackbar.update(snk => {
                 snk.open = true;
                 snk.type = 'dismiss'
-                snk.message = "Error al agregar el activo."
+                snk.message = response.data.message //"Error al agregar el activo."
                 return snk
             })
         }
@@ -227,7 +231,7 @@
             snackbar.update(snk => {
                 snk.open = true;
                 snk.type = 'dismiss'
-                snk.message = "Error al editar activo."
+                snk.message = response.data.message //"Error al editar activo."
                 return snk
             })
         }
