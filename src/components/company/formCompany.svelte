@@ -1,10 +1,11 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { snackbar } from "../../stores/store";
-    import { getContext } from "svelte";
+    import { getContext, onDestroy, onMount } from "svelte";
     import { TextField, Button, Select } from "$lib";
     
     export let company = {}, isEdit = false;
+    let companyBackup;
     let showSucursalesBtn = false, loading = false, message = 'Empresa agregada';
     let paises = [
         {
@@ -158,6 +159,15 @@
         
         loading = false
     }
+
+    // onMount(() => {
+    //     companyBackup = JSON.stringify(company)
+    // })
+
+    // onDestroy(() => {
+    //     console.log('DESTROY FORM COMPANY')
+    //     company = JSON.parse(companyBackup)
+    // })
 
     $: company.rut = formatRut(company.rut)
     

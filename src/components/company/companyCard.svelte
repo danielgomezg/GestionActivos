@@ -72,7 +72,7 @@
                                 { label: "Eliminar", dispatch: "delete" }
                             ]  
                         }
-                        on:edit={() => dispath("edit", company) }
+                        on:edit={() => dispath("edit", { ...company }) }
                         on:history={() => dispath("history", company) }
                         on:delete={() => {
                             messageSnackbar = '¿Eliminar la empresa ' + company.name + '?'
@@ -84,7 +84,7 @@
                 </div>
                 <div class="desktop-only">    
                     <IconButton icon="history" tooltipId="btn-history__{company.name}" tooltipText="Historial" on:click={ dispath("history", company) } />
-                    <IconButton icon="edit" tooltipId="btn-edit__{company.name}" tooltipText="Editar" on:click={ dispath("edit", company) } />
+                    <IconButton icon="edit" tooltipId="btn-edit__{company.name}" tooltipText="Editar" on:click={ dispath("edit", { ...company }) } />
                     <IconButton 
                         icon="delete" 
                         tooltipId="btn-delete__{company.name}" 

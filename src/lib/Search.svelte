@@ -47,7 +47,7 @@
         console.log('remove text')
         value = '';
         isFocused = false
-        dispatch('removeSearch')
+        // dispatch('removeSearch')
     }
 
     onMount(() => {

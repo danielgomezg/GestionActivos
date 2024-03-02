@@ -21,11 +21,14 @@
     let dispatch = createEventDispatcher();
 
     function cleanValue() {
-        value = '';
+        console.log('cleanValue')
+        console.log('value', value)
+        value = null;
         label = '';
     }
     
     function handleMultiple(event) {
+        console.log('handleMultiple')
         let files = event.target.files;
         console.log(files)
         let filesArray = Array.from(files);
@@ -47,6 +50,7 @@
     }
 
     function handleChange(event) {
+        console.log('handleChange')
         if (multiple) {
             handleMultiple(event)
             return;

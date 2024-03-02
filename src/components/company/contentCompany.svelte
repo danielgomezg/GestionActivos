@@ -79,6 +79,7 @@
     }
 
     const editCompany = (company) => {
+        console.log('COMPANY EDIT-> ', company)
         modalTitle = company.name + " - editando"
         modalContent = FormCompany;
         props = { company, isEdit: true }

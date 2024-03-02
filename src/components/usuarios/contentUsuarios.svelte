@@ -114,9 +114,6 @@
         <div>
             <UsuarioSearch
                 bind:usuarios = {usuarios}
-                on:startSearch={ () => {
-                    offset = 0;
-                } }
                 on:removeSearch={ () => {
                     offset = 0
                     usuarios = []

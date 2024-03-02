@@ -254,7 +254,7 @@
 <div class="form">
 
     <OfficeSucursalSelected 
-        keep 
+        keep={ !isEdit }
         isEdit={isEdit} 
         bind:iskeep={isKeep}
         companyId={company_id} 

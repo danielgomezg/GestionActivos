@@ -63,7 +63,7 @@
                 <div>{ usuario.secondName + ' ' + usuario.secondLastName }</div>
             </div>
             <div class="desktop-only">
-                <IconButton {disabled} icon="edit" tooltipId="btn-edit__{usuario.rut}" tooltipText="Editar" on:click={ dispath("edit", usuario) } />
+                <IconButton {disabled} icon="edit" tooltipId="btn-edit__{usuario.rut}" tooltipText="Editar" on:click={ dispath("edit",  { ...usuario }) } />
                 <IconButton 
                     icon="delete" 
                     {disabled}
@@ -85,7 +85,7 @@
                             { label: "Eliminar", dispatch: "delete" }
                         ]  
                     }
-                    on:edit={() => dispath("edit", usuario) }
+                    on:edit={() => dispath("edit", { ...usuario }) }
                     on:delete={() => {
                         messageSnackbar = '¿Eliminar el usuario ' + usuario.firstName + ' ' + usuario.lastName + '?'
                         openSnackbar = true;

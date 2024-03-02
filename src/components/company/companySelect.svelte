@@ -32,6 +32,8 @@
 
 <Select         
     on:change={e => {
+        console.log('select cpm e.detail --> ', e.detail)
+        if (e.detail == '') return;
         dispatch('name', companies.find(c => c.value == e.detail).label)
         dispatch('change', e.detail)
     }}

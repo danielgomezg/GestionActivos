@@ -8,9 +8,11 @@
     export let companyId = 0;
     export let isEdit = false;
     
+    let fileInput;
     let accionBtn;
     let images = []; //Array donde se agregan imagenes nuevas
     let imagesURL = {}; //Objeto estan las imagenes guardades del articulo
+    let message = '';
 
     let addArticle = getContext('addArticle');
     let replaceArticle = getContext('replaceArticle');
@@ -195,6 +197,7 @@
     <div class="flex-row grid-col-span-2 gap-8">
     
     <FileInput 
+        bind:this={fileInput}
         btnIcon
         label="Imagen"
         trailing="image"
@@ -252,7 +255,9 @@
                             icon="remove" 
                             custom 
                             on:click={ () => {
+                                console.log('img new remove > ', img)
                                 // Quitar img de images
+                                fileInput.cleanValue();
                                 images = images.filter(image => image != img)
                             } } 
                         />

@@ -1,5 +1,5 @@
 <script>
-    import { onMount, createEventDispatcher, onDestroy  } from 'svelte';
+    import { onMount, createEventDispatcher, onDestroy, tick  } from 'svelte';
     import { MDCSelect } from '@material/select';
 
     export let label = ''
@@ -13,6 +13,18 @@
     let selectComponent;
     let menuComponent;
     let select
+
+    const _updateValue = async (selected) => {
+        await tick()
+        console.log(`${label} selected >`, selected)
+        console.log(select)
+        if (select == undefined) return;
+        select.setValue(selected);
+        console.log(`${label} select value -> `, select.value)
+        if (select.value == '') {
+            dispatch("empty")
+        }
+    }
 
     const updateValue = (selected) => {
         if (options.length  == 0) return;
@@ -29,16 +41,26 @@
         dispatch("change", select.value)
     }
 
+    const layoutSelect = async () => {
+        await tick();
+        select.layout();
+        select.layoutOptions();
+    }
+
     onMount(() => {
         
         select = new MDCSelect(selectComponent);
         select.listen('MDCSelect:change', setDispatch);
         
-        if (selected != '') updateValue(selected)
+        // if (selected != '') updateValue(selected)
 
     })
 
-    $: updateValue(selected)
+    $: _updateValue(selected)
+
+    $: if (options.length > 0) {
+        layoutSelect()
+    }
 
     onDestroy(() => {
         

@@ -95,6 +95,8 @@
         }
         
         if(isEdit){
+            disabledOffice = false;
+            disabledSucursal = false;
             let office = await getOffice(selectedOffice)
             if(office){
                 selectedSucursal = office.sucursal_id

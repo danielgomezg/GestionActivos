@@ -2,14 +2,17 @@
         import { IconButton } from "$lib";
         import { getContext } from "svelte";
         import { fade, fly } from 'svelte/transition';
+        import { createEventDispatcher } from "svelte";
         
         
         export let open = false, persistance = false, height = '90%', drag = false, title = '', backButton = false
         
+
         let content;
         let resize = false;
+        let dispatch = createEventDispatcher();
         let backModalContent = getContext('backModalContent');
-        
+
         function dragging(event) {
             const touch = event.touches[0];
             if (!drag) return;

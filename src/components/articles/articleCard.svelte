@@ -64,7 +64,7 @@
 
 <Card>
     <div class="card-container">
-        <div class="card-header align-start">
+        <div class="card-header" style="align-items: flex-start;">
             <div class="flex-row gap-8 ">
                 <div class="content-image">
                     {#if article.photo == ''}
@@ -76,25 +76,7 @@
                 <div class="flex-column">
                     <div class="card-title">{ article.name }</div>
 
-                    <div class="responsive-table">
-                        <table>
-                            <tr>
-                                <td><span class="material-symbols-rounded">barcode</span></td>
-                                <td>{ article.code }</td>
-                                <td><span class="material-symbols-rounded">event</span></td>
-                                <td>{ article.creation_date }</td>
-                            </tr>
-                            <tr>
-                                
-                            </tr>
-                            <tr>
-                                <td><span class="material-symbols-rounded">inventory_2</span></td>
-                                <td>{ article.count_actives || 0 } activos</td>
-                                <td><span class="material-symbols-rounded">notes</span></td>
-                                <td class="description">{ article.description }</td>
-                            </tr>
-                        </table>
-                    </div>
+                    
 
                    
                     <!-- <p> Agregado el { article.creation_date }</p>
@@ -108,7 +90,7 @@
                     label="Reporte activos"
                 /> -->
                 <IconButton icon="history" tooltipId="btn-history__{article.name}" tooltipText="Historial" on:click={ dispath("history", article) } />
-                <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", {article, imageUrl}) } />
+                <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", { article: {...article}, imageUrl}) } />
                 {#if $user.profile_id != 2}
                     <IconButton 
                         icon="delete" 
@@ -132,7 +114,7 @@
                             { label: "Eliminar", dispatch: "delete" }
                         ]  
                     }
-                    on:edit={() => dispath("edit", {article, imageUrl}) }
+                    on:edit={() => dispath("edit", { article: {...article}, imageUrl}) }
                     on:history={() => dispath("history", article) }
                     on:delete={() => {
                         messageSnackbar = '¿Eliminar el artículo ' + article.name + '?'
@@ -143,17 +125,39 @@
                 </Menu>
             </div>
         </div>
-        <!-- <div class="card-content">
-            <div class="contenedor">
-                <p>{ article.description }</p>
+        <div class="card-content">
+            <div class="responsive-table">
+                <table>
+                    <tr>
+                        <td><span class="material-symbols-rounded">barcode</span></td>
+                        <td>{ article.code }</td>
+                    </tr>
+                    <tr>
+                        
+                    </tr>
+                    <tr>
+                        <td><span class="material-symbols-rounded">inventory_2</span></td>
+                        <td>{ article.count_actives || 0 } activos</td>
+                    </tr>
+                </table>
             </div>
-        </div> -->
+            <div class="responsive-table">
+                <table>
+                    <tr>
+                        <td><span class="material-symbols-rounded">event</span></td>
+                        <td>{ article.creation_date }</td>
+                    </tr>
+                    <tr>
+                        
+                    </tr>
+                    <tr>
+                        <td><span class="material-symbols-rounded">notes</span></td>
+                        <td class="description">{ article.description }</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
         <div class="card-actions">
-            <!-- <ReportActive 
-                label=""
-                id={ article.id } 
-                disabled={ false }
-            /> -->
             <Button label="Ver activos" type="outlined" color="" on:click={ dispath("showActivos", article) } />
             <Button label="Nuevo activo" custom on:click={ dispath("newActivo", article) } />
         </div>
@@ -172,5 +176,11 @@
 
     td {
         vertical-align: top;
+    }
+
+    .card-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 50px;
     }
 </style>

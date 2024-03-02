@@ -241,13 +241,13 @@
 
         <ArticlesSearch
             bind:articles={articles} 
-            on:startSearch={ () => {
-                startSearch = true;
-                articleBackup.set(articles)
-            } }
             on:removeSearch={ () => {
-                startSearch = false;
-                articles = [...$articleBackup]
+                offset = 0;
+                articles = []
+                findArticles(companyId)
+            } }
+            on:notFound={ () => {
+                articles = []
             } }
             company_id = {companyId}
         />

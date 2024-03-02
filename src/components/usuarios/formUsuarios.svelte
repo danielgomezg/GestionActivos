@@ -124,6 +124,11 @@
         usuario.company_id = parseInt(usuario.company_id, 10)
         usuario.profile_id = parseInt(usuario.profile_id, 10)
 
+        // Si el perfil es administrador u operador el id de la empresa es null;
+        if(usuario.profile_id == 1 || usuario.profile_id == 3){
+            usuario.company_id = null
+        }
+
         // Peticion
         console.log(usuario)   
         let body = JSON.stringify(usuario)  
@@ -188,6 +193,10 @@
             return console.log(message)
         }
 
+        // Si el perfil es administrador u operador el id de la empresa es null;
+        if(usuario.profile_id == 1 || usuario.profile_id == 3){
+            usuario.company_id = null
+        }
         
         // Peticion
         let body;
@@ -296,8 +305,7 @@
 
     <TextField 
         version=2
-        id="name-company"
-        required 
+        id="name-company" 
         type="text"
         label="Segundo nombre" 
         bind:value={usuario.secondName}
@@ -312,8 +320,7 @@
     />
 
     <TextField 
-        version=2
-        required 
+        version=2 
         type="text"
         label="Segundo apellido" 
         bind:value={usuario.secondLastName}
