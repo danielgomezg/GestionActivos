@@ -296,7 +296,7 @@
             {#each offices as office, index} 
             <tr>
                 <td style="width: 65%;"><li>{ formatOfficeInfo(office) }</li></td>
-                <td style="width: 65%;">
+                <td style="width: 65%; display: flex;">
                     <IconButton icon="edit" tooltipId="btn-edit__{index}" tooltipText="Editar" on:click={ () => toggleEdit(office, index) } />
                     <IconButton 
                         icon="delete" 

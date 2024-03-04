@@ -5,7 +5,7 @@
     import { MDCDrawer } from "@material/drawer";
     import { MDCList } from "@material/list";
 
-    export let props = {}
+    export let open = false;
 
     let drawerList;
     let selected = '';
@@ -48,7 +48,7 @@
 <aside 
     bind:this={drawerComponent}
     class="mdc-drawer mdc-drawer--modal mdc-drawer--size" 
-    class:open={ props.open }
+    class:open={ open }
     >
     <div class="mdc-drawer__content">
         <nav bind:this={drawerList} class="mdc-list">
@@ -60,6 +60,9 @@
                         style="color: inherit; text-decoration: none;" 
                         on:click={() => {
                             selected = navigation.path
+                            if (window.innerWidth <= 600) { // Asume que los dispositivos con un ancho de ventana de 768px o menos son móviles
+                                open = false;
+                            }
                         } }>
                         <div class="mdc-list-item--drawer" class:mdc-list-item--activated={ selected == navigation.path } >
                             <span class="mdc-list-item__ripple"></span>

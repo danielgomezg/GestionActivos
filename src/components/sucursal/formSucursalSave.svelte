@@ -254,7 +254,7 @@
         {/if}
     </div>
 
-    <div class="grid-col-span-1">
+    <div class="mobile-fixed">
         <Button 
             custom
             label="Guardar"

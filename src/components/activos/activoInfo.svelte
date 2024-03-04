@@ -3,7 +3,7 @@
     import { getContext, onMount } from "svelte";
     import { snackbar } from "../../stores/store";
     import { estadosActivo } from "../../stores/store";
-    import { Divider, IconButton, Snackbar } from "$lib";
+    import { Divider, IconButton, Snackbar, Menu } from "$lib";
 
     export let article = {};
     export let company_id = 0;
@@ -17,6 +17,7 @@
     let activoToDelete = {};
     let openSnackbar = false;
     let messageSnackbar = '';
+    let openActions = [];
 
     let editActivo = getContext('editActivo')
     let addActivoCount = getContext('addActivoCount');
@@ -102,17 +103,39 @@
 />
 
 <div>
-    {#each activos as activo}
+    {#each activos as activo, index}
         <div>
             <div class="info__title">
                 <div>    
-                    <div class="flex-row align-center gap-8">
+                    <div style="display: flex; gap: 8px">
                         <span class="material-symbols-rounded">barcode</span>
                         <strong>{ activo.bar_code }</strong>
                     </div>
                     <h5>{ `Adquirido el ${activo.acquisition_date} - Agregado el ${activo.creation_date}` }  </h5>
                 </div>
-                <div>
+                <div class="mobile-only">
+                    <Menu
+                        id={`store_${index}`}
+                        bind:open={openActions[index]}
+                        options={
+                            [
+                                { label: "Documento contable", dispatch: "document", disabled: !activo.accounting_document},
+                                { label: "Editar", dispatch: "edit"},
+                                { label: "Eliminar", dispatch: "delete" }
+                            ]  
+                        }
+                        on:document={() => downloadDocument(activo) }
+                        on:edit={() => editActivo(activo, article, company_id) }
+                        on:delete={() => {
+                            activoToDelete = activo;
+                            messageSnackbar = '¿Eliminar el activo ' + activo.bar_code + '?'
+                            openSnackbar = true;
+                        }}
+                    >
+                      <IconButton icon="more_vert" on:click={() => openActions[index] = !openActions[index] } />
+                    </Menu>
+                </div>
+                <div class="desktop-only">
                     {#if activo.accounting_document}
                         <IconButton icon="description" tooltipId="btn-doc__{activo.bar_code}" tooltipText="Documento contable" on:click={ () => downloadDocument(activo) } />
                     {/if}

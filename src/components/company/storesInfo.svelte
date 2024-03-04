@@ -1,8 +1,8 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { onMount, getContext } from "svelte";
+    import { onMount, getContext, createEventDispatcher } from "svelte";
     import { snackbar } from "../../stores/store";
-    import { Divider, IconButton, Snackbar } from "$lib";
+    import { Divider, IconButton, Snackbar, Menu } from "$lib";
 
     export let company = {};
     export let company_id = 0; 
@@ -10,17 +10,18 @@
 
     let limit = 7;
     let offset = 0;
-    let count = -1;
+    let count = 0;
     let stores = [];
     let storeToDelete = {};
+    let openActions = [];
     let openSnackbar = false;
     let messageSnackbar = '';
-
+    let dispatch = createEventDispatcher();
     let editStore = getContext('editStore');
     let addSucursalCount = getContext('addSucursalCount');
 
     const getSucursalePorCompany = async () => {
-        if (count != -1 && offset > count) return
+        if (offset > count) return
 
         let response = (await Api.call(`/sucursalPorCompany/${company_id}?limit=${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET Sucursales --> ', response)
@@ -68,6 +69,7 @@
     }
 
     onMount(async () => {
+        offset = 0;
         await getSucursalePorCompany()  
     })
 
@@ -84,14 +86,34 @@
 />
 
 <div class="store-info__container">
-    {#each stores as store}
+    {#each stores as store, index}
         <div>
             <div class="store-info__title">
                 <div>    
                     <strong>{ store.number }</strong>
                     { ` (${store.count_offices} oficinas)` }
                 </div>
-                <div>
+                <div class="mobile-only">
+                    <Menu
+                        id={`store_${index}`}
+                        bind:open={openActions[index]}
+                        options={
+                            [
+                                { label: "Editar", dispatch: "edit"},
+                                { label: "Eliminar", dispatch: "delete" }
+                            ]  
+                        }
+                        on:edit={() => editStore(store, company) }
+                        on:delete={() => {
+                            storeToDelete = store;
+                            messageSnackbar = '¿Eliminar la sucursal ' + store.number + '?'
+                            openSnackbar = true;
+                        }}
+                    >
+                      <IconButton icon="more_vert" on:click={() => openActions[index] = !openActions[index] } />
+                    </Menu>
+                </div>
+                <div class="desktop-only">
                     <IconButton icon="edit" tooltipId="btn-edit__{store.number}" tooltipText="Editar" on:click={ editStore(store, company) } />
                     <IconButton 
                         icon="delete" 

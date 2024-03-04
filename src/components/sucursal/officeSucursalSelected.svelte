@@ -10,8 +10,8 @@
     export let custom = false;
     export let isEdit = false;
     export let cleanStore = false;
-    export let selectedOffice = '';
-    export let selectedSucursal = '';  
+    export let selectedOffice = 0;
+    export let selectedSucursal = 0;  
     export let show = ['sucursal', 'office'];
 
     let offices = [];
@@ -20,6 +20,8 @@
     let disabledOffice = false;
     let keepOfficeIcon = false;
     let disabledSucursal = false;
+
+    let request = false;
 
     let dispatch = createEventDispatcher();
 
@@ -38,10 +40,12 @@
     };
 
     const getSucursales = async () => {
+        if (request) return;
         if (companyId == 0) {
             sucursales = [];
             return;
         }; 
+        request = true;
         let response = await Api.call(`/sucursalPorCompany/${companyId}`, 'GET');
         console.log('RESPONSE GET SUCURSALES --> ', response);
         if (response.success && response.statusCode === '200') {
@@ -50,6 +54,7 @@
         else {
             sucursales = [];
         }
+        request = false;
     };
 
     const getOfficesBySucursal = async (sucursalId) => {
@@ -73,7 +78,6 @@
     }
 
     onMount(async () => {
-        console.log('MOUNT OFFICE SUCURSAL')
         if (cleanStore) {
             lockStore.set(0);
             lockOffice.set(0);

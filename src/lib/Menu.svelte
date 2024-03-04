@@ -3,7 +3,7 @@
   import IconButton from "./IconButton.svelte";
   import { onMount, createEventDispatcher } from "svelte";
 
-
+  export let id;
   export let options = [];
   export let open = false;
 
@@ -45,7 +45,7 @@
   <!-- <IconButton icon="more_vert" on:click={() => (open = !open)} /> -->
   <slot />
 
-  <div bind:this={menuComponent} class="mdc-menu mdc-menu-surface">
+  <div {id} bind:this={menuComponent} class="mdc-menu mdc-menu-surface">
     <ul
       class="mdc-list"
       role="menu"
@@ -54,7 +54,12 @@
       tabindex="-1"
     >
       {#each options as option }
-        <li class="mdc-list-item" role="menuitem" custom-dispatch={ option.dispatch }>
+        <li 
+          class="mdc-list-item" 
+          class:mdc-list-item--disabled={option.disabled}
+          role="menuitem" 
+          custom-dispatch={ option.dispatch }
+        >
           <span class="mdc-list-item__ripple"></span>
           <span class="mdc-list-item__text">{ option.label }</span>
         </li>        

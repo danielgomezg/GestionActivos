@@ -68,7 +68,7 @@
 <main class="main">
         {#if Object.keys($user).length != 0 }
             <NavigationDrawer     
-                props={ { open, isMobile } } 
+                bind:open={open}
             />
         {/if}
         <div class="main-content" >

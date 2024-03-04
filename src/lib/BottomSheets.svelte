@@ -154,7 +154,7 @@
             overflow-y: auto;
             scrollbar-width: none;
             flex: 1;
-            padding: 0 12px;
+            padding: 10px 12px 0;
         }
     
         .bottom-sheet .body::-webkit-scrollbar {

@@ -10,17 +10,16 @@
 
     let dispatch = createEventDispatcher()
 
-    let selectComponent;
+    let select;
     let menuComponent;
-    let select
+    let selectComponent;
 
     const _updateValue = async (selected) => {
+
         await tick()
-        console.log(`${label} selected >`, selected)
-        console.log(select)
         if (select == undefined) return;
-        select.setValue(selected);
-        console.log(`${label} select value -> `, select.value)
+        select.setValue(selected.toString());
+
         if (select.value == '') {
             dispatch("empty")
         }
@@ -51,9 +50,24 @@
         
         select = new MDCSelect(selectComponent);
         select.listen('MDCSelect:change', setDispatch);
-        
-        // if (selected != '') updateValue(selected)
-
+    
+        let bottomSheet = document.querySelector('.bottom-sheet .body');
+        if (bottomSheet != null) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    console.log('mutation -> ', mutation	)
+                    if (mutation.attributeName === 'class') {
+                        const hasActivatedClass = selectComponent.classList.contains('mdc-select--activated');
+                        if (hasActivatedClass) {
+                            bottomSheet.style.overflowY = 'unset';
+                        } else {
+                            bottomSheet.style.overflowY = 'auto';
+                        }
+                    }
+                });
+            });
+            observer.observe(selectComponent, { attributes: true });
+        }
     })
 
     $: _updateValue(selected)
