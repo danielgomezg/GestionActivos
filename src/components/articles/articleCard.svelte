@@ -75,12 +75,6 @@
                 </div>
                 <div class="flex-column">
                     <div class="card-title">{ article.name }</div>
-
-                    
-
-                   
-                    <!-- <p> Agregado el { article.creation_date }</p>
-                    <p> { article.count_actives || 0 } activos</p> -->
                 </div>
             </div>
             <div class="desktop-only">
@@ -104,7 +98,6 @@
                 {/if}
             </div>
             <div class="mobile-only">
-                <!-- <IconButton icon="more_vert" /> -->
                 <Menu
                     bind:open={openActions}
                     options={

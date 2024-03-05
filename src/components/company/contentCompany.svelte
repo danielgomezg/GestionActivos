@@ -231,12 +231,3 @@
     {modalContent}
     bind:openModal={openModal}
 />
-
-<style>
-
-    .companies-content {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-</style>

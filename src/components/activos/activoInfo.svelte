@@ -11,7 +11,7 @@
 
     let limit = 7;
     let offset = 0;
-    let count = -1;
+    let count = 0;
     let activos = [];
     let activeDocument;
     let activoToDelete = {};
@@ -23,7 +23,7 @@
     let addActivoCount = getContext('addActivoCount');
 
     const getActives = async () => {
-        if (count != -1 && offset > count) return
+        if (offset > count) return
 
         let response = (await Api.call(`/activePorArticle/${article.id}?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', company_id))
         console.log('RESPONSE GET ACTIVES --> ', response)
@@ -87,6 +87,7 @@
     }
 
     onMount(async () => {
+        offset = 0;
         await getActives()
     })
 
