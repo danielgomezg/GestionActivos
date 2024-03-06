@@ -210,21 +210,23 @@
 </script>
 
 <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
-    <Fab disabled={ newArticleDisabled } on:click={ createArticle(companyId) } />
+    {#if $user.profile_id != 2}
+        <Fab disabled={ newArticleDisabled } on:click={ createArticle(companyId) } />
+    {/if}
 </div>
 <div style="padding-top: 20px;">
     <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
         <div class="flex-row gap-8 space-between">
             {#if !hideSelectCompany}
-            <CompanySelect 
-                customHeight
-                on:change={ (event) => {
-                    console.log(event.detail)
-                    offset = 0;
-                    count = 0;
-                    findArticles(event.detail)
-                }}
-            />
+                <CompanySelect 
+                    customHeight
+                    on:change={ (event) => {
+                        console.log(event.detail)
+                        offset = 0;
+                        count = 0;
+                        findArticles(event.detail)
+                    }}
+                />
             {/if}
             {#if $user.profile_id != 2}
                 <div class="desktop-only">

@@ -31,7 +31,7 @@ export const modulos = writable([
     "articulo",
     "usuario",
     "empresa",
-    // "categoria",
+    "categoria",
 ])
 
 export const menu = writable([
@@ -53,17 +53,17 @@ export const menu = writable([
             2
         ]
     },
-    // {
-    //     id: 6,
-    //     name: 'Categorias',
-    //     path: '/categorias',
-    //     icon: 'category',
-    //     profiles: [
-    //         1,
-    //         2,
-    //         3
-    //     ]
-    // },
+    {
+        id: 6,
+        name: 'Categorias',
+        path: '/categorias',
+        icon: 'category',
+        profiles: [
+            1,
+            2,
+            3
+        ]
+    },
     {
         id: 3,
         name: 'Articulos',

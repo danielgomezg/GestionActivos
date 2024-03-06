@@ -1,9 +1,10 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { Button, Loading, Fab, Lists } from "$lib";
+    import CompanySelect from "../company/companySelect.svelte";
     // import StoresInfo from "./storesInfo.svelte";
     // import CardCompany from "./companyCard.svelte";
-    // import FormCompany from "./formCompany.svelte";
+    import FormCategory from "./categoryForm.svelte";
     // import CompanySearch from "./companySearch.svelte";
     // import { companyBackup } from "../../stores/store";
     // import History from "../history/history.svelte";
@@ -18,51 +19,17 @@
     let limit = 5;
     let offset = 0;
     let modalContent;  
-    let categories = [
-        {
-            id: 1,
-            description: "Division 1",
-            parentId: 0,
-        },
-        {
-            id: 2,
-            description: "Division 2",
-            parentId: 0,
-        },
-        {
-            id: 3,
-            description: "Division 3",
-            parentId: 0,
-            // children: [
-            //     {
-            //         id: 31,
-            //         description: "Division 3.1",
-            //         parentId: 3,
-            //     },
-            //     {
-            //         id: 32,
-            //         description: "Division 3.2",
-            //         parentId: 3,
-            //     },
-            //     {
-            //         id: 33,
-            //         description: "Division 3.3",
-            //         parentId: 3,
-            //     },
-            // ]
-        },
-        {
-            id: 4,
-            description: "Division 4",
-            parentId: 0,
-        },
-    ]
+    let message = "";
+    let company_id = 0;
+    let categories = []
 
     let loading = false;
     let startSearch = false;
     let previusComponent, previusProps;
     let openModal = false, backButton = false;
     let modalTitle = '', previusModelTitle = '';
+    let hideSelectCompany = false;
+    let bottomShettHeight;
 
     // setContext('backModalContent', (e) => {
     //     e.preventDefault();
@@ -103,25 +70,26 @@
     //     empresas = empresas.filter(emp => companyId !== emp.id);
     // })
 
-    const createCategory = () => {
+    const createCategory = (parent_id) => {
         modalTitle = 'Crear categoria'
-        // modalContent = FormCompany;
-        // props = { company: {
-        //     name: '',
-        //     rut: '',
-        //     country: '',
-        //     contact_name: '',
-        //     contact_phone: '',
-        //     contact_email: ''
-        // } }
+        modalContent = FormCategory;
+        props = { 
+            category: {
+                description: '',
+                parent_id
+            }, 
+            company_id
+        }
+        bottomShettHeight = '50%'
         openModal = true
         backButton = false;
     }
 
-    const editCompany = (company) => {
-        modalTitle = company.name + " - editando"
-        modalContent = FormCompany;
-        props = { company, isEdit: true }
+    const editCategories = (category) => {
+        modalTitle = category.description + " - editando"
+        modalContent = FormCategory;
+        props = { category, company_id }
+        bottomShettHeight = '50%'
         openModal = true
         backButton = false;
     }
@@ -170,45 +138,51 @@
 
     }
 
+    function depthFirstSearch(tree, value) {
+        if (tree.id === value) {
+            return tree;
+        }
+
+        if (tree.children === undefined) {
+            return null;
+        }
+
+        for (let child of tree.children) {
+            let result = depthFirstSearch(child, value);
+
+            if (result) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
     const getCategories = async (parentId) => {
         if (offset > count) return;
         console.log('GET CATEGORIES -> ', parentId)
         console.log('CATEGORIES -> ', categories)
 
-        categories = categories.map(cat => {
-            if (cat.id == parentId) {
-                cat.children = [
-                    {
-                        id: 31,
-                        description: `Division ${parentId}.1`,
-                        parentId: 3,
-                    },
-                    {
-                        id: 32,
-                        description: `Division ${parentId}.2`,
-                        parentId: 3,
-                    },
-                    {
-                        id: 33,
-                        description: `Division ${parentId}.3`,
-                        parentId: 3,
-                    },
-                ]
-            } 
-            // else {
-            //     cat.children = []
-            // }
-            return cat
-        })
+        loading = true;
+        let response = (await Api.call(`/category/${parentId}?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', company_id))
+        console.log('RESPONSE GET CATEGORIES --> ', response)
+        if (response.success && response.statusCode == "200") {
+            count = response.data.count
+            if (count == 0) return;
+        
+            if (parentId == 0) {
+                categories = response.data.result
+            } else {
+                // Se necesita agregar las categorias a la categoria padre
+                let parent = depthFirstSearch({ children: categories }, parentId);
+                parent.children = response.data.result
+                categories = [...categories]
 
-        // loading = true;
-        // let response = (await Api.call(`/categories/${parentId}?limit=${limit}&offset=${offset}`, 'GET'))
-        // console.log('RESPONSE GET COMPANIES --> ', response)
-        // if (response.success && response.statusCode == "200") {
-        //     empresas = [...empresas, ...response.data.result] //empresas.set(response.data)
-        //     count = response.data.count
-        // } 
-        // loading = false;
+
+
+            }
+        } 
+        loading = false;
     }
 
     const history = (company) => {
@@ -224,13 +198,22 @@
     const handleScroll = () => {
         if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
             offset = offset + limit;
-            getCompanies()
+            // getCompanies()
         }
     }
 
     onMount(async () => {
-        getCategories(0) 
 
+        let user = JSON.parse(sessionStorage.getItem('user'));
+        if (user.profile_id == 2) {
+            getCategories(user.company_id);
+            hideSelectCompany = true;
+            message = "Buscando..."
+        }
+        else {
+            hideSelectCompany = false;
+            message = "Selecciona una empresa para obtener sus articulos."
+        }
         window.addEventListener('scroll', handleScroll)
     })
 
@@ -240,11 +223,29 @@
 
 </script>
 
+<div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
+    <Fab on:click={ () => createCategory(0) } />
+</div>
 <div style="position: relative">
     <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
-        <div class="desktop-only">
-            <Button label="Nueva categoria" custom on:click={ createCategory } />
+        <div class="flex-row gap-8 space-between">
+            {#if !hideSelectCompany}
+                <CompanySelect 
+                    customHeight
+                    on:change={ (event) => {
+                        console.log(event.detail)
+                        company_id = event.detail;
+                        offset = 0;
+                        count = 0;
+                        getCategories(0)
+                    }}
+                />
+            {/if}
+            <div class="desktop-only">
+                <Button label="Nueva categoria" custom on:click={ () => createCategory(0) } />
+            </div>
         </div>
+        
         <!-- <Search value="" /> -->
         <div>
         <!-- <CompanySearch 
@@ -261,15 +262,14 @@
             } }
         /> -->
         </div>
-        <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
-            <Fab on:click={ createCategory } />
-        </div>
     </div>
 
     <div class="flex-column gap-8 mt-8" style="padding: 44px 0 10px;">
         <Lists 
             options={ categories }
             on:select={ (event) => getCategories(event.detail) }
+            on:edit={ (event) => editCategories(event.detail) }
+            on:add={ (event) => createCategory(event.detail.id) }
         />
         <!-- {#if loading}
             <Loading />
@@ -297,6 +297,7 @@
     {modalTitle}
     {backButton}
     {modalContent}
+    {bottomShettHeight}
     bind:openModal={openModal}
 />
 
