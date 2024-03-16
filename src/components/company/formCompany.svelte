@@ -5,7 +5,6 @@
     import { TextField, Button, Select } from "$lib";
     
     export let company = {}, isEdit = false;
-    let companyBackup;
     let showSucursalesBtn = false, loading = false, message = 'Empresa agregada';
     let paises = [
         {
@@ -173,15 +172,6 @@
         
         loading = false
     }
-
-    // onMount(() => {
-    //     companyBackup = JSON.stringify(company)
-    // })
-
-    // onDestroy(() => {
-    //     console.log('DESTROY FORM COMPANY')
-    //     company = JSON.parse(companyBackup)
-    // })
 
     $: company.rut = formatRut(company.rut)
     

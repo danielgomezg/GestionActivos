@@ -48,9 +48,11 @@
             alt="logo"
           />
         </div>
-        {#if nameCompany != ''}
+
+        <!-- {#if nameCompany != ''}
           <h1 class="company-name">{nameCompany}</h1>
-        {/if}
+        {/if} -->
+        <slot name="company" />
       </section>
       <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
         <slot name="account" />
@@ -60,11 +62,14 @@
 <!-- {/if} -->
 
 <style>
-  .img-container {
-    height: 100%;
+  .mdc-top-app-bar{
+    z-index: 6;
   }
+  /* .img-container {
+    height: 100%;
+  } */
 
-  img {
+  /* img {
     height: 100%;
   }
 
@@ -73,6 +78,6 @@
     margin-left: 20px;
     border-left: solid 1px white;
     padding-left: 20px;
-  }
+  } */
 
 </style>

@@ -1,15 +1,38 @@
 <script>
+    import { getContext } from "svelte";
     import { TextField, Button } from "$lib";
     import Api from "../../../helpers/ApiCall";
+    import { snackbar } from "../../stores/store";
 
     export let company_id;
     export let category = {};
+
+    let addCategory = getContext('addCategory');
+    let editCategory = getContext('editCategory');
 
     const create = async () => {
         
         let body = JSON.stringify(category)
         let response = (await Api.call('/category', 'POST', { body }, 'json', company_id))
         console.log('RESPONSE SAVE CATEGORY', response);
+        if (response.success && response.statusCode == '201') {
+            snackbar.update(snk => {
+                snk.type = 'dismiss'
+                snk.open = true;
+                snk.message = 'Categoría creada correctamente'
+                return snk
+            })
+
+            addCategory(response.data.result)
+        }
+        else {
+            snackbar.update(snk => {
+                snk.type = 'dismiss'
+                snk.open = true;
+                snk.message = 'Error al crear la categoría'
+                return snk
+            })
+        }
 
     }
 
@@ -18,6 +41,24 @@
         let body = JSON.stringify(category)
         let response = (await Api.call(`/category/${category.id}` , 'PUT', { body }, 'json', company_id))
         console.log('RESPONSE UPDATE CATEGORY', response);
+        if (response.success && response.statusCode == '201') {
+            snackbar.update(snk => {
+                snk.type = 'dismiss'
+                snk.open = true;
+                snk.message = 'Categoría actualizada correctamente'
+                return snk
+            })
+
+            editCategory(response.data.result)
+        }
+        else {
+            snackbar.update(snk => {
+                snk.type = 'dismiss'
+                snk.open = true;
+                snk.message = 'Error al actualizar la categoría'
+                return snk
+            })
+        }
     }
 
     const save = () => {

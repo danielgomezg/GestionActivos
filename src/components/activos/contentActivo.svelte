@@ -3,6 +3,7 @@
     import { onMount, setContext } from "svelte";
     import ActivoForm from "./activoForm.svelte";	
     import ActivoSearch from "./activoSearch.svelte";
+    import { companySelect } from "../../stores/store";
     import ReportActivo from "../reports/report.svelte";
     import CompanySelect from "../company/companySelect.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
@@ -395,21 +396,30 @@
     }
 
     onMount(() => {
-        let user = JSON.parse(sessionStorage.getItem('user'));
-        console.log(user)
-        if (user.profile_id == 2) {
-            companyId = user.company_id;
-            hideSelectCompany = true;
-            // message = "Buscando..."
-        }
-        else {
-            hideSelectCompany = false;
-            // message = "Selecciona una empresa para obtener sus articulos."
-        }
+        // let user = JSON.parse(sessionStorage.getItem('user'));
+        // console.log(user)
+        // if (user.profile_id == 2) {
+        //     companyId = user.company_id;
+        //     hideSelectCompany = true;
+        //     // message = "Buscando..."
+        // }
+        // else {
+        //     hideSelectCompany = false;
+        //     // message = "Selecciona una empresa para obtener sus articulos."
+        // }
     })
 
     // $: getActivosByStore(storeFilter, offset, limit)
     $: getActivosByOffice(officesFilter, offset, limit)
+    $: if ($companySelect != 0) {
+        companyId = $companySelect;
+        filters = [];
+        storeFilter = undefined;
+        officesFilter = [];
+        activos = [];
+        newArticleDisabled = false;
+        
+    }
 
 </script>
 
@@ -426,7 +436,7 @@
 </div>
 
 <div style="padding-top: 80px;">
-    {#if !hideSelectCompany}
+    <!-- {#if !hideSelectCompany}
         <CompanySelect 
             customHeight
             on:name={ (event) => {
@@ -443,7 +453,7 @@
                 newArticleDisabled = false;
             }  }
         />
-    {/if}
+    {/if} -->
     <div class="header-content mt-18">
         
         <div class="flex-row gap-8 space-between">
@@ -502,7 +512,6 @@
                     bind:storeId={storeFilter}
                     on:startSearch={ () => {
                         startSearch = true;
-                        // companyBackup.set(empresas)
                     } }
                     on:removeSearch={ () => {
                         if (!startSearch) return;
@@ -513,7 +522,6 @@
                             else getActivosByStore(storeFilter)
                         }
                         else offset = 0;
-                        // empresas = [...$companyBackup]
                     } }
                 />
                 <!-- <Menu

@@ -1,5 +1,5 @@
 <script>
-    import { user } from "../../stores/store";
+    import { user, companySelect } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     import { Button, Loading, Fab } from "$lib";
     import CardArticle from "./articleCard.svelte";
@@ -151,7 +151,8 @@
             article: {
                 name: '',
                 description: '',
-                code: ''
+                code: '',
+                category_id: '',
             },
             companyId
         }
@@ -189,16 +190,17 @@
     }
 
     onMount(() => {
-        let user = JSON.parse(sessionStorage.getItem('user'));
-        if (user.profile_id == 2) {
-            findArticles(user.company_id);
-            hideSelectCompany = true;
-            message = "Buscando..."
-        }
-        else {
-            hideSelectCompany = false;
-            message = "Selecciona una empresa para obtener sus articulos."
-        }
+        // let user = JSON.parse(sessionStorage.getItem('user'));
+        // if (user.profile_id == 2) {
+        //     findArticles(user.company_id);
+        //     hideSelectCompany = true;
+        //     message = "Buscando..."
+        // }
+        // else {
+        //     // if ($companySelect != 0) findArticles($companySelect);
+        //     hideSelectCompany = false;
+        //     message = "Selecciona una empresa para obtener sus articulos."
+        // }
 
         window.addEventListener('scroll', handleScroll)
     })
@@ -206,6 +208,12 @@
     onDestroy(() => {
         window.removeEventListener('scroll', handleScroll)
     })
+
+    $: if ($companySelect != 0) {
+        offset = 0;
+        count = 0;
+        findArticles($companySelect)
+    }
 
 </script>
 
@@ -217,7 +225,7 @@
 <div style="padding-top: 20px;">
     <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
         <div class="flex-row gap-8 space-between">
-            {#if !hideSelectCompany}
+            <!-- {#if !hideSelectCompany}
                 <CompanySelect 
                     customHeight
                     on:change={ (event) => {
@@ -227,7 +235,7 @@
                         findArticles(event.detail)
                     }}
                 />
-            {/if}
+            {/if} -->
             {#if $user.profile_id != 2}
                 <div class="desktop-only">
                     <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(companyId) } />

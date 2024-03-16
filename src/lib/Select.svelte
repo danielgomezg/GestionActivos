@@ -17,7 +17,7 @@
     const _updateValue = async (selected) => {
 
         await tick()
-        if (select == undefined) return;
+        if (select == undefined || selected == null) return;
         select.setValue(selected.toString());
 
         if (select.value == '') {
@@ -55,7 +55,7 @@
         if (bottomSheet != null) {
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
-                    console.log('mutation -> ', mutation	)
+                    // console.log('mutation -> ', mutation)
                     if (mutation.attributeName === 'class') {
                         const hasActivatedClass = selectComponent.classList.contains('mdc-select--activated');
                         if (hasActivatedClass) {
