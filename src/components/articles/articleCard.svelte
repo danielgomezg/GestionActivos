@@ -129,6 +129,7 @@
                         <td><span class="material-symbols-rounded">category</span></td>
                         <td>{ article.category?.description || '' }</td>
                     </tr>
+                    
                     <tr>
                         <td><span class="material-symbols-rounded">inventory_2</span></td>
                         <td>{ article.count_actives || 0 } activos</td>
