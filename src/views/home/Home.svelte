@@ -5,8 +5,6 @@
     import { user } from "../../stores/store";
     import { Router, Route } from "svelte-routing";
 
-
-    // @ts-ignore
     import { TopAppBar, NavigationDrawer, Snackbar } from "$lib";
 
     import NotFound from "../../components/notFound/notFound.svelte";
@@ -18,6 +16,8 @@
     import ContentUsuarios from "../../components/usuarios/contentUsuarios.svelte";
     import ContentSucursal from "../../components/sucursal/contentSucursal.svelte";
     import ContentCategory from "../../components/categories/contentCategory.svelte";
+
+    import CompanySelect from "../../components/company/companySelect.svelte";
 
 
     let open = true;
@@ -60,6 +60,10 @@
 
 {#if Object.keys($user).length != 0 }
 <TopAppBar on:openNav={ () => open = !open }  >
+    <div slot="company">
+        <CompanySelect version="2" />
+        <!-- <h1 class="company-name">Master-G</h1> -->
+    </div>
     <div slot="account" class="flex-row align-center">
         <UserAccount />
     </div>

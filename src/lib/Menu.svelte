@@ -3,7 +3,6 @@
   import IconButton from "./IconButton.svelte";
   import { onMount, createEventDispatcher } from "svelte";
 
-  export let id;
   export let options = [];
   export let open = false;
 
@@ -34,6 +33,7 @@
   onMount(() => {
     menu = new MDCMenu(menuComponent);
     menu.setFixedPosition(true);
+    menu.setAbsolutePosition(50, 50)
     menu.listen("MDCMenu:selected", selectedItem);
     // menu.open = true;
   });
@@ -45,7 +45,7 @@
   <!-- <IconButton icon="more_vert" on:click={() => (open = !open)} /> -->
   <slot />
 
-  <div {id} bind:this={menuComponent} class="mdc-menu mdc-menu-surface">
+  <div bind:this={menuComponent} class="mdc-menu mdc-menu-surface">
     <ul
       class="mdc-list"
       role="menu"

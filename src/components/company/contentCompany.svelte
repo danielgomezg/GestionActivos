@@ -5,7 +5,6 @@
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
     import CompanySearch from "./companySearch.svelte";
-    import { companyBackup } from "../../stores/store";
     // import History from "../history/history.svelte";
     import HistoryCompany from "./companyHistory.svelte";
     import { onMount, setContext, onDestroy } from "svelte";

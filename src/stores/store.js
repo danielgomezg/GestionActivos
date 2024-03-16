@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store'
 
-export const companyBackup = writable([])
+export const companySelect = writable(0);
+export const companySelectName = writable('');
 export const articleBackup = writable([])
 
 export const snackbar = writable({
@@ -14,6 +15,11 @@ export const snackbar = writable({
 
 export const lockStore = writable(0);
 export const lockOffice = writable(0);	
+export const lockArticle = writable(0);
+
+export const lockStoreName = writable('');
+export const lockOfficeName = writable('');
+export const lockArticleName = writable('');
 
 
 
@@ -31,7 +37,7 @@ export const modulos = writable([
     "articulo",
     "usuario",
     "empresa",
-    // "categoria",
+    "categoria",
 ])
 
 export const menu = writable([
@@ -53,17 +59,17 @@ export const menu = writable([
             2
         ]
     },
-    // {
-    //     id: 6,
-    //     name: 'Categorias',
-    //     path: '/categorias',
-    //     icon: 'category',
-    //     profiles: [
-    //         1,
-    //         2,
-    //         3
-    //     ]
-    // },
+    {
+        id: 6,
+        name: 'Categorias',
+        path: '/categorias',
+        icon: 'category',
+        profiles: [
+            1,
+            2,
+            3
+        ]
+    },
     {
         id: 3,
         name: 'Articulos',

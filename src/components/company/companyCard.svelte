@@ -1,8 +1,8 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { snackbar } from "../../stores/store";
     import { createEventDispatcher, getContext } from "svelte";
     import { Card, IconButton, Button, Snackbar, Menu } from "$lib";
+    import { snackbar, companySelect, companySelectName } from "../../stores/store";
 
     export let company = {}
 
@@ -18,7 +18,7 @@
     }
 
     const deleteCompany = async () => {
-
+        return;
         console.log('deleteCompany -> ', company)
         // let confirmacion = confirm('Esta seguro que desea eliminar la empresa ', company.name)
         // if (!confirmacion) return;
@@ -46,6 +46,7 @@
     }
 
     // $: if ($snackbar.click) confirmSnackbar()
+    $: console.log('company select -> ', $companySelect)
 
 </script>
 
@@ -59,7 +60,22 @@
 <Card>
     <div class="card-container">
         <div class="card-header">
-            <div class="card-title">{ company.name }</div>
+            <div style="display: flex; align-items: center; gap: 10px">
+                <div class="card-title">{ company.name }</div>
+                <!-- {#if company.id == $companySelect} -->
+                    <!-- <span class="material-symbols-rounded" class:fill={company.id == $companySelect}>keep</span> -->
+                    <IconButton 
+                        fill={company.id == $companySelect}
+                        icon="keep" 
+                        tooltipId="btn-keep__{company.name}" 
+                        tooltipText="mantener" 
+                        on:click={ () => {
+                            companySelectName.set(company.name)
+                            companySelect.set(company.id)
+                        } } />
+
+                <!-- {/if} -->
+            </div>
             <div>
                 <div class="mobile-only">
                     <!-- <IconButton icon="more_vert" /> -->
@@ -69,7 +85,7 @@
                             [
                                 { label: "Historial", dispatch: "history"},
                                 { label: "Editar", dispatch: "edit"},
-                                { label: "Eliminar", dispatch: "delete" }
+                                // { label: "Eliminar", dispatch: "delete" }
                             ]  
                         }
                         on:edit={() => dispath("edit", { ...company }) }
@@ -85,14 +101,14 @@
                 <div class="desktop-only">    
                     <IconButton icon="history" tooltipId="btn-history__{company.name}" tooltipText="Historial" on:click={ dispath("history", company) } />
                     <IconButton icon="edit" tooltipId="btn-edit__{company.name}" tooltipText="Editar" on:click={ dispath("edit", { ...company }) } />
-                    <IconButton 
+                    <!-- <IconButton 
                         icon="delete" 
                         tooltipId="btn-delete__{company.name}" 
                         tooltipText="Eliminar" 
                         on:click={ () => {
                             messageSnackbar = '¿Eliminar la empresa ' + company.name + '?'
                             openSnackbar = true;
-                        } } />
+                        } } /> -->
                 </div>
             </div>
         </div>

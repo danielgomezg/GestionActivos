@@ -1,9 +1,9 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { getContext, onDestroy, onMount } from "svelte";
-    import { snackbar, estadosActivo } from "../../stores/store";
+    import { getContext, onDestroy, onMount, tick } from "svelte";
+    import { snackbar, estadosActivo, lockArticle, lockOffice, lockStore, lockStoreName, lockOfficeName, lockArticleName } from "../../stores/store";
     import ArticleSelect from "../articles/articleSelect.svelte";
-    import { TextField, Button, Select, FileInput, DatePicker } from "$lib";
+    import { TextField, Button, Select, FileInput, DatePicker, Snackbar } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
     export let activo = {};
@@ -12,6 +12,10 @@
     export let isEdit = false;
     export let showArticles = false; //Es true cuando lo llama el contentActivo. Se necesita mostrar el select de articulos
 
+    let nameStore = '';
+    let nameOffice = '';
+    let messageSnackbar = '';
+    let openSnackbar = false;
     let isKeep = false;
     let accionBtn;
     let message= '';
@@ -164,21 +168,31 @@
                 office_id: ''
             };
             if (showArticles) {
-                activo.article_id = 0;
-                article_id = 0;
+                // activo.article_id = 0;
+                // article_id = 0;
             } 
             fileComponent.cleanValue();
             console.log('isKeep', isKeep)
             if (!isKeep) {
-                selectedOffice = 0;
-                selectedSucursal = 0;
+                // selectedOffice = 0;
+                // selectedSucursal = 0;
             }
 
+            console.log('selectedOffice', selectedOffice)
+            console.log('selectedSucursal', selectedSucursal)
+            console.log('article_id', article_id)
+
+            lockOffice.set(selectedOffice);
+            lockStore.set(selectedSucursal);
+            lockArticle.set(article_id);
+
+            lockOfficeName.set(nameOffice);
+            lockStoreName.set(nameStore);
 
             locationsActivesNew.offices.push(selectedOffice);
             locationsActivesNew.stores.push(selectedSucursal);
             
-        }else {
+        } else {
             snackbar.update(snk => {
                 snk.open = true;
                 snk.type = 'dismiss'
@@ -237,13 +251,32 @@
         }
     }
 
+    const setSaved = async () => {
+        selectedSucursal = $lockStore
+        article_id = $lockArticle
+        await tick();
+        selectedOffice = $lockOffice
+    }
 
     onMount(async () => {
         if(isEdit){
             selectedOffice = activo.office_id
             accionBtn = editActivo
-        }else{
+        } else {
+            console.log('lockStore', $lockStore)
+            console.log('lockOffice', $lockOffice)
+            console.log('lockArticle', $lockArticle)
+            if ($lockStore != 0 && $lockOffice != 0 && $lockArticle != 0) {
+                openSnackbar = true
+                messageSnackbar = `Mantener 
+                        - Oficina: ${ $lockOfficeName }
+                        - Sucursal: ${ $lockStoreName }
+                        - Artículo: ${ $lockArticleName }
+                    `
+            }
             accionBtn = saveActivo
+            // alert(`office_id -> ${ $lockOffice } - store_id -> ${ $lockStore } - article_id -> ${ $lockArticle }`)
+            // accionBtn = saveActivo
         }
     })
 
@@ -255,18 +288,33 @@
     $: activo.rut_in_charge_active = formatRut(activo.rut_in_charge_active)
 
 </script>
+
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={messageSnackbar}
+    on:confirm={ setSaved }
+/>
+
 <div class="form">
 
     <OfficeSucursalSelected 
-        keep={ !isEdit }
         isEdit={isEdit} 
-        bind:iskeep={isKeep}
         companyId={company_id} 
         bind:selectedOffice={selectedOffice}
         bind:selectedSucursal={selectedSucursal}
-        on:keep={e => isKeep = e.detail}
-        on:changeOffice={e => selectedOffice = e.detail.selectedOffice}
-        on:changeSucursal={e => selectedSucursal = e.detail.selectedSucursal}
+        on:changeOffice={e => {
+            console.log('changeOffice')
+            console.log(e.detail)	
+            nameOffice = e.detail.office.label
+            selectedOffice = e.detail.selectedOffice
+        }}
+        on:changeStore={e => {
+            console.log('changeSucursal')
+            console.log(e.detail)
+            nameStore = e.detail.store.label
+            selectedSucursal = e.detail.selectedSucursal
+        }}
     />
 
     {#if showArticles}
@@ -274,6 +322,7 @@
             companyId={company_id} 
             selected={article_id}
             on:change={e => article_id = e.detail}
+            on:name={e => lockArticleName.set(e.detail)}
         />
     {/if}
 
@@ -281,7 +330,7 @@
         version=2
         required 
         type="text"
-        label="Código de barra" 
+        label="Código de activo fijo" 
         bind:value={activo.bar_code}
     />
 

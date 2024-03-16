@@ -2,6 +2,7 @@
     import Api from "../../../helpers/ApiCall";
     import { onMount, getContext } from "svelte";
     import { snackbar } from "../../stores/store";
+    import CategorySelect from "../categories/categorySelect.svelte";
     import { TextField, Button, FileInput, TextArea, IconButton } from "$lib";
   
     export let article = {};
@@ -187,6 +188,12 @@
             bind:value={ article.description }
         />    
     </div>
+
+    <CategorySelect 
+        {companyId}
+        bind:selected={ article.category_id }
+        on:change={ e => article.category_id = e.detail}
+    />
 
     <TextField 
         version=2

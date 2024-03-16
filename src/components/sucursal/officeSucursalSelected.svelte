@@ -2,7 +2,7 @@
     import { Select } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import Button from "../../lib/Button.svelte";
-    import { lockOffice, lockStore } from "../../stores/store";
+    import { lockOffice, lockStore, lockArticle } from "../../stores/store";
     import { onMount, createEventDispatcher, tick, onDestroy } from "svelte";
 
     export let keep = false;
@@ -62,6 +62,10 @@
         console.log('RESPONSE GET OFFICES --> ', response);
         if (response.success && response.statusCode === '200') {
             offices = response.data.result.map(r => ({ label: `${r.floor} - ${r.description}`, value: r.id }));
+            await tick();
+            if ($lockOffice > 0) {
+                selectedOffice = $lockOffice;
+            }
         }else{
             offices = []
         }
@@ -77,6 +81,12 @@
         return;
     }
 
+    const setSaved = () => {
+        selectedOffice = $lockOffice
+        selectedSucursal = $lockStore
+        article_id = $lockArticle
+    }
+
     onMount(async () => {
         if (cleanStore) {
             lockStore.set(0);
@@ -85,17 +95,13 @@
         
         await getSucursales();
         
-        if ($lockOffice > 0) {
-            await getOffice($lockOffice)
-            selectedSucursal = $lockStore;
-
-            await tick();
-
-            selectedOffice = $lockOffice;
-            keepOfficeIcon = true;
-            disabledKeep = false;
-            disabledOffice = true;
-            disabledSucursal = true;
+        if ($lockOffice > 0 && $lockStore > 0) {
+            // await getOfficesBySucursal($lockStore)
+            // // await getOffice($lockOffice)
+            // await tick();
+            
+            // selectedSucursal = $lockStore;
+            // selectedOffice = $lockOffice;
         }
         
         if(isEdit){
@@ -113,8 +119,8 @@
 
     onDestroy(() => {
         if (!keepOfficeIcon) {
-            lockStore.set(0);
-            lockOffice.set(0);
+            // lockStore.set(0);
+            // lockOffice.set(0);
         }
     })
 

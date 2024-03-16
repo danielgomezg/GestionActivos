@@ -80,6 +80,10 @@
     top: 60px;
   }
 
+  .mdc-snackbar__label {
+    white-space: pre-line;
+  }
+
   /* .alert {
     padding: 8px;
   }

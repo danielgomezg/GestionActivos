@@ -65,6 +65,23 @@
     }
 }
 
+.img-container {
+    height: 100%;
+    margin-right: 20px;
+    img {
+        height: 100%;
+    }
+    @media only screen and (max-width: 600px) {
+        height: auto;
+        display: flex;
+        align-items: center;
+
+        img {
+            width: 80px;
+        }
+    }
+}
+
 .responsive-table {
     
     overflow-x: auto;

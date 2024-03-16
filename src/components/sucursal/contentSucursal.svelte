@@ -93,12 +93,10 @@
             companyId={$user.company_id}
             on:startSearch={ () => {
                 startSearch = true;
-                // companyBackup.set(empresas)
             } }
             on:removeSearch={ () => {
                 startSearch = false;
                 getStores($user.company_id)
-                // empresas = [...$companyBackup]
             } }
         />
     </div>

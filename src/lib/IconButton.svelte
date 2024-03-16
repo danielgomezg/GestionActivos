@@ -8,6 +8,7 @@
     export let tooltipText = '';
     export let tooltipId = '';
     export let custom = false;
+    export let fill = false;
 
     let iconButtonElement
 
@@ -26,7 +27,10 @@
     {disabled} 
     aria-describedby={tooltipId}
 >
-  <span class="material-symbols-rounded">{icon}</span>
+  <span 
+    class="material-symbols-rounded"
+    class:fill={fill}
+  >{icon}</span>
 </button>
 
 {#if tooltipId != '' && tooltipText != ''}

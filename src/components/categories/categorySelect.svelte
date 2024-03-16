@@ -1,3 +1,4 @@
+
 <script>
     import { Select } from "$lib"
     import Api from "../../../helpers/ApiCall";
@@ -7,36 +8,36 @@
     export let selected = ''
     export let customHeight = false
 
-    let articles = []
+    let categorias = []
     let dispatch = createEventDispatcher();
 
     //Se obtiene las companias con el id y nombre solamente
-    const getArticleByCompanyId = async () => {
-        let response = (await Api.call('/articles/company/' + companyId, 'GET'))
-        console.log('RESPONSE GET ARTICLES --> ', response)
+    const getCategories = async () => {
+        let response = (await Api.call('/categories', 'GET', {}, 'json',  companyId))
+        console.log('RESPONSE GET CATEGORIES --> ', response)
         if (response.success && response.statusCode == '200') {
-            articles = response.data.result.map(r => { return { label: r.name, value: r.id } })
+            categorias = response.data.result.map(r => { return { label: r.description, value: r.id } })
         } 
     }
 
     onMount(() => {
-        getArticleByCompanyId();
+        getCategories();
     })
 
 </script>
 
-{#key articles}
+{#key categorias}
 
 <Select         
     on:change={e => {
-        console.log('SELECTED ARTICLE --> ', e.detail)
-        dispatch('name', articles.find(c => c.value == e.detail).label)
+        console.log('SELECTED CATEGORIE --> ', e.detail)
+        dispatch('name', categorias.find(c => c.value == e.detail).label)
         dispatch('change', e.detail)
     }}
     {selected}
     {customHeight}
-    label="Articulo"
-    options={ articles }
+    label="Categoria"
+    options={ categorias }
 />
 
 {/key}

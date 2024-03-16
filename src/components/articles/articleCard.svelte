@@ -126,7 +126,8 @@
                         <td>{ article.code }</td>
                     </tr>
                     <tr>
-                        
+                        <td><span class="material-symbols-rounded">category</span></td>
+                        <td>{ article.category.description || '' }</td>
                     </tr>
                     <tr>
                         <td><span class="material-symbols-rounded">inventory_2</span></td>
