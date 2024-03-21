@@ -6,7 +6,7 @@
 
     export let company_id = 0;
 
-    let document;
+    let fileActive;
     let fileComponent;
     let selectedOffice = 0;
     let selectedSucursal = 0;
@@ -14,7 +14,7 @@
     // FUNCION QUE SUBE LA IMAGEN AL SERVIDOR
     const upload = async () => {
         let msg = '';
-        if (document == null) {
+        if (fileActive == null) {
             msg = 'Debe agregar un archivo';
         }
         else if (selectedOffice == 0) {
@@ -34,11 +34,17 @@
         }
 
         let formData = new FormData();
-        formData.append('file', document);
+        formData.append('file', fileActive);
         let response = await Api.call(`/active/upload?office_id=${selectedOffice}`, 'POST', { body: formData }, 'file', company_id);
         console.log('RESPONSE UPLOAD DOCUMENT --> ', response)
-        if (response != null) {
-
+        if (response.statusCode == 200) {
+            const downloadUrl = URL.createObjectURL(response.data);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = 'activos.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
         else {
             snackbar.update(snk => {
@@ -88,7 +94,7 @@
         on:change={ (e) => {
             console.log('file selected')
             console.log(e.detail)
-            document = e.detail 
+            fileActive = e.detail 
         }}
     />
 

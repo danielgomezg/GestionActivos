@@ -40,8 +40,13 @@ class Api {
         .then(response => {
             // console.log(response)
 
-            // console.log(response)
             let statusCode = response.status
+
+            if (type == 'file') {
+                return response.blob().then(data => {
+                    return { success: true, statusCode, data }
+                })
+            }
 
             return response.json().then(data => {
                 
