@@ -4,6 +4,7 @@
     import ActivoForm from "./activoForm.svelte";	
     import ActivoSearch from "./activoSearch.svelte";
     import { companySelect } from "../../stores/store";
+    // import ActivosTeoricos from "./activosTeoricos.svelte";
     import ActivoFormUpload from "./activoFormUpload.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import { headerTableActivos, snackbar } from "../../stores/store";
@@ -67,6 +68,12 @@
         if (officesFilter.length > 0) getActivosByOffice(officesFilter, offset)
         else getActivosByStore(storeFilter, offset)
     })
+
+    // const activosTeoricos = () => {
+    //     modalTitle = `Cargar activos teoricos`;
+    //     modalContent = ActivosTeoricos;
+    //     openModal = true;
+    // }
 
     const uploadActivos = () => {
         modalTitle = `Cargar activos`;
@@ -293,31 +300,6 @@
                 });
             }
 
-            // let host = '';
-            // if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
-            // else host = `http://127.0.0.1:9000`	
-            // const response = await fetch(`${host}/report/active/${location}/${id}`, {
-            //     method: 'GET',
-            //     headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
-            // });
-
-            // console.log('RESPONSE ACTIVOS BY REPORT PDF > ', response)
-
-            // if (!response.ok) {
-            //     throw new Error('Network response was not ok');
-            // }
-
-            // const data = await response.blob();
-
-            // const downloadUrl = URL.createObjectURL(data);
-            // console.log(downloadUrl);
-
-            // const link = document.createElement('a');
-            // link.href = downloadUrl;
-            // link.download = `Reporte de activos de ${companyName}.pdf`;
-            // document.body.appendChild(link);
-            // link.click();
-            // document.body.removeChild(link);
         } catch (error) {
             snackbar.update(snk => {
                 snk.open = true;
@@ -369,31 +351,6 @@
                 });
             }
 
-            // let host = '';
-            // if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
-            // else host = `http://127.0.0.1:9000`	
-            // const response = await fetch(`${host}/report/excel/active/${location}/${id}`, {
-            //     method: 'GET',
-            //     headers: { 'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}` }
-            // });
-
-            // console.log('RESPONSE ACTIVOS BY REPORT EXCEL > ', response)
-
-            // if (!response.ok) {
-            //     throw new Error('Network response was not ok');
-            // }
-
-            // const data = await response.blob();
-
-            // const downloadUrl = URL.createObjectURL(data);
-            // console.log(downloadUrl);
-
-            // const link = document.createElement('a');
-            // link.href = downloadUrl;
-            // link.download = `Reporte de activos de ${companyName}.xlsx`;
-            // document.body.appendChild(link);
-            // link.click();
-            // document.body.removeChild(link);
         } catch (error) {
             snackbar.update(snk => {
                 snk.open = true;
@@ -406,17 +363,7 @@
     }
 
     onMount(() => {
-        // let user = JSON.parse(sessionStorage.getItem('user'));
-        // console.log(user)
-        // if (user.profile_id == 2) {
-        //     companyId = user.company_id;
-        //     hideSelectCompany = true;
-        //     // message = "Buscando..."
-        // }
-        // else {
-        //     hideSelectCompany = false;
-        //     // message = "Selecciona una empresa para obtener sus articulos."
-        // }
+        
     })
 
     // $: getActivosByStore(storeFilter, offset, limit)
@@ -446,24 +393,6 @@
 </div>
 
 <div style="padding-top: 80px;">
-    <!-- {#if !hideSelectCompany}
-        <CompanySelect 
-            customHeight
-            on:name={ (event) => {
-                companyName = event.detail;
-            } }
-            on:change={ (event) => {
-                console.log('COMPANY ID -> ', event.detail)
-                companyId = event.detail;
-                filters = [];
-                storeFilter = undefined;
-                officesFilter = [];
-                activos = [];
-                
-                newArticleDisabled = false;
-            }  }
-        />
-    {/if} -->
     <div class="header-content mt-18">
         
         <div class="flex-row gap-8 space-between">
@@ -506,11 +435,6 @@
         </div>
         <div class="flex-row gap-8" style="align-items: center;">
             
-            <!-- <ReportActivo 
-                id={ companyId } 
-                label="Exportar a PDF"
-                disabled={ newArticleDisabled }
-            /> -->
             <div class="mobile-only" style="display: flex; align-items: center; justify-content: space-between;">
                 <ActivoSearch 
                     {companyId}
@@ -548,9 +472,10 @@
                       <IconButton icon="download" on:click={() => openActions = !openActions } />
                 </Menu> -->
             </div>
-            <div class="desktop-only" style="display: flex; align-items: center">
-                <IconButton icon="upload_file" tooltipId="btn-active__upload" tooltipText="Cargar activos" on:click={ uploadActivos } />
+            <div class="desktop-only" style="display: flex; align-items: center; gap: 8px ">
+                <!-- <IconButton icon="upload_file" tooltipId="btn-active__upload" tooltipText="Cargar activos" on:click={ uploadActivos } /> -->
                 <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
+                <!-- <Button label="Activos teoricos" custom disabled={ newArticleDisabled } secondary on:click={ activosTeoricos } /> -->
             </div>
         </div>
         <!-- <Search value="" /> -->
