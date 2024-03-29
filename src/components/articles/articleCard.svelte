@@ -132,7 +132,7 @@
                     
                     <tr>
                         <td><span class="material-symbols-rounded">inventory_2</span></td>
-                        <td>{ article.count_actives || 0 } activos</td>
+                        <td>{ article.count_active || 0 } activos</td>
                     </tr>
                 </table>
             </div>
