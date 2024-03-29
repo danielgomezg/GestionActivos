@@ -56,6 +56,12 @@
     }
 
     function validForm() {
+
+        let [day, month, year] = activo.acquisition_date.split('/');
+        if (day > 31 || month > 12 || year > new Date().getFullYear()) {
+            message = "Fecha de adquisición inválida."
+            return false
+        }
         if (activo.bar_code == ''){
             message = "Falta agregar el codigo de barra del activo."
             return false;
@@ -121,9 +127,12 @@
     }
 
     const saveActivo = async () => {
-        activo.article_id = parseInt(article_id)
-        activo.office_id = parseInt(selectedOffice)
-        
+
+        let activeBody = { ...activo }
+
+        activeBody.article_id = parseInt(article_id)
+        activeBody.office_id = parseInt(selectedOffice)
+        activeBody.acquisition_date = activo.acquisition_date.split('/').reverse().join('-')
         let isValid = validForm();
         if (!isValid) {
             snackbar.update(snk => {
@@ -136,9 +145,9 @@
         }
 
         let documentUrl = await uploadDocument(document)
-        activo.accounting_document = documentUrl == null ? '' : documentUrl;
+        activeBody.accounting_document = documentUrl == null ? '' : documentUrl;
 
-        let body = JSON.stringify(activo);
+        let body = JSON.stringify(activeBody);
         console.log(body)
         let response = (await Api.call('/active', 'POST', { body }, 'json', company_id))
         console.log(response)
@@ -172,7 +181,6 @@
                 // article_id = 0;
             } 
             fileComponent.cleanValue();
-            console.log('isKeep', isKeep)
             if (!isKeep) {
                 // selectedOffice = 0;
                 // selectedSucursal = 0;
@@ -205,7 +213,9 @@
 
     const editActivo = async () => {
         console.log('edit active')
-        activo.office_id = parseInt(selectedOffice)
+        let activoBody = { ...activo }
+        activoBody.office_id = parseInt(selectedOffice)
+        activoBody.acquisition_date = activo.acquisition_date.split('/').reverse().join('-')
 
         let isValid = validForm();
         if (!isValid) {
@@ -220,11 +230,11 @@
 
         let documentUrl = await uploadDocument(document)
         console.log('documentUrl', documentUrl	)
-        if (documentUrl != null) activo.accounting_document = documentUrl;
+        if (documentUrl != null) activoBody.accounting_document = documentUrl;
 
         // Peticion
-        delete activo.office
-        let body = JSON.stringify(activo)  
+        delete activoBody.office
+        let body = JSON.stringify(activoBody)  
         console.log('BODY EDIT ACTIVE --> ', body)  
         let response = (await Api.call(`/active/${activo.id}`, 'PUT', { body }, 'json', company_id))
         console.log('RESPONSE EDIT ACTIVE--> ', response)
@@ -262,10 +272,9 @@
         if(isEdit){
             selectedOffice = activo.office_id
             accionBtn = editActivo
+            // activo.acquisition_date = activo.acquisition_date.split('-').reverse().join('/');
         } else {
-            console.log('lockStore', $lockStore)
-            console.log('lockOffice', $lockOffice)
-            console.log('lockArticle', $lockArticle)
+            
             if ($lockStore != 0 && $lockOffice != 0 && $lockArticle != 0) {
                 openSnackbar = true
                 messageSnackbar = `Mantener 
@@ -286,6 +295,7 @@
     
 
     $: activo.rut_in_charge_active = formatRut(activo.rut_in_charge_active)
+    $: console.log('activo', activo)
 
 </script>
 
@@ -352,6 +362,7 @@
 
     <DatePicker 
         bind:value={activo.acquisition_date}
+        placeholder="dd/mm/aaaa"
         label="Fecha de adquisición" 
     />
 
