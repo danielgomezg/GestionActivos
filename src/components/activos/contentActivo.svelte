@@ -4,11 +4,10 @@
     import ActivoForm from "./activoForm.svelte";	
     import ActivoSearch from "./activoSearch.svelte";
     import { companySelect } from "../../stores/store";
-    import ReportActivo from "../reports/report.svelte";
-    import CompanySelect from "../company/companySelect.svelte";
+    import ActivoFormUpload from "./activoFormUpload.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import { headerTableActivos, snackbar } from "../../stores/store";
-    import { Button, Search, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
+    import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
     let limit = 3;
@@ -68,6 +67,17 @@
         if (officesFilter.length > 0) getActivosByOffice(officesFilter, offset)
         else getActivosByStore(storeFilter, offset)
     })
+
+    const uploadActivos = () => {
+        modalTitle = `Cargar activos`;
+        modalContent = ActivoFormUpload;
+
+        props = {
+            company_id: companyId
+        }
+
+        openModal = true;
+    }
 
     const newActivo = (company_id) => {
         modalTitle = `Nuevo activo - ` + companyName;
@@ -538,7 +548,8 @@
                       <IconButton icon="download" on:click={() => openActions = !openActions } />
                 </Menu> -->
             </div>
-            <div class="desktop-only">
+            <div class="desktop-only" style="display: flex; align-items: center">
+                <IconButton icon="upload_file" tooltipId="btn-active__upload" tooltipText="Cargar activos" on:click={ uploadActivos } />
                 <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
             </div>
         </div>
