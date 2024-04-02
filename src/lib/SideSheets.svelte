@@ -72,18 +72,16 @@
         z-index: 500;
     }
 
-    .side-sheet {
+    /* .side-sheet {
         position: fixed;
-        right: -100%; /* -250px; Ancho del side sheet */
         top: 0;
         height: 100vh;
         width: 40%;
         background-color: #FFFFFF;
         border-radius: 16px 0 0 16px ;
-        transition: 0.5s; /* Agrega transición para un deslizamiento suave */
         display: flex;
         flex-direction: column;
-    }
+    } */
 
     .open {
         right: 0;

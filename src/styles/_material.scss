@@ -129,7 +129,21 @@ $primay_button-colors: (
     // @include button.container-fill-color($primay_button-colors);
 }
 
-.mdc-button-report {
+.mdc-button--outlined.pdf {
+    @include button.outline-width(2px);
+    @include button.outline-color(#B40A2D);
+    @include button.ink-color(#B40A2D);
+    @include button.icon-color(#B40A2D);
+}
+
+.mdc-button--outlined.excel {
+    @include button.outline-width(2px);
+    @include button.outline-color(#217346);
+    @include button.ink-color(#217346);
+    @include button.icon-color(#217346);
+}
+
+.mdc-button-report, .mdc-button-secondary {
     @include button.container-fill-color(#142157);
 }
 

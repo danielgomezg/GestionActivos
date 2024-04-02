@@ -4,7 +4,7 @@
     import ActivoForm from "./activoForm.svelte";	
     import ActivoSearch from "./activoSearch.svelte";
     import { companySelect } from "../../stores/store";
-    // import ActivosTeoricos from "./activosTeoricos.svelte";
+    import ActivosTeoricos from "./activosTeoricos.svelte";
     import ActivoFormUpload from "./activoFormUpload.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import { headerTableActivos, snackbar } from "../../stores/store";
@@ -69,11 +69,14 @@
         else getActivosByStore(storeFilter, offset)
     })
 
-    // const activosTeoricos = () => {
-    //     modalTitle = `Cargar activos teoricos`;
-    //     modalContent = ActivosTeoricos;
-    //     openModal = true;
-    // }
+    const activosTeoricos = () => {
+        modalTitle = `Activos teoricos`;
+        modalContent = ActivosTeoricos;
+        props = {
+            companyId
+        }
+        openModal = true;
+    }
 
     const uploadActivos = () => {
         modalTitle = `Cargar activos`;
@@ -475,7 +478,7 @@
             <div class="desktop-only" style="display: flex; align-items: center; gap: 8px ">
                 <!-- <IconButton icon="upload_file" tooltipId="btn-active__upload" tooltipText="Cargar activos" on:click={ uploadActivos } /> -->
                 <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
-                <!-- <Button label="Activos teoricos" custom disabled={ newArticleDisabled } secondary on:click={ activosTeoricos } /> -->
+                <Button label="Activos teoricos" custom disabled={ newArticleDisabled } secondary on:click={ activosTeoricos } />
             </div>
         </div>
         <!-- <Search value="" /> -->

@@ -190,17 +190,6 @@
     }
 
     onMount(() => {
-        // let user = JSON.parse(sessionStorage.getItem('user'));
-        // if (user.profile_id == 2) {
-        //     findArticles(user.company_id);
-        //     hideSelectCompany = true;
-        //     message = "Buscando..."
-        // }
-        // else {
-        //     // if ($companySelect != 0) findArticles($companySelect);
-        //     hideSelectCompany = false;
-        //     message = "Selecciona una empresa para obtener sus articulos."
-        // }
 
         window.addEventListener('scroll', handleScroll)
     })
@@ -225,23 +214,11 @@
 <div style="padding-top: 20px;">
     <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
         <div class="flex-row gap-8 space-between">
-            <!-- {#if !hideSelectCompany}
-                <CompanySelect 
-                    customHeight
-                    on:change={ (event) => {
-                        console.log(event.detail)
-                        offset = 0;
-                        count = 0;
-                        findArticles(event.detail)
-                    }}
-                />
-            {/if} -->
             {#if $user.profile_id != 2}
                 <div class="desktop-only">
                     <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(companyId) } />
                 </div>
             {/if}
-                <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
             <ReportArticle 
                 id={ companyId } 
                 label="Exportar a PDF"
