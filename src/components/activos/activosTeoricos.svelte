@@ -68,12 +68,7 @@
         if (fileActive == null) {
             msg = 'Debe agregar un archivo';
         }
-        else if (selectedOffice == 0) {
-            msg = 'Debe seleccionar una oficina';
-        }
-        else if (selectedSucursal == 0) {
-            msg = 'Debe seleccionar una sucursal';
-        }
+        
         if (msg != '') {
             snackbar.update(snk => {
                 snk.type = 'dismiss'
@@ -86,16 +81,17 @@
 
         let formData = new FormData();
         formData.append('file', fileActive);
-        let response = await Api.call(`/active/upload?office_id=${selectedOffice}`, 'POST', { body: formData }, 'file', companyId);
+        let response = await Api.call(`/active/teorico/upload`, 'POST', { body: formData }, 'file', companyId);
         console.log('RESPONSE UPLOAD DOCUMENT --> ', response)
         if (response.statusCode == 200) {
-            const downloadUrl = URL.createObjectURL(response.data);
-            const link = document.createElement('a');
-            link.href = downloadUrl;
-            link.download = 'activos.xlsx';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            snackbar.update(snk => {
+                snk.type = 'dismiss'
+                snk.open = true;
+                snk.message = 'Archivo subido correctamente'
+                return snk
+            });
+            fileActive = null;
+            fileComponent.cleanValue();
         }
         else {
             snackbar.update(snk => {
