@@ -70,24 +70,16 @@
             message = "Falta agregar la fecha de adquisición del activo."
             return false;
         }
-        if (activo.accounting_record_number == ''){
-            message = "Falta agregar el número de registro contable del activo."
-            return false;
-        }
-        if (activo.name_in_charge_active == ''){
-            message = "Falta agregar el nombre del encargado del activo."
-            return false;
-        }
-        if (activo.rut_in_charge_active == ''){
-            message = "Falta agregar el rut del encargado del activo."
-            return false;
-        }
         if (activo.serie == ''){
             message = "Falta agregar el número de serie del activo."
             return false;
         }
         if (activo.model == ''){
             message = "Falta agregar el modelo del activo."
+            return false;
+        }
+        if (activo.brand == ''){
+            message = "Falta agregar la marca del activo."
             return false;
         }
         if (activo.state == ''){
@@ -128,11 +120,9 @@
 
     const saveActivo = async () => {
 
-        let activeBody = { ...activo }
-
-        activeBody.article_id = parseInt(article_id)
-        activeBody.office_id = parseInt(selectedOffice)
-        activeBody.acquisition_date = activo.acquisition_date.split('/').reverse().join('-')
+        activo.article_id = parseInt(article_id)
+        activo.office_id = parseInt(selectedOffice)
+        activo.acquisition_date = activo.acquisition_date.split('/').reverse().join('-')
         let isValid = validForm();
         if (!isValid) {
             snackbar.update(snk => {
@@ -143,6 +133,7 @@
             })
             return console.log(message)
         }
+        let activeBody = { ...activo }
 
         let documentUrl = await uploadDocument(document)
         activeBody.accounting_document = documentUrl == null ? '' : documentUrl;
@@ -166,6 +157,7 @@
                 bar_code: '',
                 serie: '',
                 model: '',
+                brand: '',
                 comment: '',
                 acquisition_date: '',
                 accounting_document: '',
@@ -360,6 +352,14 @@
         bind:value={activo.model}
     />
 
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Marca" 
+        bind:value={activo.brand}
+    />
+
     <DatePicker 
         bind:value={activo.acquisition_date}
         placeholder="dd/mm/aaaa"
@@ -418,7 +418,7 @@
         }}
     />
 
-    {#if showArticles}
+    {#if !showArticles}
         <!-- div para dejar el boton save debajo -->
         <div></div>
     {/if}

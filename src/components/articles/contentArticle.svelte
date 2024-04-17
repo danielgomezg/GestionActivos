@@ -113,6 +113,7 @@
                 bar_code: '',
                 serie: '',
                 model: '',
+                brand:'',
                 comment: '',
                 acquisition_date: '',
                 accounting_document: '',
