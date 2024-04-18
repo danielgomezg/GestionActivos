@@ -2,8 +2,8 @@
     import { Select } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import Button from "../../lib/Button.svelte";
-    import { lockOffice, lockStore, lockArticle } from "../../stores/store";
-    import { onMount, createEventDispatcher, tick, onDestroy } from "svelte";
+    import { lockOffice, lockStore } from "../../stores/store";
+    import { onMount, createEventDispatcher, tick } from "svelte";
 
     export let keep = false;
     export let companyId = 0;
@@ -24,20 +24,6 @@
     let request = false;
 
     let dispatch = createEventDispatcher();
-
-    const keepOffice = () => {
-        console.log('KEEP OFFICE')
-
-        disabledSucursal = !disabledSucursal;
-        disabledOffice = !disabledOffice;
-
-        lockStore.set(selectedSucursal);
-        lockOffice.set(selectedOffice);
-
-        keepOfficeIcon = !keepOfficeIcon;
-        
-        dispatch('keep', keepOfficeIcon);
-    };
 
     const getSucursales = async () => {
         if (request) return;
@@ -63,7 +49,7 @@
         if (response.success && response.statusCode === '200') {
             offices = response.data.result.map(r => ({ label: `${r.floor} - ${r.description}`, value: r.id }));
             await tick();
-            if ($lockOffice > 0) {
+            if ($lockOffice > 0 && !cleanStore) {
                 selectedOffice = $lockOffice;
             }
         }else{
@@ -81,28 +67,10 @@
         return;
     }
 
-    const setSaved = () => {
-        selectedOffice = $lockOffice
-        selectedSucursal = $lockStore
-        article_id = $lockArticle
-    }
-
     onMount(async () => {
-        if (cleanStore) {
-            lockStore.set(0);
-            lockOffice.set(0);
-        }   
+        
         
         await getSucursales();
-        
-        if ($lockOffice > 0 && $lockStore > 0) {
-            // await getOfficesBySucursal($lockStore)
-            // // await getOffice($lockOffice)
-            // await tick();
-            
-            // selectedSucursal = $lockStore;
-            // selectedOffice = $lockOffice;
-        }
         
         if(isEdit){
             disabledOffice = false;
@@ -116,13 +84,6 @@
         }
         
     });
-
-    onDestroy(() => {
-        if (!keepOfficeIcon) {
-            // lockStore.set(0);
-            // lockOffice.set(0);
-        }
-    })
 
     $: if (selectedSucursal) {
         getOfficesBySucursal(selectedSucursal);
@@ -170,15 +131,3 @@
     />
     {/key}
 {/if}
-
-{#if keep}
-    <div style="margin-left: auto; grid-column: 1 / -1;">
-        <Button 
-            disabled={disabledKeep}
-            custom
-            label={ keepOfficeIcon ? "Cambiar oficina" : "Mantener oficina"}
-            trailing={ keepOfficeIcon ? 'lock' : 'lock_open'}
-            on:click={ keepOffice }
-        />
-    </div>  
-{/if}	

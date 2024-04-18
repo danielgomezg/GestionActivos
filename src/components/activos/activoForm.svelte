@@ -10,6 +10,7 @@
     export let article_id = 0;
     export let company_id = 0;
     export let isEdit = false;
+    export let article_name = '';
     export let showArticles = false; //Es true cuando lo llama el contentActivo. Se necesita mostrar el select de articulos
 
     let nameStore = '';
@@ -185,6 +186,7 @@
             lockOffice.set(selectedOffice);
             lockStore.set(selectedSucursal);
             lockArticle.set(article_id);
+            if (article_name != '') lockArticleName.set(article_name);
 
             lockOfficeName.set(nameOffice);
             lockStoreName.set(nameStore);
@@ -192,7 +194,15 @@
             locationsActivesNew.offices.push(selectedOffice);
             locationsActivesNew.stores.push(selectedSucursal);
             
-        } else {
+        } else if (response.success && response.statusCode == undefined) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al agregar el activo."
+                return snk
+            })
+        }
+        else {
             snackbar.update(snk => {
                 snk.open = true;
                 snk.type = 'dismiss'
@@ -242,6 +252,16 @@
             // dispatch('reloadActivo')
             reloadActivo();
         }
+        else if (response.success && response.statusCode == undefined) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al editar activo."
+                return snk
+            })
+            // dispatch('reloadActivo')
+            reloadActivo();
+        }
         else {
             //aviso
             snackbar.update(snk => {
@@ -267,14 +287,19 @@
             // activo.acquisition_date = activo.acquisition_date.split('-').reverse().join('/');
         } else {
             
-            if ($lockStore != 0 && $lockOffice != 0 && $lockArticle != 0) {
-                openSnackbar = true
+            if ($lockStore != 0 && $lockOffice != 0) {
                 messageSnackbar = `Mantener 
                         - Oficina: ${ $lockOfficeName }
                         - Sucursal: ${ $lockStoreName }
-                        - Artículo: ${ $lockArticleName }
                     `
             }
+            if ($lockArticle != 0 && showArticles) {
+                messageSnackbar += `Mantener artículo: ${ $lockArticleName }`
+            }
+            if (messageSnackbar != '') {
+                openSnackbar = true
+            }
+
             accionBtn = saveActivo
             // alert(`office_id -> ${ $lockOffice } - store_id -> ${ $lockStore } - article_id -> ${ $lockArticle }`)
             // accionBtn = saveActivo
@@ -382,7 +407,6 @@
 
     <TextField 
         version=2
-        required 
         type="text"
         label="Nombre del encargado" 
         bind:value={activo.name_in_charge_active}
@@ -390,7 +414,6 @@
 
     <TextField 
         version=2
-        required 
         type="text"
         label="Rut del encargado" 
         bind:value={activo.rut_in_charge_active}
@@ -398,7 +421,6 @@
 
     <TextField 
         version=2
-        required 
         type="text"
         label="N° registro contable" 
         bind:value={activo.accounting_record_number}

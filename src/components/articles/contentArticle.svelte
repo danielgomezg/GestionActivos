@@ -1,18 +1,16 @@
 <script>
-    import { user, companySelect } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     import { Button, Loading, Fab } from "$lib";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
-    import { articleBackup } from "../../stores/store";
     import ArticleHistory from "./articleHistory.svelte";
     import ArticlesSearch from "./articlesSearch.svelte";
+    import ReportArticle from "../reports/report.svelte";
     import ActivoForm from "../activos/activoForm.svelte";
     import ActivoInfo from "../activos/activoInfo.svelte";
     import { setContext, onMount, onDestroy } from "svelte";
-    import CompanySelect from "../company/companySelect.svelte";
+    import { user, companySelect } from "../../stores/store";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-    import ReportArticle from "../reports/report.svelte";
 
     let props;
     let count = 0;
@@ -125,9 +123,9 @@
                 office_id: ''
             },
             article_id: article.id,
-            company_id
+            company_id,
+            article_name: article.name
         }
-
         openModal = true;
     }
 
