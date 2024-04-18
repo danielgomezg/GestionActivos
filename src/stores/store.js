@@ -169,6 +169,11 @@ export const headerTableActivos = writable([
         numeric: false
     },
     {
+        name: 'brand',
+        label: 'Marca',
+        numeric: false
+    },
+    {
         name: 'acquisition_date',
         label: 'Adquirido',
         numeric: false
@@ -188,16 +193,16 @@ export const headerTableActivos = writable([
         label: 'Comentario',
         numeric: false
     },
-    {
-        name: 'name_in_charge_active',
-        label: 'Responsable',
-        numeric: false
-    },
-    {
-        name: 'accounting_record_number',
-        label: 'N Registro',
-        numeric: false
-    },
+    // {
+    //     name: 'name_in_charge_active',
+    //     label: 'Responsable',
+    //     numeric: false
+    // },
+    // {
+    //     name: 'accounting_record_number',
+    //     label: 'N Registro',
+    //     numeric: false
+    // },
     {
         name: 'accounting_document',
         label: 'Documento',

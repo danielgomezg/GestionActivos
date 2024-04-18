@@ -10,6 +10,7 @@
     export let article_id = 0;
     export let company_id = 0;
     export let isEdit = false;
+    export let article_name = '';
     export let showArticles = false; //Es true cuando lo llama el contentActivo. Se necesita mostrar el select de articulos
 
     let nameStore = '';
@@ -70,24 +71,16 @@
             message = "Falta agregar la fecha de adquisición del activo."
             return false;
         }
-        if (activo.accounting_record_number == ''){
-            message = "Falta agregar el número de registro contable del activo."
-            return false;
-        }
-        if (activo.name_in_charge_active == ''){
-            message = "Falta agregar el nombre del encargado del activo."
-            return false;
-        }
-        if (activo.rut_in_charge_active == ''){
-            message = "Falta agregar el rut del encargado del activo."
-            return false;
-        }
         if (activo.serie == ''){
             message = "Falta agregar el número de serie del activo."
             return false;
         }
         if (activo.model == ''){
             message = "Falta agregar el modelo del activo."
+            return false;
+        }
+        if (activo.brand == ''){
+            message = "Falta agregar la marca del activo."
             return false;
         }
         if (activo.state == ''){
@@ -128,11 +121,9 @@
 
     const saveActivo = async () => {
 
-        let activeBody = { ...activo }
-
-        activeBody.article_id = parseInt(article_id)
-        activeBody.office_id = parseInt(selectedOffice)
-        activeBody.acquisition_date = activo.acquisition_date.split('/').reverse().join('-')
+        activo.article_id = parseInt(article_id)
+        activo.office_id = parseInt(selectedOffice)
+        activo.acquisition_date = activo.acquisition_date.split('/').reverse().join('-')
         let isValid = validForm();
         if (!isValid) {
             snackbar.update(snk => {
@@ -143,6 +134,7 @@
             })
             return console.log(message)
         }
+        let activeBody = { ...activo }
 
         let documentUrl = await uploadDocument(document)
         activeBody.accounting_document = documentUrl == null ? '' : documentUrl;
@@ -166,6 +158,7 @@
                 bar_code: '',
                 serie: '',
                 model: '',
+                brand: '',
                 comment: '',
                 acquisition_date: '',
                 accounting_document: '',
@@ -193,6 +186,7 @@
             lockOffice.set(selectedOffice);
             lockStore.set(selectedSucursal);
             lockArticle.set(article_id);
+            if (article_name != '') lockArticleName.set(article_name);
 
             lockOfficeName.set(nameOffice);
             lockStoreName.set(nameStore);
@@ -200,7 +194,15 @@
             locationsActivesNew.offices.push(selectedOffice);
             locationsActivesNew.stores.push(selectedSucursal);
             
-        } else {
+        } else if (response.success && response.statusCode == undefined) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al agregar el activo."
+                return snk
+            })
+        }
+        else {
             snackbar.update(snk => {
                 snk.open = true;
                 snk.type = 'dismiss'
@@ -250,6 +252,16 @@
             // dispatch('reloadActivo')
             reloadActivo();
         }
+        else if (response.success && response.statusCode == undefined) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al editar activo."
+                return snk
+            })
+            // dispatch('reloadActivo')
+            reloadActivo();
+        }
         else {
             //aviso
             snackbar.update(snk => {
@@ -275,14 +287,19 @@
             // activo.acquisition_date = activo.acquisition_date.split('-').reverse().join('/');
         } else {
             
-            if ($lockStore != 0 && $lockOffice != 0 && $lockArticle != 0) {
-                openSnackbar = true
+            if ($lockStore != 0 && $lockOffice != 0) {
                 messageSnackbar = `Mantener 
                         - Oficina: ${ $lockOfficeName }
                         - Sucursal: ${ $lockStoreName }
-                        - Artículo: ${ $lockArticleName }
                     `
             }
+            if ($lockArticle != 0 && showArticles) {
+                messageSnackbar += `Mantener artículo: ${ $lockArticleName }`
+            }
+            if (messageSnackbar != '') {
+                openSnackbar = true
+            }
+
             accionBtn = saveActivo
             // alert(`office_id -> ${ $lockOffice } - store_id -> ${ $lockStore } - article_id -> ${ $lockArticle }`)
             // accionBtn = saveActivo
@@ -360,6 +377,14 @@
         bind:value={activo.model}
     />
 
+    <TextField 
+        version=2
+        required 
+        type="text"
+        label="Marca" 
+        bind:value={activo.brand}
+    />
+
     <DatePicker 
         bind:value={activo.acquisition_date}
         placeholder="dd/mm/aaaa"
@@ -382,7 +407,6 @@
 
     <TextField 
         version=2
-        required 
         type="text"
         label="Nombre del encargado" 
         bind:value={activo.name_in_charge_active}
@@ -390,7 +414,6 @@
 
     <TextField 
         version=2
-        required 
         type="text"
         label="Rut del encargado" 
         bind:value={activo.rut_in_charge_active}
@@ -398,7 +421,6 @@
 
     <TextField 
         version=2
-        required 
         type="text"
         label="N° registro contable" 
         bind:value={activo.accounting_record_number}
@@ -418,7 +440,7 @@
         }}
     />
 
-    {#if showArticles}
+    {#if !showArticles}
         <!-- div para dejar el boton save debajo -->
         <div></div>
     {/if}

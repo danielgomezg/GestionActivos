@@ -37,7 +37,7 @@
 
 {#if type == 'button'}
     <Button 
-        report 
+        secondary 
         leading="download" 
         {label}
         {disabled} 

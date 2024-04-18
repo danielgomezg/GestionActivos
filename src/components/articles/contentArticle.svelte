@@ -1,18 +1,16 @@
 <script>
-    import { user, companySelect } from "../../stores/store";
     import Api from "../../../helpers/ApiCall";
     import { Button, Loading, Fab } from "$lib";
     import CardArticle from "./articleCard.svelte";
     import FormArticle from "./articleForm.svelte";
-    import { articleBackup } from "../../stores/store";
     import ArticleHistory from "./articleHistory.svelte";
     import ArticlesSearch from "./articlesSearch.svelte";
+    import ReportArticle from "../reports/report.svelte";
     import ActivoForm from "../activos/activoForm.svelte";
     import ActivoInfo from "../activos/activoInfo.svelte";
     import { setContext, onMount, onDestroy } from "svelte";
-    import CompanySelect from "../company/companySelect.svelte";
+    import { user, companySelect } from "../../stores/store";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-    import ReportArticle from "../reports/report.svelte";
 
     let props;
     let count = 0;
@@ -113,6 +111,7 @@
                 bar_code: '',
                 serie: '',
                 model: '',
+                brand:'',
                 comment: '',
                 acquisition_date: '',
                 accounting_document: '',
@@ -124,9 +123,9 @@
                 office_id: ''
             },
             article_id: article.id,
-            company_id
+            company_id,
+            article_name: article.name
         }
-
         openModal = true;
     }
 
@@ -190,17 +189,6 @@
     }
 
     onMount(() => {
-        // let user = JSON.parse(sessionStorage.getItem('user'));
-        // if (user.profile_id == 2) {
-        //     findArticles(user.company_id);
-        //     hideSelectCompany = true;
-        //     message = "Buscando..."
-        // }
-        // else {
-        //     // if ($companySelect != 0) findArticles($companySelect);
-        //     hideSelectCompany = false;
-        //     message = "Selecciona una empresa para obtener sus articulos."
-        // }
 
         window.addEventListener('scroll', handleScroll)
     })
@@ -225,23 +213,11 @@
 <div style="padding-top: 20px;">
     <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
         <div class="flex-row gap-8 space-between">
-            <!-- {#if !hideSelectCompany}
-                <CompanySelect 
-                    customHeight
-                    on:change={ (event) => {
-                        console.log(event.detail)
-                        offset = 0;
-                        count = 0;
-                        findArticles(event.detail)
-                    }}
-                />
-            {/if} -->
             {#if $user.profile_id != 2}
                 <div class="desktop-only">
                     <Button label="Nuevo articulo" custom disabled={ newArticleDisabled } on:click={ () => createArticle(companyId) } />
                 </div>
             {/if}
-                <!-- <Button label="Nuevo reporte" report leading icon="download" on:click={ reportArticle } /> -->
             <ReportArticle 
                 id={ companyId } 
                 label="Exportar a PDF"

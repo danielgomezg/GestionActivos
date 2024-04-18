@@ -157,6 +157,7 @@
             <div>
                 <li>{ `Serie: ${activo.serie}` }</li>
                 <li>{ `Modelo: ${activo.model}` }</li>
+                <li>{ `Marca: ${activo.brand}` }</li>
                 <li>{ `Responsable: ${activo.name_in_charge_active}, ${activo.rut_in_charge_active}` }</li>
                 <li>{ `Estado: ${ activo.state } ${ activo.comment != '' ? `(${activo.comment })` : '' }` }</li>
                 

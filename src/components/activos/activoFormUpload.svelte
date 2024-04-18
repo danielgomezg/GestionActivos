@@ -54,12 +54,7 @@
                 return snk
             });
         }
-        // if (response.success && response.statusCode == "201") {
-        //     return response.data.result;
-        // }
-        // else {
-        //     return null;
-        // }
+
     }
 
 </script>
