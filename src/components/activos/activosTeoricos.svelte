@@ -81,7 +81,7 @@
 
         let formData = new FormData();
         formData.append('file', fileActive);
-        let response = await Api.call(`/active/teorico/upload`, 'POST', { body: formData }, 'file', companyId);
+        let response = await Api.call(`/active/teorico/upload`, 'POST', { body: formData }, 'fileDoc', companyId);
         console.log('RESPONSE UPLOAD DOCUMENT --> ', response)
         if (response.statusCode == 200) {
             snackbar.update(snk => {

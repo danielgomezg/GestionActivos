@@ -20,7 +20,7 @@ class Api {
             ...body
         }
         // Si type es file se quita Content-Type del header
-        if (type == 'file') {
+        if (type == 'file' || type == 'fileDoc') {
             delete params.headers['Content-Type']
         }
 
@@ -42,7 +42,7 @@ class Api {
 
             let statusCode = response.status
 
-            if (type == 'file') {
+            if (type == 'fileDoc') {
                 return response.blob().then(data => {
                     return { success: true, statusCode, data }
                 })
@@ -73,10 +73,6 @@ class Api {
                 }
             });
         })
-        // .then(data => {
-        //     console.log(data)
-        //     return { success: true, data: data }
-        // })
         .catch(error => {
             console.error('Error:', error)
             return { success: false, statusCode: 500 }
