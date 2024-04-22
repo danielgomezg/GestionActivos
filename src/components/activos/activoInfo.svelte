@@ -22,6 +22,30 @@
     let editActivo = getContext('editActivo')
     let addActivoCount = getContext('addActivoCount');
 
+    const loadImages = async (acts) => {
+        for (let i = 0; i < acts.length; i++) {
+            if (acts[i].photo1 == null || acts[i].photo1 == "") continue;
+            let r = await getImage(acts[i].photo1)
+            let activo = acts.find(act => act.id == acts[i].id)
+            activo.urlphoto1 = r;
+        }
+        console.log('ACTIVOS IMAGES --> ', acts)
+        activos = [...acts]
+
+    }
+
+    const getImage = async (name) => {
+        if (name == '') return null;
+        
+
+        let response = (await Api.callImage('/image_active/' + name));
+        console.log('RESPONSE GET IMAGE -> ', response)
+        if (response != null) {
+            return response;
+        }
+        return '';
+    }
+
     const getActives = async () => {
         if (offset > count) return
 
@@ -31,6 +55,7 @@
             count = response.data.count
             if (response.data.count > 0) {
                 activos = [...activos, ...response.data.result] 
+                await loadImages(response.data.result);
                 return
             }
             // activos = response.data.result
@@ -93,6 +118,7 @@
 
     $: updateOffset(endSroll);
     $: if(offset != 0) getActives();
+    $: console.log('ACTIVOS --> ', activos)
 
 </script>
 
@@ -154,12 +180,20 @@
                         } } />
                 </div>
             </div>
-            <div>
-                <li>{ `Serie: ${activo.serie}` }</li>
-                <li>{ `Modelo: ${activo.model}` }</li>
-                <li>{ `Marca: ${activo.brand}` }</li>
-                <li>{ `Responsable: ${activo.name_in_charge_active}, ${activo.rut_in_charge_active}` }</li>
-                <li>{ `Estado: ${ activo.state } ${ activo.comment != '' ? `(${activo.comment })` : '' }` }</li>
+            <div style="display: flex; justify-content: space-between;">    
+                <div>
+                    <li>{ `Serie: ${activo.serie}` }</li>
+                    <li>{ `Modelo: ${activo.model}` }</li>
+                    <li>{ `Marca: ${activo.brand}` }</li>
+                    <li>{ `Responsable: ${activo.name_in_charge_active}, ${activo.rut_in_charge_active}` }</li>
+                    <li>{ `Estado: ${ activo.state } ${ activo.comment != '' ? `(${activo.comment })` : '' }` }</li>
+                    
+                </div>
+                {#if activo.urlphoto1}
+                    <div class="content-image" style="margin: 0 auto;">
+                        <img src={ activo.urlphoto1 } class="article-image" alt={activo.bar_code} />
+                    </div>
+                {/if}
                 
             </div>
             <!-- <div class="info__description">
@@ -182,9 +216,5 @@
         justify-content: space-between;
     }
 
-    .info__description {
-        font-size: 14px;
-        font-weight: lighter;
-    }
 
 </style>

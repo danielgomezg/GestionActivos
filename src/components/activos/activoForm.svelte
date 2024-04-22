@@ -3,7 +3,7 @@
     import { getContext, onDestroy, onMount, tick } from "svelte";
     import { snackbar, estadosActivo, lockArticle, lockOffice, lockStore, lockStoreName, lockOfficeName, lockArticleName } from "../../stores/store";
     import ArticleSelect from "../articles/articleSelect.svelte";
-    import { TextField, Button, Select, FileInput, DatePicker, Snackbar } from "$lib";
+    import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
     export let activo = {};
@@ -13,6 +13,9 @@
     export let article_name = '';
     export let showArticles = false; //Es true cuando lo llama el contentActivo. Se necesita mostrar el select de articulos
 
+    let images = [];
+    let imagesURL = {};
+    let fileInputImage;
     let nameStore = '';
     let nameOffice = '';
     let messageSnackbar = '';
@@ -103,6 +106,25 @@
         return true
     }
 
+    // 
+    const getImage = async ({ photo1, photo2, photo3, photo4}) => {
+        let photos = [photo1, photo2, photo3, photo4].filter(photo => photo != null && photo != '');
+        console.log('PHOTOS A-> ', photos)
+        if (photos.length == 0) return null;
+
+        // Por cada url de photos hacer la peticion Api.callImage
+        for (let i = 0; i < photos.length; i++) {
+            let response = await Api.callImage('/image_active/' + photos[i]);
+            console.log('RESPONSE GET IMAGE -> ', response)
+            if (response != null) {
+                // images = [response, ...images];
+                // imagesURL[photos[i]] = response;
+                imagesURL[response] = photos[i];
+                
+            }
+        }
+    }
+
     // FUNCION QUE SUBE LA IMAGEN AL SERVIDOR
     const uploadDocument = async (image) => {
         if (image == null) return null;
@@ -117,6 +139,24 @@
         else {
             return null;
         }
+    }
+
+    // FUNCION QUE SUBE LA IMAGEN AL SERVIDOR
+    const uploadImage = async (images) => {
+        // if (image == null) return null;
+        if (images.length == 0) return null;
+
+        let response = await Promise.all(images.map(image => {
+            let formData = new FormData();
+            formData.append('file', image);
+            return Api.call('/image_active', 'POST', { body: formData }, 'file');
+        }));
+
+        console.log('RESPONSE UPLOAD IMAGE --> ', response)
+        let success = response.filter(res => res.success == true && res.statusCode == "201");
+        if (success.length == 0) return [];
+        return success.map(res => res.data.result);
+
     }
 
     const saveActivo = async () => {
@@ -135,6 +175,13 @@
             return console.log(message)
         }
         let activeBody = { ...activo }
+
+        let imagesUrl = await uploadImage(images);
+        console.log('imageUrl', imagesUrl)
+        if (imagesUrl[0] != undefined) activeBody.photo1 = imagesUrl[0];
+        if (imagesUrl[1] != undefined) activeBody.photo2 = imagesUrl[1];
+        if (imagesUrl[2] != undefined) activeBody.photo3 = imagesUrl[2];
+        if (imagesUrl[3] != undefined) activeBody.photo4 = imagesUrl[3];
 
         let documentUrl = await uploadDocument(document)
         activeBody.accounting_document = documentUrl == null ? '' : documentUrl;
@@ -230,6 +277,21 @@
             return console.log(message)
         }
 
+        let imagesUpload = await uploadImage(images);
+        console.log('imagesUpload', imagesUpload)
+        console.log('imagesURL', imagesURL)
+        console.log('images', images)
+        if (!Object.values(imagesURL).includes(activoBody.photo1)) activoBody.photo1 = '';
+        if (!Object.values(imagesURL).includes(activoBody.photo2)) activoBody.photo2 = '';
+        if (!Object.values(imagesURL).includes(activoBody.photo3)) activoBody.photo3 = '';
+        if (!Object.values(imagesURL).includes(activoBody.photo4)) activoBody.photo4 = '';
+
+        for(let i = 0; i < imagesUpload.length; i++){
+            if (activoBody.photo1 == '' || activoBody.photo1 == null) activoBody.photo1 = imagesUpload[i];
+            else if (activoBody.photo2 == '' || activoBody.photo2 == null) activoBody.photo2 = imagesUpload[i];
+            else if (activoBody.photo3 == '' || activoBody.photo3 == null) activoBody.photo3 = imagesUpload[i];
+            else if (activoBody.photo4 == '' || activoBody.photo4 == null) activoBody.photo4 = imagesUpload[i];
+        }
         let documentUrl = await uploadDocument(document)
         console.log('documentUrl', documentUrl	)
         if (documentUrl != null) activoBody.accounting_document = documentUrl;
@@ -250,7 +312,7 @@
 
             //replaceArticle(response.data.result)
             // dispatch('reloadActivo')
-            reloadActivo();
+            if(showArticles) reloadActivo();
         }
         else if (response.success && response.statusCode == undefined) {
             snackbar.update(snk => {
@@ -260,7 +322,7 @@
                 return snk
             })
             // dispatch('reloadActivo')
-            reloadActivo();
+            if(showArticles) reloadActivo();
         }
         else {
             //aviso
@@ -284,6 +346,8 @@
         if(isEdit){
             selectedOffice = activo.office_id
             accionBtn = editActivo
+            console.log('activo', activo)
+            getImage(activo)
             // activo.acquisition_date = activo.acquisition_date.split('-').reverse().join('/');
         } else {
             
@@ -333,6 +397,7 @@
         on:changeOffice={e => {
             console.log('changeOffice')
             console.log(e.detail)	
+            if (e.detail.office == undefined) return;
             nameOffice = e.detail.office.label
             selectedOffice = e.detail.selectedOffice
         }}
@@ -439,11 +504,82 @@
             document = e.detail 
         }}
     />
-
+    
     {#if !showArticles}
         <!-- div para dejar el boton save debajo -->
         <div></div>
     {/if}
+
+    <div class="flex-row grid-col-span-2 gap-8">
+   
+        <FileInput 
+            bind:this={ fileInputImage }
+            btnIcon
+            label="Imagen"
+            trailing="image"
+            accept={ ['png', 'jpg', 'jpeg'] }
+            helperText="Imagen con formato png, jpg o jpeg"
+            multiple
+            on:change={ (e) => {
+                console.log('new image > ', e.detail)
+                if ((images.length + e.detail.length > 4 && !isEdit) || (Object.keys(imagesURL).length + e.detail.length + images.length > 4 && isEdit)){
+                    snackbar.update(snk => {
+                        snk.open = true;
+                        snk.type = 'dismiss'
+                        snk.message = "Solo se pueden agregar hasta 4 imagenes."
+                        return snk
+                    }) 
+                    return;
+                } 
+
+                if (images.length > 0) {
+                    console.log('images if > ', images)	
+                    images = [...images, ...e.detail]
+                } 
+                else {
+                    console.log('images else > ', images)
+                    console.log(...e.detail)
+                    images = [...e.detail]
+                } 
+            }}
+        />
+
+        <div class="image-list">
+            {#each Object.keys(imagesURL) as img}
+                <div class="content-image">
+                    <IconButton 
+                        icon="remove" 
+                        custom 
+                        on:click={ () => {
+                            delete imagesURL[img]
+                            imagesURL = {...imagesURL}
+                            // article.photo = Object.values(imagesURL).join(',')
+                        } } 
+                    />
+                    <img src={ img } class="article-image" alt={activo.bar_code} />
+                    
+                </div>
+            {/each}
+            {#each images as img}
+                <div class="content-image">
+                    <IconButton 
+                        icon="remove" 
+                        custom 
+                        on:click={ () => {
+                            console.log('img new remove > ', img)
+                            // Quitar img de images
+                            fileInputImage.cleanValue();
+                            images = images.filter(image => image != img)
+                        } } 
+                    />
+                    
+                    <img src={ URL.createObjectURL(img) } class="article-image" alt={activo.bar_code} />
+                    
+                </div>
+            {/each}
+        </div>
+    </div>
+
 
     <div class="mobile-fixed">
         <Button 
