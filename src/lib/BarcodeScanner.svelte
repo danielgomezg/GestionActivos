@@ -15,7 +15,7 @@
                 }
             },
             decoder: {
-                readers: ["code_128_reader"],
+                readers: ["code_128_reader", "ean_reader", "upc_reader", "code_39_reader", "code_93_reader", "codabar_reader"],
                 debug: {
                     showCanvas: true,
                     showPatches: true,
