@@ -22,3 +22,4 @@ export { default as IconButton } from "./IconButton.svelte";
 export { default as DatePicker } from "./Datepicker.svelte";
 export { default as BottomSheets } from "./BottomSheets.svelte";
 export { default as NavigationDrawer } from "./NavDrawer.svelte";
+export { default as BarcodeScanner } from "./BarcodeScanner.svelte";

@@ -144,7 +144,7 @@
     // FUNCION QUE SUBE LA IMAGEN AL SERVIDOR
     const uploadImage = async (images) => {
         // if (image == null) return null;
-        if (images.length == 0) return null;
+        if (images.length == 0) return [];
 
         let response = await Promise.all(images.map(image => {
             let formData = new FormData();
@@ -216,6 +216,7 @@
                 // article_id: '',
                 office_id: ''
             };
+            images = [];
             if (showArticles) {
                 // activo.article_id = 0;
                 // article_id = 0;
