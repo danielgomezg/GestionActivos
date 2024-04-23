@@ -12,7 +12,13 @@
                     width: 520,
                     height: 400,                  
                     facingMode: "environment"  //"environment" for back camera, "user" front camera
-                }
+                },
+                area: { // defines rectangle of the detection/localization area
+                    top: "0%",    // top offset
+                    right: "0%",  // right offset
+                    left: "0%",   // left offset
+                    bottom: "0%"  // bottom offset
+                },
             },
             decoder: {
                 readers: ["code_128_reader", "ean_reader", "upc_reader", "code_39_reader", "code_93_reader", "codabar_reader"],
@@ -46,6 +52,7 @@
         });
 
         Quagga.onDetected((data) => {
+            console.log('Detected', data.codeResult.code);
             console.log(data.codeResult.code);
             Quagga.stop();
         });
