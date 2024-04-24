@@ -1,10 +1,10 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { getContext, onDestroy, onMount, tick } from "svelte";
-    import { snackbar, estadosActivo, lockArticle, lockOffice, lockStore, lockStoreName, lockOfficeName, lockArticleName } from "../../stores/store";
     import ArticleSelect from "../articles/articleSelect.svelte";
-    import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton } from "$lib";
+    import { getContext, onDestroy, onMount, tick } from "svelte";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
+    import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton, BarcodeScanner } from "$lib";
+    import { snackbar, estadosActivo, lockArticle, lockOffice, lockStore, lockStoreName, lockOfficeName, lockArticleName } from "../../stores/store";
 
     export let activo = {};
     export let article_id = 0;
@@ -13,6 +13,8 @@
     export let article_name = '';
     export let showArticles = false; //Es true cuando lo llama el contentActivo. Se necesita mostrar el select de articulos
 
+    let videoScan = false;
+    let barcodeScanner;
     let images = [];
     let imagesURL = {};
     let fileInputImage;
@@ -96,10 +98,6 @@
         }
         if (activo.office_id == '' || activo.office_id == null){
             message = "Falta agregar una oficina al activo."
-            return false;
-        }
-        if (activo.article_id == ''){
-            message = "Falta agregar un artículo al activo."
             return false;
         }
         
@@ -419,14 +417,35 @@
         />
     {/if}
 
-    <TextField 
-        version=2
-        required 
-        type="text"
-        label="Código de activo fijo" 
-        bind:value={activo.bar_code}
-    />
+    <div style="display: flex; align-items: center">
+        <TextField 
+            version=2
+            required 
+            type="text"
+            label="Código de activo fijo" 
+            bind:value={activo.bar_code}
+        />
 
+        <IconButton 
+            icon="barcode_scanner" 
+            on:click={ () => {
+                if (videoScan) {
+                    barcodeScanner.stop();
+                    videoScan = false;
+                } else {
+                    barcodeScanner.start();
+                    videoScan = true;
+                }
+            } } 
+        />
+
+    </div>
+
+    <BarcodeScanner 
+        on:detected={ e => activo.bar_code = e.detail }
+        bind:this={ barcodeScanner }
+    />
+    
     <TextField 
         version=2
         required 

@@ -1,6 +1,6 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { Button, Loading, Fab, BarcodeScanner } from "$lib";
+    import { Button, Loading, Fab } from "$lib";
     import StoresInfo from "./storesInfo.svelte";
     import CardCompany from "./companyCard.svelte";
     import FormCompany from "./formCompany.svelte";
@@ -202,10 +202,6 @@
         </div>
         <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
             <Fab on:click={ createCompany } />
-        </div>
-        <!-- class="mobile-only" -->
-        <div >
-            <BarcodeScanner />
         </div>
     </div>
 
