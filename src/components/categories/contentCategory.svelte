@@ -52,6 +52,7 @@
         props = { 
             category: {
                 description: '',
+                code: '',
                 parent_id
             }, 
             company_id
