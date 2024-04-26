@@ -3,7 +3,7 @@
     import ArticleSelect from "../articles/articleSelect.svelte";
     import { getContext, onDestroy, onMount, tick } from "svelte";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
-    import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton, BarcodeScanner } from "$lib";
+    import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton, BarcodeScanner, Checkbox } from "$lib";
     import { snackbar, estadosActivo, lockArticle, lockOffice, lockStore, lockStoreName, lockOfficeName, lockArticleName } from "../../stores/store";
 
     export let activo = {};
@@ -64,13 +64,13 @@
     function validForm() {
 
         let [day, month, year] = activo.acquisition_date.split('/');
+        if (activo.bar_code == '' && activo.virtual_code == false){
+            message = "Falta agregar el codigo de barra del activo."
+            return false;
+        }
         if (day > 31 || month > 12 || year > new Date().getFullYear()) {
             message = "Fecha de adquisición inválida."
             return false
-        }
-        if (activo.bar_code == ''){
-            message = "Falta agregar el codigo de barra del activo."
-            return false;
         }
         if (activo.acquisition_date == ''){
             message = "Falta agregar la fecha de adquisición del activo."
@@ -183,6 +183,7 @@
 
         let documentUrl = await uploadDocument(document)
         activeBody.accounting_document = documentUrl == null ? '' : documentUrl;
+        activeBody.virtual_code = activo.virtual_code.toString();
 
         let body = JSON.stringify(activeBody);
         console.log(body)
@@ -373,7 +374,7 @@
         if (showArticles) newActivo(locationsActivesNew)
     })
     
-
+    $: activo.bar_code = activo.virtual_code ? '' : activo.bar_code
     $: activo.rut_in_charge_active = formatRut(activo.rut_in_charge_active)
     $: console.log('activo', activo)
 
@@ -422,12 +423,15 @@
             version=2
             required 
             type="text"
+            disabled={ activo.virtual_code }
             label="Código de activo fijo" 
             bind:value={activo.bar_code}
+            
         />
 
         <IconButton 
             icon="barcode_scanner" 
+            disabled={ activo.virtual_code }
             on:click={ () => {
                 if (videoScan) {
                     barcodeScanner.stop();
@@ -445,6 +449,10 @@
         on:detected={ e => activo.bar_code = e.detail }
         bind:this={ barcodeScanner }
     />
+
+
+    <Checkbox bind:checked={ activo.virtual_code } label="Generar código virtual" />
+
     
     <TextField 
         version=2

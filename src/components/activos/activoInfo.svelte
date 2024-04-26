@@ -136,7 +136,11 @@
                 <div>    
                     <div style="display: flex; gap: 8px">
                         <span class="material-symbols-rounded">barcode</span>
-                        <strong>{ activo.bar_code }</strong>
+                        {#if activo.bar_code != ''}
+                            <strong>{ activo.bar_code }</strong>
+                        {:else if activo.virtual_code != ''}
+                            <strong>{ activo.virtual_code + ' (virtual)' }</strong>
+                        {/if}
                     </div>
                     <h5>{ `Adquirido el ${activo.acquisition_date} - Agregado el ${activo.creation_date}` }  </h5>
                 </div>

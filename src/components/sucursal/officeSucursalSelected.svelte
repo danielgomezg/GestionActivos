@@ -5,15 +5,18 @@
     import { lockOffice, lockStore } from "../../stores/store";
     import { onMount, createEventDispatcher, tick } from "svelte";
 
-    export let keep = false;
     export let companyId = 0;
     export let custom = false;
     export let isEdit = false;
+    export let required = false;
     export let cleanStore = false;
     export let selectedOffice = 0;
     export let selectedSucursal = 0;  
     export let show = ['sucursal', 'office'];
+    export { setValidOffice, setValidStore }
 
+    let selectStore;
+    let selectOffice;
     let offices = [];
     let sucursales = [];
     let disabledKeep = true;
@@ -24,6 +27,14 @@
     let request = false;
 
     let dispatch = createEventDispatcher();
+
+    const setValidOffice = (status) => {
+        selectOffice.setValid(status);
+    }
+
+    const setValidStore = (status) => {
+        selectStore.setValid(status);
+    }
 
     const getSucursales = async () => {
         if (request) return;
@@ -96,6 +107,8 @@
 {#if show.includes('sucursal')}
     {#key sucursales}
     <Select
+        bind:this={ selectStore }
+        {required}
         label="Sucursal"
         options={sucursales}
         customHeight={custom}
@@ -116,6 +129,8 @@
 {#if show.includes('office')}
     {#key offices}
     <Select
+        bind:this={ selectOffice }
+        {required}
         label="Oficina"
         options={offices}
         customHeight={custom}

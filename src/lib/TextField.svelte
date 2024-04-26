@@ -7,17 +7,28 @@
     export let placeholder = ''
     export let required = false
     export let type = 'text'
-    export let value
+    export let value = ''
     export let label = ""
     export let id = ''
     export let trailing = ''
     export let disabled = false
+    export { setValid }
 
+    let isValid;
     let textfield
+    let mdcTextField;
+
+
+    const setValid = (status) => {
+        console.log('status', status)
+        // mdcTextField.valid = status
+        mdcTextField.foundation.setValid(status)
+        isValid = status
+    }
 
     onMount(() => {
         if (version == 2) {   
-            new MDCTextField(textfield) 
+            mdcTextField = new MDCTextField(textfield) 
             textfield.addEventListener('input', function() {
                 // Acceder al valor del input
                 // console.log(textfield)
@@ -27,8 +38,15 @@
                 // console.log('Texto ingresado:', valorInput.value);
                 value = valorInput.value
             });
+            // mdcTextField.foundation.setUseNativeValidation(false)
         }
     })
+
+    $: if (mdcTextField != undefined && value != null) {
+        // mdcTextField.valid = true
+        mdcTextField.foundation.setValid(true)
+        mdcTextField.foundation.setValue(value)
+    }
 
 
 </script>
@@ -39,6 +57,7 @@
     class="mdc-text-field mdc-text-field--outlined mdc-text-field--custom"
     class:mdc-text-field--with-trailing-icon={trailing != ''}
     class:mdc-text-field--disabled={disabled}
+    class:mdc-text-field--danger={isValid === false}
     >
     <span class="mdc-notched-outline">
         <span class="mdc-notched-outline__leading"></span>
@@ -50,7 +69,6 @@
     <input 
         {id}
         {type} 
-        {value}
         {required}
         {placeholder}
         {disabled}
