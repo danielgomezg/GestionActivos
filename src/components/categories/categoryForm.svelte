@@ -29,7 +29,7 @@
             snackbar.update(snk => {
                 snk.type = 'dismiss'
                 snk.open = true;
-                snk.message = 'Error al crear la categoría'
+                snk.message = response.data.message || 'Error al crear la categoría'
                 return snk
             })
         }
@@ -81,6 +81,13 @@
         type="text"
         label="Descripción" 
         bind:value={ category.description }
+    />
+
+    <TextField 
+        required 
+        type="text"
+        label="Código" 
+        bind:value={ category.code }
     />
 
     <div class="grid-col-span-1 mobile-fixed">

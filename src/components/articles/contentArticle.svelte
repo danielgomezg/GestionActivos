@@ -44,7 +44,7 @@
     // Contexto para aumentar el contador de activos de un articulo
     setContext('addActivoCount', (articleId, cont) => {
         let article = articles.find(art => art.id == articleId);
-        article.count_actives = article.count_actives + cont;
+        article.count_active = article.count_active + cont;
         articles = [...articles]
     })
 

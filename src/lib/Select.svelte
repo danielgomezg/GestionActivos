@@ -7,12 +7,21 @@
     export let selected = ''
     export let disabled = false
     export let customHeight = false
+    export let required = false
+    export { setValid }
 
     let dispatch = createEventDispatcher()
 
     let select;
+    let isValid;
     let menuComponent;
     let selectComponent;
+
+    const setValid = (state) => {
+        // select.valid = state
+        isValid = state
+        select.foundation.setValid(state)
+    }
 
     const _updateValue = async (selected) => {
 
@@ -25,18 +34,8 @@
         }
     }
 
-    const updateValue = (selected) => {
-        if (options.length  == 0) return;
-        if (!select) return;
-        if(selected == null) return;
-        
-        select.value = selected.toString();
-        // dispatch("change", select.value)
-
-        // selectedIndex = select.selectedIndex = options.findIndex(option => option.value == selectedValue);
-    }
-
     const setDispatch = () => {
+        setValid(true)
         dispatch("change", select.value)
     }
 
@@ -50,6 +49,7 @@
         
         select = new MDCSelect(selectComponent);
         select.listen('MDCSelect:change', setDispatch);
+        select.required = required;
     
         let bottomSheet = document.querySelector('.bottom-sheet .body');
         if (bottomSheet != null) {
@@ -87,6 +87,7 @@
 <div bind:this={selectComponent} class="mdc-select mdc-select--outlined mdc-select-custom"
     class:mdc-select--disabled={disabled}
     class:mdc-select--no-label={label == ''}
+    class:mdc-select--danger={isValid === false}
     >
     <div class="mdc-select__anchor mdc-select-custom" aria-labelledby="outlined-select-label" class:custom-height={customHeight}>
         <span class="mdc-notched-outline">

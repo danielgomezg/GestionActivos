@@ -15,15 +15,42 @@
   let listComponent;
   let openActions = [];
   let dispatch = createEventDispatcher();
-  
-  onMount(() => {
-    // list = new MDCList(listComponent);
-    // list.singleSelection = true;
-    // const listItemRipples = list.listElements.map(
-    //   (listItemEl) => new MDCRipple(listItemEl)
-    // );
-  });
 
+  function handleClick(e, option) {
+    e.stopPropagation();
+    e.preventDefault();
+    let actives = document.querySelectorAll(`ul.${customClass}:not([data-level='0']):not([data-parent='${option.parent_id}'])`);
+
+    if (option.active) {
+      // remove ul con data-parent = option.id
+      actives.forEach((ul) => {
+        if (ul.getAttribute('data-parent') == option.id) {
+          ul.remove();
+        }
+      })
+      option.children = [];
+
+      option.active = false;
+
+      let op = options.find((o) => o.id == option.id);
+      op.active = false;
+      op.children = [];
+
+      // reeplazar op en options
+      options = options.map((o) => {
+        if (o.id == op.id) {
+          return op;
+        }
+        return o;
+      })
+
+      return;
+    }
+
+    option.active = true;
+    dispatch('select', option.id)
+  }
+  
 </script>
 
 {#if options.length > 0}
@@ -36,6 +63,7 @@
   data-evolution="true"
   role="listbox"
   aria-label="List with caterogies"
+  style="padding-left: { level * 10 }px; "
 >
   {#each options as option, index}
     <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
@@ -48,37 +76,17 @@
       class:list-active={option.active}
       class="mdc-list-item__custom" 
       tabindex={option.parent_id}
-      on:click|self={ (e) => {
-        console.log('CLICK LI')
-        e.stopPropagation();
-        e.preventDefault();
-        // e.preventDefault();
-        // if (option.active) {
-        //   option.children = []
-        //   return;
-        // }
-        option.active = !option.active;
-
-        let actives = document.querySelectorAll(`ul.${customClass}:not([data-level='0']):not([data-parent='${option.parent_id}'])`);
-        console.log('actives ul -> ', actives)
-        // Se eliminan los ul que no tenga el mismo parent_id
-        actives.forEach((ul) => {
-          // ul.remove();
-          if (ul.getAttribute('data-root') != origin) {
-            // ul.remove();
-            // dispatch('delete', ul.getAttribute('data-parent'))
-          }
-        })
-
-        dispatch('select', option.id)
-
-      } }
+      on:click|self={ (e) => handleClick(e, option) }
     >
       <span class="mdc-list-item__ripple"></span>
-      <span class="mdc-list-item__text">{option.description}</span>
+      <!-- svelte-ignore a11y-no-static-element-interactions -->
+      <span class="mdc-list-item__text" on:click|self={ (e) => handleClick(e, option) }>{ option.code + ' - ' +  option.description}</span>
       {#if actions}
         <span class="mdc-list-item__meta">
           <!-- <div class="menu-container"> -->
+            {#key option.active}
+              <IconButton icon={ option.active ? 'expand_less' : 'expand_more' } on:click={ (e) => handleClick(e, option) } />
+            {/key}
             <Menu
                   bind:open={openActions[index]}
                   options={
@@ -119,20 +127,22 @@
       {/if}
     </li>
     <!-- <li role="separator" class="mdc-list-divider"></li> -->
-    {#if option.children}
-      <svelte:self
-        origin={ level == 0 ? option.id : origin }
-        {customClass}
-        level={level + 1} 
-        parent_id={option.id}
-        options={option.children} 
-        actions={actions}
-        on:select 
-        on:edit
-        on:delete
-        on:add
-      />
-    {/if}
+    {#key option.children}
+      {#if option.children}
+        <svelte:self
+          origin={ level == 0 ? option.id : origin }
+          {customClass}
+          level={level + 1} 
+          parent_id={option.id}
+          options={option.children} 
+          actions={actions}
+          on:select 
+          on:edit
+          on:delete
+          on:add
+        />
+      {/if}
+    {/key}
 
   {/each}
 </ul>
@@ -145,7 +155,8 @@
   }
   
   .mdc-list-main {
-    border: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
   }
 
 
@@ -161,6 +172,7 @@
 
   .mdc-list-item__meta {
     margin-left: auto;
+    display: flex;
   }
 
   .menu-container {

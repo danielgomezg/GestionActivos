@@ -1,34 +1,25 @@
 <script>
     import { MDCTextField } from '@material/textfield';
-    import { createEventDispatcher, onMount } from 'svelte';
+    import { onMount } from 'svelte';
 
-    export let placeholder = ''
-    export let required = false
-    export let value
-    export let label = ""
-    export let id = ''
-    export let disabled = false
+    export let value;
+    export let id = '';
+    export let label = '';
+    export let placeholder = '';
+    export let required = false;
+    export let disabled = false;
 
-    let dispatch = createEventDispatcher();
+    export { setValid }
 
-    let textfield
+    let isValid;
+    let textfield;
+    let mdcTextField;
 
-    function showDatePicker() {
-        document.querySelector("#datepicker").showPicker();
-        // inputDate.showPicker();
-    }
-    
-    // Funcion que borre lo que se ingresa al input
-    function clearInput() {
-        var valorInput = textfield.querySelector('input')
-        valorInput.value = ''
-    }
-
-    // Funcion que quita el focus del input
-    function blurInput() {
-        if (textfield == undefined) return
-        var valorInput = textfield.querySelector('input')
-        valorInput.blur()
+    const setValid = (status) => {
+        console.log('status datepicker', status)
+        // mdcTextField.valid = status
+        mdcTextField.foundation.setValid(status)
+        isValid = status
     }
 
     const formatDate = (date) => {
@@ -55,17 +46,21 @@
     }
 
     onMount(() => { 
-        new MDCTextField(textfield) 
+        mdcTextField = new MDCTextField(textfield) 
         textfield.addEventListener('input', function() {
             var valorInput = textfield.querySelector('input') 
             value = valorInput.value
         });
-       
+        // mdcTextField.foundation.setUseNativeValidation(false)
     })
 
     // $: blurInput(value)
     $: value = formatDate(value)
-
+    $: if (mdcTextField != undefined && value != null) {
+        // mdcTextField.valid = true
+        mdcTextField.foundation.setValid(true)
+        mdcTextField.foundation.setValue(value)
+    }
 
 </script>
 
@@ -73,6 +68,7 @@
     bind:this={textfield} 
     class="mdc-text-field mdc-text-field--outlined mdc-text-field--custom mdc-text-field--with-trailing-ico"
     class:mdc-text-field--disabled={disabled}
+    class:mdc-text-field--danger={isValid === false}
     >
     <span class="mdc-notched-outline">
         <span class="mdc-notched-outline__leading"></span>
@@ -84,7 +80,6 @@
     <input 
         {id}
         type="text"
-        {value}
         {required}
         {placeholder}
         {disabled}

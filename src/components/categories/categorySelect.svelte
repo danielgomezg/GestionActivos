@@ -13,7 +13,7 @@
 
     //Se obtiene las companias con el id y nombre solamente
     const getCategories = async () => {
-        let response = (await Api.call('/categories', 'GET', {}, 'json',  companyId))
+        let response = (await Api.call('/categories/finals', 'GET', {}, 'json',  companyId))
         console.log('RESPONSE GET CATEGORIES --> ', response)
         if (response.success && response.statusCode == '200') {
             categorias = response.data.result.map(r => { return { label: r.description, value: r.id } })

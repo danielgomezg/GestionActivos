@@ -54,11 +54,11 @@
         // if (image == null) return null;
         if (images.length == 0) return null;
 
-        let response = (await Promise.all(images.map(image => {
+        let response = await Promise.all(images.map(image => {
             let formData = new FormData();
             formData.append('file', image);
             return Api.call('/image_article', 'POST', { body: formData }, 'file');
-        })));
+        }));
 
         console.log('RESPONSE UPLOAD IMAGE --> ', response)
         let success = response.filter(res => res.success == true && res.statusCode == "201");
@@ -205,81 +205,72 @@
 
     <div class="flex-row grid-col-span-2 gap-8">
     
-    <FileInput 
-        bind:this={fileInput}
-        btnIcon
-        label="Imagen"
-        trailing="image"
-        accept={ ['png', 'jpg', 'jpeg'] }
-        helperText="Imagen con formato png, jpg o jpeg"
-        multiple
-        on:change={ (e) => {
-            console.log('new image > ', e.detail)
-            if ((images.length + e.detail.length > 4 && !isEdit) || (Object.keys(imagesURL).length + e.detail.length + images.length > 4 && isEdit)){
-                snackbar.update(snk => {
-                    snk.open = true;
-                    snk.type = 'dismiss'
-                    snk.message = "Solo se pueden agregar hasta 4 imagenes."
-                    return snk
-                }) 
-                return;
-            } 
+        <FileInput 
+            bind:this={fileInput}
+            btnIcon
+            label="Imagen"
+            trailing="image"
+            accept={ ['png', 'jpg', 'jpeg'] }
+            helperText="Imagen con formato png, jpg o jpeg"
+            multiple
+            on:change={ (e) => {
+                console.log('new image > ', e.detail)
+                if ((images.length + e.detail.length > 4 && !isEdit) || (Object.keys(imagesURL).length + e.detail.length + images.length > 4 && isEdit)){
+                    snackbar.update(snk => {
+                        snk.open = true;
+                        snk.type = 'dismiss'
+                        snk.message = "Solo se pueden agregar hasta 4 imagenes."
+                        return snk
+                    }) 
+                    return;
+                } 
 
-            if (images.length > 0) {
-                console.log('images if > ', images)	
-                images = [...images, ...e.detail]
-            } 
-            else {
-                console.log('images else > ', images)
-                console.log(...e.detail)
-                images = [...e.detail]
-            } 
-        }}
-    />
+                if (images.length > 0) {
+                    console.log('images if > ', images)	
+                    images = [...images, ...e.detail]
+                } 
+                else {
+                    console.log('images else > ', images)
+                    console.log(...e.detail)
+                    images = [...e.detail]
+                } 
+            }}
+        />
 
-    <div class="image-list">
-        <!-- {#if article.photo == '' } -->
-            <!-- <img src="https://via.placeholder.com/150" class="article-image" alt={article.name} /> -->
-        <!-- {:else} -->
-            <!-- {#if isEdit} -->
-                {#each Object.keys(imagesURL) as img}
-                    <div class="content-image">
-                        <IconButton 
-                            icon="remove" 
-                            custom 
-                            on:click={ () => {
-                                delete imagesURL[img]
-                                imagesURL = {...imagesURL}
-                                article.photo = Object.values(imagesURL).join(',')
-                            } } 
-                        />
-                        <img src={ img } class="article-image" alt={article.name} />
-                        
-                    </div>
-                {/each}
-            <!-- {:else} -->
-                {#each images as img}
-                    <div class="content-image">
-                        <IconButton 
-                            icon="remove" 
-                            custom 
-                            on:click={ () => {
-                                console.log('img new remove > ', img)
-                                // Quitar img de images
-                                fileInput.cleanValue();
-                                images = images.filter(image => image != img)
-                            } } 
-                        />
-                        
-                        <img src={ URL.createObjectURL(img) } class="article-image" alt={article.name} />
-                        
-                    </div>
-                {/each}
-        <!-- {/if} -->
-            
-            <!-- <img src={ imageUrl } class="article-image" alt={article.name} /> -->
-        <!-- {/if} -->
-    </div>
+        <div class="image-list">
+            {#each Object.keys(imagesURL) as img}
+                <div class="content-image">
+                    <IconButton 
+                        icon="remove" 
+                        custom 
+                        on:click={ () => {
+                            delete imagesURL[img]
+                            imagesURL = {...imagesURL}
+                            article.photo = Object.values(imagesURL).join(',')
+                        } } 
+                    />
+                    <img src={ img } class="article-image" alt={article.name} />
+                    
+                </div>
+            {/each}
+            {#each images as img}
+                <div class="content-image">
+                    <IconButton 
+                        icon="remove" 
+                        custom 
+                        on:click={ () => {
+                            console.log('img new remove > ', img)
+                            // Quitar img de images
+                            fileInput.cleanValue();
+                            images = images.filter(image => image != img)
+                        } } 
+                    />
+                    
+                    <img src={ URL.createObjectURL(img) } class="article-image" alt={article.name} />
+                    
+                </div>
+            {/each}
+        </div>
 
     </div>
 
@@ -292,31 +283,3 @@
     </div>
 
 </div>
-
-<style>
-    /* .image {
-        position: relative;
-        height: 100px;
-        box-sizing: border-box;
-        aspect-ratio: 1 / 1;
-    }
-    .article-image {
-        width: 100%;
-        object-fit: contain;
-        border-radius: 5px; 
-        border: 1px solid #ccc;
-    } */
-
-    /* .article-image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-    .content-image {
-        width: 100px;
-        height: 100px;
-        overflow: hidden;
-    } */
-    
-</style>

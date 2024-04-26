@@ -16,6 +16,7 @@
 
     const getImage = async (name) => {
         if (name == '') return null;
+        if (name == null) return null;
         name = name.split(',')[0];
 
         let response = (await Api.callImage('/image_article/' + name));
