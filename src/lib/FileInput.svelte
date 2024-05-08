@@ -94,17 +94,17 @@
         </span>
         <input 
             bind:this={fileInput}
-            {id}
-            {type} 
-            {required}
-            {value}
-            {placeholder}
-            {multiple}
-            class="mdc-text-field__input" 
-            aria-labelledby="my-label-id"
-            aria-controls="my-helper-id"
-            aria-describedby="my-helper-id" 
-            on:change={ handleChange }
+                {id}
+                {type} 
+                {required}
+                {value}
+                {placeholder}
+                {multiple}
+                class="mdc-text-field__input" 
+                aria-labelledby="my-label-id"
+                aria-controls="my-helper-id"
+                aria-describedby="my-helper-id" 
+                on:change={ handleChange }
             >
             {#if trailing != ''}
                 <span style="margin: auto; padding: 10px">

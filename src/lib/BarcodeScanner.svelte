@@ -112,8 +112,11 @@
 
 </script>
 
-<!-- <button on:click={ initBarcodeScanner  }>Init scan</button> -->
-<!-- <IconButton icon="barcode_scanner" on:click={ initBarcodeScanner } /> -->
+<!-- 
+
+    No se usa
+
+-->
 {#if state === 'started'}
     <div class="mobile-only">
         <div id="interactive"></div>

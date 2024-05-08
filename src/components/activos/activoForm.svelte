@@ -434,10 +434,11 @@
             disabled={ activo.virtual_code }
             on:click={ () => {
                 if (videoScan) {
-                    barcodeScanner.stop();
+                    // barcodeScanner.stop();
                     videoScan = false;
                 } else {
-                    barcodeScanner.start();
+                    // barcodeScanner.start();
+                    barcodeScanner.startScan();
                     videoScan = true;
                 }
             } } 
@@ -445,14 +446,14 @@
 
     </div>
 
-    <BarcodeScanner 
-        on:detected={ e => activo.bar_code = e.detail }
+    <BarcodeScanner
         bind:this={ barcodeScanner }
+        on:detect={(e) => activo.bar_code = e.detail.decodedText} 
+        width={250}
+        height={250}
     />
 
-
     <Checkbox bind:checked={ activo.virtual_code } label="Generar código virtual" />
-
     
     <TextField 
         version=2
