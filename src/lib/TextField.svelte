@@ -39,6 +39,7 @@
                 value = valorInput.value
             });
             mdcTextField.foundation.setUseNativeValidation(false)
+            
         }
     })
 
