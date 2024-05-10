@@ -104,6 +104,7 @@
                 accounting_record_number: '',
                 name_in_charge_active: '',
                 rut_in_charge_active: '',
+                virtual_code: false,
                 state: '',
                 article_id: '',
                 office_id: ''

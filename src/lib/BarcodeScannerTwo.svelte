@@ -75,6 +75,7 @@
                 aspectRatio: 1,
                 supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
                 formatsToSupport: formatsToSupport,
+                rememberLastUsedCamera: false
             },
             false // non-verbose
         );
@@ -93,6 +94,7 @@
     // }
 </script>
 
+<!-- <button on:click={onCameraSelect}>Start Scan</button>	 -->
 <div bind:this={ divScanner } id="qr-scanner" />
 
 <style>

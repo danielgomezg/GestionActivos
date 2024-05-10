@@ -212,6 +212,7 @@
                 name_in_charge_active: '',
                 rut_in_charge_active: '',
                 state: '',
+                virtual_code: false,
                 // article_id: '',
                 office_id: ''
             };
@@ -429,29 +430,32 @@
             
         />
 
-        <IconButton 
-            icon="barcode_scanner" 
-            disabled={ activo.virtual_code }
-            on:click={ () => {
-                if (videoScan) {
-                    // barcodeScanner.stop();
-                    videoScan = false;
-                } else {
-                    // barcodeScanner.start();
-                    barcodeScanner.startScan();
-                    videoScan = true;
-                }
-            } } 
-        />
-
+        <div class="mobile-only">       
+            <IconButton 
+                icon="barcode_scanner" 
+                disabled={ activo.virtual_code }
+                on:click={ () => {
+                    if (videoScan) {
+                        // barcodeScanner.stop();
+                        videoScan = false;
+                    } else {
+                        // barcodeScanner.start();
+                        barcodeScanner.startScan();
+                        videoScan = true;
+                    }
+                } } 
+            />
+        </div>
     </div>
 
-    <BarcodeScanner
-        bind:this={ barcodeScanner }
-        on:detect={(e) => activo.bar_code = e.detail.decodedText} 
-        width={250}
-        height={250}
-    />
+    <div class="mobile-only">
+        <BarcodeScanner
+            bind:this={ barcodeScanner }
+            on:detect={(e) => activo.bar_code = e.detail.decodedText} 
+            width={250}
+            height={250}
+        />
+    </div>
 
     <Checkbox bind:checked={ activo.virtual_code } label="Generar código virtual" />
     
