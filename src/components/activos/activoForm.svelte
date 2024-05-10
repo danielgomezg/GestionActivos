@@ -457,6 +457,7 @@
         />
     </div>
 
+    
     <Checkbox bind:checked={ activo.virtual_code } label="Generar código virtual" disabled={isEdit} />
     
     <TextField 
