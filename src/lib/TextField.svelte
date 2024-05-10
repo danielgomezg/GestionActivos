@@ -38,13 +38,14 @@
                 // console.log('Texto ingresado:', valorInput.value);
                 value = valorInput.value
             });
-            // mdcTextField.foundation.setUseNativeValidation(false)
+            mdcTextField.foundation.setUseNativeValidation(false)
+            
         }
     })
 
     $: if (mdcTextField != undefined && value != null) {
         // mdcTextField.valid = true
-        mdcTextField.foundation.setValid(true)
+        // mdcTextField.foundation.setValid(true)
         mdcTextField.foundation.setValue(value)
     }
 
