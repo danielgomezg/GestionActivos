@@ -6,6 +6,7 @@
     export let id = 0
     export let label = "";
     export let checked = false;
+    export let disabled = false;
 
     let formComponent;
     let checkboxComponent;
@@ -22,12 +23,16 @@
 </script>
 
 <div bind:this={ formComponent } class="mdc-form-field">
-  <div bind:this={ checkboxComponent } class="mdc-checkbox">
+  <div bind:this={ checkboxComponent } 
+    class="mdc-checkbox"
+    class:mdc-checkbox--disabled={disabled}
+    >
     <input 
       type="checkbox"
       {checked}
       class="mdc-checkbox__native-control"
       {id}
+      {disabled}
       aria-labelledby={id}
       on:change={ handleChange }
     />
