@@ -27,8 +27,8 @@ class Api {
         // url = `${process.env.REACT_APP_API_URL}${url}`
         console.log(import.meta.env.MODE)
         if (import.meta.env.MODE == 'production') {
-            // url = `http://45.33.99.148:8000${url}`
-            url = `45-33-99-148.ip.linodeusercontent.com:8000${url}`
+            url = `http://45.33.99.148:8000${url}`
+            // url = `45-33-99-148.ip.linodeusercontent.com:8000${url}`
         }
         else {
             // url = `http://127.0.0.1:9000${url}`	
