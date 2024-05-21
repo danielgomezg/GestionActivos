@@ -27,8 +27,7 @@ class Api {
         // url = `${process.env.REACT_APP_API_URL}${url}`
         console.log(import.meta.env.MODE)
         if (import.meta.env.MODE == 'production') {
-            url = `http://45.33.99.148:8000${url}`
-            // url = `45-33-99-148.ip.linodeusercontent.com:8000${url}`
+            url = `https://45-33-99-148.ip.linodeusercontent.com/api/${url}`
         }
         else {
             // url = `http://127.0.0.1:9000${url}`	
@@ -85,7 +84,7 @@ class Api {
     static callImage(path = '') {
         
         let host = '';
-            if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+            if (import.meta.env.MODE == 'production') host = `https://45-33-99-148.ip.linodeusercontent.com/api`
             else host = `http://192.168.100.8:9000`	
             return fetch(`${host}${path}`)
                 .then(response => response.blob())
@@ -105,7 +104,7 @@ class Api {
     static getReport(path = '', params = {}) {
 
         let host = '';
-        if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+        if (import.meta.env.MODE == 'production') host = `https://45-33-99-148.ip.linodeusercontent.com/api`
         else host = `http://192.168.100.8:9000`
 
         let token = Api.getTokenFromLocalStorage();
@@ -128,4 +127,5 @@ class Api {
     }
 
 }
+
 export default Api
