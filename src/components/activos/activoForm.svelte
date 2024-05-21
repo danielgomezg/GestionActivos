@@ -377,7 +377,11 @@
     
     $: activo.bar_code = activo.virtual_code ? '' : activo.bar_code
     $: activo.rut_in_charge_active = formatRut(activo.rut_in_charge_active)
-    $: console.log('activo', activo)
+    // $: console.log('activo', activo)
+    $: if (activo.virtual_code && barcodeScanner != undefined) {
+        barcodeScanner.stopScan();
+        videoScan = false;
+    } 
 
 </script>
 
@@ -437,6 +441,7 @@
                 on:click={ () => {
                     if (videoScan) {
                         // barcodeScanner.stop();
+                        barcodeScanner.stopScan();
                         videoScan = false;
                     } else {
                         // barcodeScanner.start();

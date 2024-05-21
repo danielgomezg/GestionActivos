@@ -211,7 +211,7 @@
 
     const getDocument = (url) => {
         let host = '';
-        if (import.meta.env.MODE == 'production') host = `http://45.33.99.148:8000`
+        if (import.meta.env.MODE == 'production') host = `https://45-33-99-148.ip.linodeusercontent.com/api`
         else host = `http://127.0.0.1:9000`	
         
         fetch(`${host}/file_active/${url}`)

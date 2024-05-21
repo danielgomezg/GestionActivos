@@ -11,9 +11,11 @@
     export let width;
     export let height;
     export { startScan } 
+    export { stopScan }
 
     let scanner;
     let divScanner;
+    let status = '';
 
     const formatsToSupport = [
         // Html5QrcodeSupportedFormats.QR_CODE,
@@ -43,6 +45,11 @@
         divScanner.style = 'display: block;';
         scanner.render(onScanSuccess, onScanFailure);
         // scanner?.start();
+        status = 'scanning';
+    }
+
+    function stopScan() {
+        if (status === 'scanning') scanner.clear();
     }
 
     // 
@@ -112,8 +119,10 @@
         position: absolute;
         inset: auto 0 0;
         display: block;
-        content: 'Allow camera access';
+        content: 'Click para permitir camara';
         visibility: visible;
         padding: 10px 0;
+        margin-bottom: 40px;
+        color: black;
     }
 </style>
