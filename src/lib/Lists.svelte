@@ -10,6 +10,7 @@
   export let customClass = '';
   export let origin = 0;
   export let actions = false;
+  export let disabledOptions = false;
 
   let list;
   let listComponent;
@@ -114,14 +115,16 @@
               >
                 
             </Menu>
-            <IconButton 
-              icon="more_vert" 
-              on:click={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                openActions[index] = !openActions[index]
-              } } 
-            />
+            {#if !disabledOptions}
+              <IconButton 
+                icon="more_vert" 
+                on:click={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  openActions[index] = !openActions[index]
+                } } 
+              />
+            {/if}
           <!-- </div> -->
         </span>
       {/if}
@@ -130,6 +133,7 @@
     {#key option.children}
       {#if option.children}
         <svelte:self
+          {disabledOptions}
           origin={ level == 0 ? option.id : origin }
           {customClass}
           level={level + 1} 

@@ -12,6 +12,7 @@
     export let id = ''
     export let trailing = ''
     export let helperText = ''
+    export let disabled = false
     export { cleanValue }
 
     let textfield;
@@ -94,6 +95,7 @@
         </span>
         <input 
             bind:this={fileInput}
+                {disabled}
                 {id}
                 {type} 
                 {required}

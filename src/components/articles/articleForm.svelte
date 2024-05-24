@@ -1,7 +1,7 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { onMount, getContext } from "svelte";
-    import { snackbar } from "../../stores/store";
+    import { snackbar, user } from "../../stores/store";
     import CategorySelect from "../categories/categorySelect.svelte";
     import { TextField, Button, FileInput, TextArea, IconButton } from "$lib";
   
@@ -278,6 +278,7 @@
         <Button 
             label="Guardar"
             custom
+            disabled={ $user.profile_id == 2 }
             on:click={ accionBtn }
         />
     </div>

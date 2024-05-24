@@ -44,13 +44,4 @@
         align-items: flex-start;
         gap: 50px;
     }
-  .store-info {
-    display: flex;
-    align-items: center;
-  }
-
-  .flag {
-    width: 25px;
-    border-radius: 3px;
-  }
 </style>

@@ -4,7 +4,7 @@
     import { getContext, onDestroy, onMount, tick } from "svelte";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
     import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton, BarcodeScanner, Checkbox } from "$lib";
-    import { snackbar, estadosActivo, lockArticle, lockOffice, lockStore, lockStoreName, lockOfficeName, lockArticleName } from "../../stores/store";
+    import { snackbar, estadosActivo, lockArticle, lockOffice, lockStore, lockStoreName, lockOfficeName, lockArticleName, user } from "../../stores/store";
 
     export let activo = {};
     export let article_id = 0;
@@ -624,6 +624,7 @@
         <Button 
             custom
             label="Guardar"
+            disabled={ $user.profile_id == 2 }
             on:click={ accionBtn }
         />
     </div>

@@ -7,11 +7,11 @@
     import ActivosTeoricos from "./activosTeoricos.svelte";
     import ActivoFormUpload from "./activoFormUpload.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-    import { headerTableActivos, snackbar } from "../../stores/store";
+    import { headerTableActivos, snackbar, user } from "../../stores/store";
     import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
 
-    let limit = 3;
+    let limit = 10;
     let offset = 0;
 
     let table;
@@ -394,7 +394,9 @@
 />
 
 <div class="mobile-only" style="position: fixed; bottom: 10px; left: 10px; z-index: 10">
-    <Fab disabled={ newArticleDisabled } on:click={ newActivo(companyId) } />
+    {#if $user.profile_id != 2}
+        <Fab disabled={ newArticleDisabled } on:click={ newActivo(companyId) } />
+    {/if}
 </div>
 
 <div style="padding-top: 80px;">
@@ -479,7 +481,9 @@
             </div>
             <div class="desktop-only" style="display: flex; align-items: center; gap: 8px ">
                 <!-- <IconButton icon="upload_file" tooltipId="btn-active__upload" tooltipText="Cargar activos" on:click={ uploadActivos } /> -->
-                <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
+                {#if $user.profile_id != 2}
+                    <Button label="Nuevo activo" custom disabled={ newArticleDisabled } on:click={ () => newActivo(companyId) } />
+                {/if}
                 <Button label="Activos teoricos" custom disabled={ newArticleDisabled } secondary on:click={ activosTeoricos } />
             </div>
         </div>

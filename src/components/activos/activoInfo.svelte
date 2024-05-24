@@ -1,7 +1,7 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { getContext, onMount } from "svelte";
-    import { snackbar } from "../../stores/store";
+    import { snackbar, user } from "../../stores/store";
     import { estadosActivo } from "../../stores/store";
     import { Divider, IconButton, Snackbar, Menu } from "$lib";
 
@@ -9,7 +9,7 @@
     export let company_id = 0;
     export let endSroll = false;
 
-    let limit = 7;
+    let limit = 50;
     let offset = 0;
     let count = 0;
     let activos = [];
@@ -152,7 +152,7 @@
                             [
                                 { label: "Documento contable", dispatch: "document", disabled: !activo.accounting_document},
                                 { label: "Editar", dispatch: "edit"},
-                                { label: "Eliminar", dispatch: "delete" }
+                                { label: "Eliminar", dispatch: "delete", hide: $user.profile_id == 2}
                             ]  
                         }
                         on:document={() => downloadDocument(activo) }
@@ -174,6 +174,7 @@
                     <IconButton 
                         icon="delete" 
                         tooltipId="btn-delete__{activo.bar_code}" 
+                        disabled
                         tooltipText="Eliminar" 
                         on:click={ () => {
 

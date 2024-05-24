@@ -14,7 +14,7 @@
  
     let props;
     let count = 0;
-    let limit = 5;
+    let limit = 50;
     let offset = 0;
     let modalContent;  
     let empresas = [];

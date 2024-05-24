@@ -14,7 +14,7 @@
 
     let props;
     let count = 0;
-    let limit = 25;
+    let limit = 50;
     let offset = 0;
     let message = "";
     let modalContent;
