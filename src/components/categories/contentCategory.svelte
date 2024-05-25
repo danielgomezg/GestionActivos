@@ -3,7 +3,7 @@
     import FormCategory from "./categoryForm.svelte";
     import { Button, Snackbar, Fab, Lists } from "$lib";
     import { onMount, setContext, onDestroy } from "svelte";
-    import { companySelect, snackbar } from "../../stores/store";
+    import { companySelect, snackbar, user } from "../../stores/store";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
  
@@ -189,7 +189,7 @@
 />
 
 <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
-    <Fab on:click={ () => createCategory(0) } />
+    <Fab on:click={ () => createCategory(0) } disabled={ $user.profile_id == 2 } />
 </div>
 <div style="position: relative">
     <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
@@ -203,6 +203,7 @@
 
     <div class="flex-column gap-8 mt-8" style="padding: 44px 0 10px;">
         <Lists 
+            disabledOptions={ $user.profile_id == 2 }
             actions
             customClass="list-categories"
             options={ categories }

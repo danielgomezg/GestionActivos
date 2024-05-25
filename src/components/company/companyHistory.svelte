@@ -6,7 +6,7 @@
     export let company = {};
     export let endSroll = false;
 
-    let limit = 10;
+    let limit = 50;
     let offset = 0;
     let count = -1;
     let companyHistory = [];

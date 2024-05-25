@@ -2,7 +2,7 @@
     import Api from "../../../helpers/ApiCall";
     import { snackbar, user } from "../../stores/store";
     import ReportActive from "../reports/report.svelte";
-    import { createEventDispatcher, getContext } from "svelte";
+    import { createEventDispatcher, getContext, onMount } from "svelte";
     import { Card, IconButton, Button, Snackbar, Menu } from "$lib";
 
     export let article = {}
@@ -84,7 +84,7 @@
                     id={ article.id } 
                     label="Reporte activos"
                 /> -->
-                <IconButton icon="history" tooltipId="btn-history__{article.name}" tooltipText="Historial" on:click={ dispath("history", article) } />
+                <IconButton icon="history" tooltipId="btn-history__{article.name}" disabled={$user.profile_id == 2} tooltipText="Historial" on:click={ dispath("history", article) } />
                 <IconButton icon="edit" tooltipId="btn-edit__{article.name}" tooltipText="Editar" on:click={ dispath("edit", { article: {...article}, imageUrl}) } />
                 {#if $user.profile_id != 2}
                     <IconButton 
@@ -103,9 +103,9 @@
                     bind:open={openActions}
                     options={
                         [
-                            { label: "Historial", dispatch: "history"},
+                            { label: "Historial", dispatch: "history", hide: $user.profile_id == 2},
                             { label: "Editar", dispatch: "edit"},
-                            { label: "Eliminar", dispatch: "delete" }
+                            { label: "Eliminar", dispatch: "delete", hide: $user.profile_id == 2}
                         ]  
                     }
                     on:edit={() => dispath("edit", { article: {...article}, imageUrl}) }
@@ -155,7 +155,7 @@
         </div>
         <div class="card-actions">
             <Button label="Ver activos" type="outlined" color="" on:click={ dispath("showActivos", article) } />
-            <Button label="Nuevo activo" custom on:click={ dispath("newActivo", article) } />
+            <Button label="Nuevo activo" disabled={ $user.profile_id == 2 } custom on:click={ dispath("newActivo", article) } />
         </div>
     </div>
 </Card>

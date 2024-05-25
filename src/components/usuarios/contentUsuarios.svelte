@@ -9,7 +9,7 @@
     
     let userSelf = JSON.parse(sessionStorage.getItem('user'));
     let props;
-    let limit = 10;
+    let limit = 50;
     let count = 0;
     let offset = 0;
     let modalContent;  

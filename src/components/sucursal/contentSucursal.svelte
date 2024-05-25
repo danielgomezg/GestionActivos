@@ -12,7 +12,7 @@
         
     let props;
     let company;
-    let limit = 6;
+    let limit = 50;
     let count = 0;
     let offset = 0;
     let stores = [];
@@ -79,29 +79,30 @@
 
 </script>
     
-<div style="padding-top: 20px;">
-    <div class="header-content">
-        <!-- <Button label="Nueva sucursal" custom on:click={ createSucursal } /> -->
-        <!-- <IconButton icon="tune" /> -->
-        <!-- <div class="title">Empresas</div> -->
+<div style="position: relative">
+    <div class="header-content" style="position: sticky; top: 40px; z-index: 3; background-color: #f0f0f0; padding: 34px 0 10px">
+        <!-- <div class="desktop-only">
+            <Button label="Nueva sucursal" custom on:click={ createSucursal } />
+        </div> -->
+        
+        <div>
+            <SucursalSearch
+                bind:sucursales = {stores}
+                companyId={$user.company_id}
+                on:startSearch={ () => {
+                    startSearch = true;
+                } }
+                on:removeSearch={ () => {
+                    startSearch = false;
+                    getStores($user.company_id)
+                } }
+            />
+        </div>
+
     </div>
     
 
-    <div class="search-sucursal">
-        <SucursalSearch
-            bind:sucursales = {stores}
-            companyId={$user.company_id}
-            on:startSearch={ () => {
-                startSearch = true;
-            } }
-            on:removeSearch={ () => {
-                startSearch = false;
-                getStores($user.company_id)
-            } }
-        />
-    </div>
-    <br>
-    <div class="companies-content">
+    <div class="flex-column gap-8" style="padding: 44px 0 10px;">
         {#if loading}
             <Loading />
         {/if}

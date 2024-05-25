@@ -8,7 +8,7 @@
     export let company_id = 0; 
     export let endSroll = false;
 
-    let limit = 7;
+    let limit = 50;
     let offset = 0;
     let count = 0;
     let stores = [];

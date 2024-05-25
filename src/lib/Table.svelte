@@ -5,6 +5,7 @@
   import IconButton from "./IconButton.svelte";
   import { MDCDataTable } from "@material/data-table";
   import { createEventDispatcher, onMount, tick } from "svelte";
+  import { user } from "../stores/store";
 
   export let limit = 0;
   export let count = 0;
@@ -92,8 +93,10 @@
     {#if showActions}
       <div class="table-actions" >
         <div transition:fly="{{y: 0, x: -5, duration: 200}}">
-          <IconButton icon="edit" on:click={() => dispatch("edit")} />
-          <IconButton icon="delete" on:click={() => dispatch("delete")} />
+          <IconButton icon="edit" disabled={ $user.profile_id != 2 } on:click={() => dispatch("edit")} />
+            {#if $user.profile_id != 2}
+              <IconButton icon="delete" on:click={() => dispatch("delete")} />
+            {/if}
         </div>
       </div>
     {/if}

@@ -57,6 +57,7 @@
         <li 
           class="mdc-list-item" 
           class:mdc-list-item--disabled={option.disabled}
+          class:hide-item={option.hide}
           role="menuitem" 
           custom-dispatch={ option.dispatch }
         >
@@ -82,6 +83,9 @@
 <style>
   .mdc-list-item {
     padding: 5px 16px;
+  }
+  .hide-item {
+    display: none;
   }
 
 </style>

@@ -1,7 +1,7 @@
 <script>
     import { Button, FileInput } from "$lib";
     import Api from "../../../helpers/ApiCall";
-    import { snackbar } from "../../stores/store";
+    import { snackbar, user } from "../../stores/store";
 
     export let companyId = 0;
 
@@ -115,6 +115,7 @@
         accept={ ['csv'] }
         trailing="upload_file"
         helperText="Documento con formato csv."
+        disabled={ $user.profile_id == 2 }
         on:change={ (e) => {
             console.log('file selected')
             console.log(e.detail)
@@ -127,6 +128,7 @@
     <div class="mobile-fixed">
         <Button 
             custom
+            disabled={ $user.profile_id == 2 }
             label="Guardar"
             on:click={ upload }
         />

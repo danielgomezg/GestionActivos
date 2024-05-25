@@ -10,7 +10,7 @@
 
     let count = 0;
     let offset = 0;
-    let limit = 100;
+    let limit = 50;
     let companies = []
     let showList = false;
     let nameCompany = '';
