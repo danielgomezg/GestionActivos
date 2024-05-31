@@ -93,6 +93,26 @@ export const menu = writable([
         ]
     },
     {
+        id: 8,
+        name: 'Valores',
+        path: '/valores',
+        icon: 'attach_money',
+        profiles: [
+            1,
+            2
+        ]
+    },
+    {
+        id: 9,
+        name: 'Colecciones',
+        path: '/colecciones',
+        icon: 'group_work',
+        profiles: [
+            1,
+            2
+        ]
+    },
+    {
         id: 4,
         name: 'Usuarios',
         path: '/usuarios',

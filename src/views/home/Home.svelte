@@ -17,6 +17,9 @@
     import ContentSucursal from "../../components/sucursal/contentSucursal.svelte";
     import ContentCategory from "../../components/categories/contentCategory.svelte";
 
+    import ContentValores from "../../components/valores/contentValores.svelte";
+    import ContentColeccion from "../../components/colecciones/contentColeccion.svelte";
+
     import CompanySelect from "../../components/company/companySelect.svelte";
 
 
@@ -92,7 +95,9 @@
                 {#if $user?.profile_id == 2} 
                     <Route path="/sucursales" component={ContentSucursal} />
                 {/if} 
-                                
+                      
+                <Route path="/colecciones" component={ContentColeccion} />
+                <Route path="/valores" component={ContentValores} />
                 <Route path="/articulos" component={ContentArticle} />
                 <Route path="/activos" component={ContentActivo} />
                 <Route path="/categorias" component={ContentCategory} />

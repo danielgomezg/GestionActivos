@@ -11,6 +11,7 @@
     export let label = ""
     export let id = ''
     export let trailing = ''
+    export let design = 'outlined'
     export let disabled = false
     export { setValid }
 
@@ -55,7 +56,10 @@
 {#if version == 2}
 <label 
     bind:this={textfield} 
-    class="mdc-text-field mdc-text-field--outlined mdc-text-field--custom"
+    class="mdc-text-field"
+    class:mdc-text-field--outlined={design == 'outlined'}
+    class:mdc-text-field--custom={design == 'outlined'}
+    class:mdc-text-field--filled={design == 'filled'}
     class:mdc-text-field--with-trailing-icon={trailing != ''}
     class:mdc-text-field--disabled={disabled}
     class:mdc-text-field--danger={isValid === false}
