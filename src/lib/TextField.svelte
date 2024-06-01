@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte';
+    import { fade } from 'svelte/transition';
     import { MDCTextField } from '@material/textfield';
     import '@material/web/textfield/outlined-text-field.js';
 
@@ -13,12 +14,28 @@
     export let trailing = ''
     export let design = 'outlined'
     export let disabled = false
+
     export { setValid }
+    export { setFeefback }
 
     let isValid;
     let textfield
     let mdcTextField;
 
+    const setFeefback = (status = '') => {
+        
+        if (status == 'success') {
+            trailing = 'check_circle'
+        } 
+        else {
+            trailing = 'error'
+        }
+
+        setTimeout(() => {
+            trailing = ''
+        }, 1000)
+        
+    }
 
     const setValid = (status) => {
         console.log('status', status)
@@ -42,7 +59,7 @@
             mdcTextField.foundation.setUseNativeValidation(false)
             
         }
-    })
+    });
 
     $: if (mdcTextField != undefined && value != null) {
         // mdcTextField.valid = true
@@ -80,14 +97,21 @@
         class="mdc-text-field__input" 
         aria-labelledby="my-label-id" 
         on:focus
-        >
-        {#if trailing != ''}
-            <span style="margin: auto; padding: 10px">
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <i class="material-symbols-rounded" on:click>{trailing}</i>
-            </span>
-        {/if}
+        on:blur
+    >
+    {#if trailing != ''}
+        <span style="margin: auto; padding: 10px">
+            <!-- svelte-ignore a11y-no-static-element-interactions -->
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <i 
+                in:fade={{duration: 100}}
+                class="material-symbols-rounded" 
+                on:click
+                class:icon-success={trailing == 'check_circle'}
+                class:icon-danger={trailing == 'error'} 
+            >{trailing}</i>
+        </span>
+    {/if}
         
 </label>
 {:else}
@@ -105,4 +129,13 @@
     .mdc-text-field__input::-webkit-calendar-picker-indicator {
        display: initial;
     }
+
+    .icon-success {
+        color: green;
+    }
+
+    .icon-danger {
+        color: red;
+    }
+
 </style>

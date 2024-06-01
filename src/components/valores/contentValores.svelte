@@ -1,107 +1,35 @@
 <script>
     import { onMount } from "svelte";
+    import Api from "../../../helpers/ApiCall";
     import { Button, Fab } from "$lib";
     import ValueActive from "./valueActive.svelte";
+    import { companySelect } from "../../stores/store";
+    
+    let count = 0;
+    let limit = 50;
+    let offset = 0;
+    let activesValues = [];
 
-    let response = [];
 
-    const getActivosValues = () => {
-        response = [
-            {
-                id: 1,
-                valor_real: 0,
-                valor_adquisicion: 0,
-                vida_util: 0,
-                activo: {
-                    id: 1,
-                    barcode: '1903213',
-                    codigo_virtual: '',
-                }
-            },
-            {
-                id: 2,
-                valor_real: 0,
-                valor_adquisicion: 0,
-                vida_util: 0,
-                activo: {
-                    id: 2,
-                    barcode: '1903213',
-                    codigo_virtual: '',
-                }
-            },
-            {
-                id: 3,
-                valor_real: 0,
-                valor_adquisicion: 0,
-                vida_util: 0,
-                activo: {
-                    id: 3,
-                    barcode: '1903213',
-                    codigo_virtual: '',
-                }
-            },
-            {
-                id: 4,
-                valor_real: 0,
-                valor_adquisicion: 0,
-                vida_util: 0,
-                activo: {
-                    id: 4,
-                    barcode: '1903213',
-                    codigo_virtual: '',
-                }
-            },
-            {
-                id: 5,
-                valor_real: 0,
-                valor_adquisicion: 0,
-                vida_util: 0,
-                activo: {
-                    id: 5,
-                    barcode: '1903213',
-                    codigo_virtual: '',
-                }
-            },
-            {
-                id: 6,
-                valor_real: 0,
-                valor_adquisicion: 0,
-                vida_util: 0,
-                activo: {
-                    id: 6,
-                    barcode: '1903213',
-                    codigo_virtual: '',
-                }
-            },
-            {
-                id: 7,
-                valor_real: 0,
-                valor_adquisicion: 0,
-                vida_util: 0,
-                activo: {
-                    id: 7,
-                    barcode: '1903213',
-                    codigo_virtual: '',
-                }
-            },
-            {
-                id: 8,
-                valor_real: 0,
-                valor_adquisicion: 0,
-                vida_util: 0,
-                activo: {
-                    id: 8,
-                    barcode: '1903213',
-                    codigo_virtual: '',
-                }
-                
-            }
-        ]
+    const getActivosValues = async (companyId) => {
+        console.log(companyId)
+        if (companyId == 0) return
+
+
+        let response = await Api.call(`/actives/values?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', companyId);
+        console.log('RESPONSE GET ACTIVOS VALUES --> ', response)
+        if (response.success && response.statusCode == "200") {
+            activesValues = [...activesValues, ...response.data.result] 
+            count = response.data.count
+        } 
     }
 
     onMount(() => {
-        getActivosValues();
+        // getActivosValues();
     });
+
+    $: getActivosValues($companySelect)
+    
 
 </script>
 
@@ -134,8 +62,11 @@
     </div>
 
     <div class="flex-column gap-8 mt-8" style="padding: 44px 0 10px;">
-        {#each response as activeValue }
-            <ValueActive {activeValue} />
+        {#each activesValues as activeValue }
+            <ValueActive 
+                active={ activeValue.active } 
+                values={ activeValue.active_values == null ? { id: 0, useful_life: 0, real_value: 0, adq_value: 0 } : activeValue.active_values }  
+            />
         {/each}
         
     </div>
