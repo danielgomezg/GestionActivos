@@ -20,7 +20,7 @@
         let body = {
             adq_value: values.adq_value.toString().replace(/\./g, '').replace('$', ''),
             real_value: values.real_value.toString().replace(/\./g, '').replace('$', ''),
-            useful_life: values.useful_life
+            useful_life: values.useful_life || 0
         };
 
         body = JSON.stringify(body);

@@ -3,7 +3,7 @@
     import ArticleSelect from "../articles/articleSelect.svelte";
     import { getContext, onDestroy, onMount, tick } from "svelte";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
-    import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton, BarcodeScanner, Checkbox } from "$lib";
+    import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton, BarcodeScanner, Checkbox, Tab } from "$lib";
     import { snackbar, estadosActivo, lockArticle, lockOffice, lockStore, lockStoreName, lockOfficeName, lockArticleName, user } from "../../stores/store";
 
     export let activo = {};
@@ -391,6 +391,8 @@
     message={messageSnackbar}
     on:confirm={ setSaved }
 />
+
+<Tab />
 
 <div class="form">
 

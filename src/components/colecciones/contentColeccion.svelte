@@ -2,8 +2,15 @@
     import { onMount } from "svelte";
     import { Button, Loading, Fab } from "$lib";
     import CardColeccion from "./cardColeccion.svelte";
+    import FormColeccion from "./formColeccion.svelte";
+    import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
+    let props;
+    let modalContent;
+    let modalTitle = '';
     let collections = [];
+    let openModal = false;
+    let backButton = false;
 
     const getColletions = () => {
         console.log('get');
@@ -30,9 +37,27 @@
             }
         ]
     }
+
+    const editColeccion = (collection) => {
+        console.log('edit')
+        modalTitle = 'Editar colección';
+        modalContent = FormColeccion;
+        props = { collection }
+
+        openModal = true;
+    }
     
     const createColeccion = () => {
         console.log('create')
+        modalTitle = 'Nueva colección';
+        modalContent = FormColeccion;
+        props = {
+            collection: {
+                name: ''
+            }
+        };
+
+        openModal = true;
     }
 
     onMount(() => {
@@ -49,7 +74,6 @@
         <!-- <Search value="" /> -->
         <div>
         
-            
         </div>
         <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
             <Fab on:click={ () => createColeccion } />
@@ -58,7 +82,19 @@
 
     <div class="flex-column gap-8" style="padding: 44px 0 10px;">
        {#each collections as collection }
-            <CardColeccion {collection} />
+            <CardColeccion 
+                {collection} 
+                on:edit={(event) => editColeccion(event.detail) }
+                on:delete={() => console.log('delete')}
+            />
        {/each}
     </div>
 </div>
+
+<SheetHandler
+    {props}
+    {modalTitle}
+    {backButton}
+    {modalContent}
+    bind:openModal={openModal}
+/>
