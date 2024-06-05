@@ -1,39 +1,46 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { TextField, IconButton } from "$lib";
-    import { createEventDispatcher } from "svelte";
+    import { companySelect } from "../../stores/store";
+    import { createEventDispatcher, onMount } from "svelte";
 
     export let hideActives = [];
     export { requeueActive };
 
-    let dispatch = createEventDispatcher();
+    let count = 0;
+    let limit = 25;
+    let offset = 0;
     let searchText = '';
-    let activesFound = [
-        {
-            id: 5,
-            barcode: '55555555',
-            virtualcode: ''
-        },
-        {
-            id: 6,
-            barcode: '66666666',
-            virtualcode: ''
-        },
-        {
-            id: 3,
-            barcode: '33333333',
-            virtualcode: ''
-        },
-        {
-            id: 7,
-            barcode: '',
-            virtualcode: '77777777'
-        }
-    ]
+    let activesFound = [];
 
+    let dispatch = createEventDispatcher();
+    
     const requeueActive = (active) => {
         activesFound = [...activesFound, active]
     }   
+
+    const getActives = async () => {
+        // Obtener activos
+        let response = await Api.call(`/actives/values/codes?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', $companySelect);
+        console.log('RESPONSE GET ACTIVOS --> ', response)
+        if (response.success && response.statusCode == "200") {
+            activesFound = [...activesFound, ...response.data.result] 
+            count = response.data.count
+        } 
+
+    }
+
+    const onScroll = async (e) => {
+        if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
+            offset += limit;
+            if (offset >= count) return;
+            await getActives();
+        }
+    }
+
+    onMount(() => {
+        getActives();
+    })
 
 </script>
 <div style="position: relative;" >
@@ -46,11 +53,11 @@
         trailing="search"
         bind:value={ searchText }
     />
-    <div class="found-container">
+    <div class="found-container" on:scroll={ onScroll }>
         {#each activesFound as active }
             {#if !hideActives.includes(active.id) }
                 <div class="active-found">
-                    <span>{ active.barcode || active.virtualcode }</span>
+                    <span>{ active.bar_code || active.virtual_code }</span>
                     <IconButton 
                         icon="add" 
                         on:click={() => {
@@ -72,6 +79,8 @@
         position: absolute;
         border-radius: 10px;
         border: solid 1px #ccc;
+        max-height: 250px;
+        overflow-y: auto;
     }
 
     .active-found {

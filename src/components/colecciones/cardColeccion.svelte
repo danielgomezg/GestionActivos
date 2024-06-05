@@ -51,7 +51,11 @@
                 <table>
                     <tr>
                         <td>Activos: </td>
-                        <td>{ collection.items }</td>
+                        <td>{ collection.actives_count || 0 }</td>
+                    </tr>
+                    <tr>
+                        <td>Creado el: </td>
+                        <td>{ collection.creation_date.split("-").reverse().join("-") }</td>
                     </tr>
                 </table>
             </div>

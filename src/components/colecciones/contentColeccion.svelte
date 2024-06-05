@@ -1,48 +1,48 @@
 <script>
-    import { onMount } from "svelte";
-    import { Button, Loading, Fab } from "$lib";
+    import { onMount, setContext } from "svelte";
+    import { Button, Fab } from "$lib";
+    import Api from "../../../helpers/ApiCall";
     import CardColeccion from "./cardColeccion.svelte";
     import FormColeccion from "./formColeccion.svelte";
+    import { companySelect } from "../../stores/store";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-
+  
     let props;
+    let count = 0;
+    let limit = 50;
+    let offset = 0;
     let modalContent;
     let modalTitle = '';
     let collections = [];
     let openModal = false;
     let backButton = false;
 
-    const getColletions = () => {
-        console.log('get');
-        collections = [
-            {
-                id: 1,
-                name: 'Colección 1',
-                items: 10
-            },
-            {
-                id: 2,
-                name: 'Colección 2',
-                items: 20
-            },
-            {
-                id: 3,
-                name: 'Colección 3',
-                items: 30
-            },
-            {
-                id: 4,
-                name: 'Colección 4',
-                items: 40
-            }
-        ]
+    setContext('addCollection', (collection) => {
+        collections = [collection, ...collections]
+    });
+
+    setContext('editCollection', (collection) => {
+        let index = collections.findIndex(c => c.id == collection.id);
+        collections[index] = collection;
+        collections = [...collections]
+    });
+
+    const getColletions = async () => {
+        if ($companySelect == 0) return
+        // Obtener colecciones
+        let response = await Api.call(`/activesGroups?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', $companySelect);
+        console.log('RESPONSE GET COLLECCION --> ', response)
+        if (response.success && response.statusCode == "200") {
+            collections = [...collections, ...response.data.result] 
+            count = response.data.count
+        } 
     }
 
     const editColeccion = (collection) => {
         console.log('edit')
         modalTitle = 'Editar colección';
         modalContent = FormColeccion;
-        props = { collection }
+        props = { collection, edit: true }
 
         openModal = true;
     }
@@ -61,8 +61,10 @@
     }
 
     onMount(() => {
-        getColletions()
+        
     })
+
+    $: getColletions($companySelect)
 
 </script>
 
