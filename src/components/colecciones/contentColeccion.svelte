@@ -1,5 +1,5 @@
 <script>
-    import { onMount, setContext } from "svelte";
+    import { onDestroy, onMount, setContext } from "svelte";
     import { Button, Fab } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import CardColeccion from "./cardColeccion.svelte";
@@ -9,7 +9,7 @@
   
     let props;
     let count = 0;
-    let limit = 50;
+    let limit = 7;
     let offset = 0;
     let modalContent;
     let modalTitle = '';
@@ -25,6 +25,10 @@
         let index = collections.findIndex(c => c.id == collection.id);
         collections[index] = collection;
         collections = [...collections]
+    });
+
+    setContext('deleteCollection', (id) => {
+        collections = collections.filter(c => c.id != id)
     });
 
     const getColletions = async () => {
@@ -60,8 +64,19 @@
         openModal = true;
     }
 
+    const handleScroll = () => {
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+            offset = offset + limit;
+            getColletions()
+        }
+    }
+
     onMount(() => {
-        
+        window.addEventListener('scroll', handleScroll)
+    })
+
+    onDestroy(() => {
+        window.removeEventListener('scroll', handleScroll)
     })
 
     $: getColletions($companySelect)

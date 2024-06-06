@@ -1,25 +1,43 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { TextField, IconButton } from "$lib";
     import { companySelect } from "../../stores/store";
+    import { TextField, IconButton, Loading } from "$lib";
     import { createEventDispatcher, onMount } from "svelte";
 
     export let hideActives = [];
-    export { requeueActive };
 
     let count = 0;
     let limit = 25;
     let offset = 0;
     let searchText = '';
+    let loading = false;
+    let notFound = false;
     let activesFound = [];
 
     let dispatch = createEventDispatcher();
-    
-    const requeueActive = (active) => {
-        activesFound = [...activesFound, active]
-    }   
+
+    const getActivesByCode = async (code) => {
+        if (code.length < 3) return;
+        activesFound = [];
+        loading = true;
+
+        let response = await Api.call(`/active/search/codes?search=${code}&limit=50&offset=0`, 'GET', {}, 'json', $companySelect);
+        console.log('RESPONSE GET ACTIVOS BY CODE --> ', response)
+        if (response.success && response.statusCode == "200") {
+            activesFound = response.data.result 
+            count = response.data.count
+            if (count == 0) {
+                notFound = true;
+            }
+            else {
+                notFound = false;
+            }
+            loading = false;
+        }
+    }
 
     const getActives = async () => {
+        if (searchText.length > 0) return;
         // Obtener activos
         let response = await Api.call(`/actives/values/codes?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', $companySelect);
         console.log('RESPONSE GET ACTIVOS --> ', response)
@@ -42,6 +60,9 @@
         getActives();
     })
 
+    $: getActivesByCode(searchText);
+    $: console.log('HIDE ACTIVES --> ', hideActives)
+
 </script>
 <div style="position: relative;" >
     <TextField 
@@ -50,10 +71,26 @@
         required 
         type="text"
         label="Buscador activos" 
-        trailing="search"
+        trailing={ searchText.length > 0 ? 'clear' : 'search' }
         bind:value={ searchText }
+        on:click={() => { 
+            if (searchText.length > 0) searchText = '';
+            offset = 0;
+            activesFound = [];
+            getActives();
+        }}
     />
     <div class="found-container" on:scroll={ onScroll }>
+        {#if loading}
+            <div style="display: flex; justify-content: center; margin: 10px 0;">
+                <Loading />
+            </div>
+        {/if}
+        {#if notFound}
+            <div style="display: flex; justify-content: center; margin: 10px 0;">
+                <span>No se encontraron activos</span>
+            </div>
+        {/if}
         {#each activesFound as active }
             {#if !hideActives.includes(active.id) }
                 <div class="active-found">
@@ -63,6 +100,7 @@
                         on:click={() => {
                             dispatch('addActive', active)
                             activesFound = activesFound.filter(a => a.id !== active.id)
+                            // hideActives = [...hideActives, active.id]
                         }} 
                     />
                 </div>
@@ -89,4 +127,5 @@
         align-items: center;
         justify-content: space-between;
     }
+    
 </style>

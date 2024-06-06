@@ -16,7 +16,7 @@
             return;
         } 
 
-        let response = (await Api.call(`/company/search?search=${text}&limit=${limit}&offset=${offset}`, 'GET'));
+        let response = await Api.call(`/company/search?search=${text}&limit=${limit}&offset=${offset}`, 'GET');
         console.log('RESPONSE SEARCH COMPANY -> ', response)
         if (response.success && response.statusCode == '200') {
             empresas = response.data.result

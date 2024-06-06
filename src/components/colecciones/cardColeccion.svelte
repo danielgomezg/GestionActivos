@@ -1,16 +1,50 @@
 <script>
-    import { Card, Menu, IconButton } from "$lib";
-    import { createEventDispatcher } from "svelte";
+    import Api from "../../../helpers/ApiCall";
+    import { createEventDispatcher, getContext } from "svelte";
+    import { Card, Menu, IconButton, Snackbar } from "$lib";
+    import { snackbar, user, companySelect } from "../../stores/store";
 
     export let collection = {}
 
-    let dispatch = createEventDispatcher();
     let openActions = false;
     let messageSnackbar = '';
-    let openSnackbar = false;
+    let openSnackbar = false; 
+    let dispatch = createEventDispatcher();
+    let removeCollection = getContext('deleteCollection');
+
+    const deleteCollection = async () => {
+
+        let response = await Api.call(`/activesGroup/${collection.id}`, 'DELETE', {}, 'json', $companySelect);
+        console.log('RESPONSE DELETE COLECCION -> ', response)
+        if (response.success && response.statusCode == '201') {
+            removeCollection(collection.id)
+
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Colección eliminado."
+                return snk
+            })
+
+        } else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Error al eliminar."
+                return snk
+            })
+        }
+    }
 
 
 </script>
+
+<Snackbar 
+    bind:open={ openSnackbar }
+    type="confirm"
+    message={messageSnackbar}
+    on:confirm={ deleteCollection }
+/>
 
 <Card>
     <div class="card-container">
@@ -32,7 +66,7 @@
                         }
                         on:edit={() => dispatch("edit", { ...collection }) }
                         on:delete={() => {
-                            messageSnackbar = '¿Eliminar la empresa ' + collection.name + '?'
+                            messageSnackbar = '¿Eliminar la colección ' + collection.name + '?'
                             openSnackbar = true;
                         }}
                     >
@@ -41,7 +75,18 @@
                 </div>
                 <div class="desktop-only">    
                     <IconButton icon="edit" tooltipId="btn-edit__{collection.name}" tooltipText="Editar" on:click={ dispatch("edit", { ...collection }) } />
-                    <IconButton icon="delete" tooltipId="btn-delete__{collection.name}" tooltipText="Eliminar" on:click={ dispatch("delete", collection) } />
+                    {#if $user.profile_id != 2}
+                        <IconButton 
+                            icon="delete" 
+                            tooltipId="btn-delete__{collection.name}" 
+                            tooltipText="Eliminar" 
+                            on:click={ () => {
+                                messageSnackbar = '¿Eliminar la colección ' + collection.name + '?'
+                                openSnackbar = true;
+                            } } 
+                        />
+
+                    {/if}
                 </div>
             </div>
             

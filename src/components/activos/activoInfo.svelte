@@ -2,7 +2,6 @@
     import Api from "../../../helpers/ApiCall";
     import { getContext, onMount } from "svelte";
     import { snackbar, user } from "../../stores/store";
-    import { estadosActivo } from "../../stores/store";
     import { Divider, IconButton, Snackbar, Menu } from "$lib";
 
     export let article = {};
@@ -171,18 +170,20 @@
                         <IconButton icon="description" tooltipId="btn-doc__{activo.bar_code}" tooltipText="Documento contable" on:click={ () => downloadDocument(activo) } />
                     {/if}
                     <IconButton icon="edit" tooltipId="btn-edit__{activo.bar_code}" tooltipText="Editar" on:click={ () => editActivo(activo, article, company_id) } />
-                    <IconButton 
-                        icon="delete" 
-                        tooltipId="btn-delete__{activo.bar_code}" 
-                        disabled
-                        tooltipText="Eliminar" 
-                        on:click={ () => {
+                    {#if $user.profile_id != 2}
+                        <IconButton 
+                            icon="delete" 
+                            tooltipId="btn-delete__{activo.bar_code}" 
+                            tooltipText="Eliminar" 
+                            on:click={ () => {
 
-                            activoToDelete = activo;
-                            messageSnackbar = '¿Eliminar el activo ' + activo.bar_code + '?'
-                            openSnackbar = true;
+                                activoToDelete = activo;
+                                messageSnackbar = '¿Eliminar el activo ' + activo.bar_code + '?'
+                                openSnackbar = true;
 
-                        } } />
+                            } } 
+                        />
+                    {/if}
                 </div>
             </div>
             <div style="display: flex; justify-content: space-between;">    

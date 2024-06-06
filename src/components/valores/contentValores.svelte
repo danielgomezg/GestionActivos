@@ -1,12 +1,12 @@
 <script>
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import Api from "../../../helpers/ApiCall";
     import { Button, Fab } from "$lib";
     import ValueActive from "./valueActive.svelte";
     import { companySelect } from "../../stores/store";
     
     let count = 0;
-    let limit = 50;
+    let limit = 25;
     let offset = 0;
     let activesValues = [];
 
@@ -24,8 +24,19 @@
         } 
     }
 
+    const handleScroll = () => {
+        if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+            offset = offset + limit;
+            getActivosValues($companySelect)
+        }
+    }
+
     onMount(() => {
-        // getActivosValues();
+        window.addEventListener('scroll', handleScroll)
+    });
+
+    onDestroy(() => {
+        window.removeEventListener('scroll', handleScroll)
     });
 
     $: getActivosValues($companySelect)

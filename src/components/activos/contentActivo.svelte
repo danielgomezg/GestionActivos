@@ -10,6 +10,7 @@
     import { headerTableActivos, snackbar, user } from "../../stores/store";
     import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
+    import ActivoFormContent from "./activoFormContent.svelte";
 
     let limit = 10;
     let offset = 0;
@@ -91,7 +92,7 @@
 
     const newActivo = (company_id) => {
         modalTitle = `Nuevo activo - ` + companyName;
-        modalContent = ActivoForm
+        modalContent = ActivoFormContent //ActivoForm
         props = { 
             activo: {
                 bar_code: '',

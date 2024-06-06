@@ -392,8 +392,6 @@
     on:confirm={ setSaved }
 />
 
-<Tab />
-
 <div class="form">
 
     <OfficeSucursalSelected 

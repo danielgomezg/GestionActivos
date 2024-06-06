@@ -106,6 +106,7 @@
             <i 
                 in:fade={{duration: 100}}
                 class="material-symbols-rounded" 
+                style="cursor: pointer;"
                 on:click
                 class:icon-success={trailing == 'check_circle'}
                 class:icon-danger={trailing == 'error'} 

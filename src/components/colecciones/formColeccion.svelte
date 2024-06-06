@@ -9,6 +9,7 @@
     export let collection = {};
     
     let searchActives;
+    let hideActives = [];
     let activesAdded = [];
     let activesColeccion = [];
     let addToListCollection = getContext('addCollection');
@@ -53,6 +54,8 @@
         console.log('RESPONSE GET COLLECCION --> ', response)
         if (response.success && response.statusCode == "201") {
             addToListCollection(response.data.result)
+            activesAdded = [];
+            collection.name = '';
         } 
     }
 
@@ -66,6 +69,7 @@
         console.log('RESPONSE GET ACTIVES COLLECCION --> ', response)
         if (response.success && response.statusCode == "200") {
             activesColeccion = [...activesColeccion, ...response.data.result] 
+            hideActives = activesColeccion.map(a => a.id)
             // count = response.data.count
         } 
     }
@@ -91,10 +95,10 @@
 
     <ActivoSearchCode 
         bind:this={searchActives}
-        hideActives={ activesColeccion.map(a => a.id) }
+        {hideActives}
         on:addActive={(e) => {
             activesAdded = [...activesAdded, e.detail]
-            
+            hideActives = [...hideActives, e.detail.id]
         }}
     />
 
@@ -108,12 +112,12 @@
                         icon="remove" 
                         on:click={ () => {
                             activesColeccion = activesColeccion.filter(a => a.id !== active.id)
-                            // searchActives.requeueActive(active)
+                            hideActives = hideActives.filter(h => h !== active.id)
                         } } 
                     />
                 </div>
             {:else}
-                {#if !edit} 
+                {#if activesAdded.length == 0 && activesColeccion.length == 0 } 
                     <p>Agrega activos a la colección</p>
                 {/if}
             {/each}
@@ -124,7 +128,7 @@
                         icon="remove" 
                         on:click={ () => {
                             activesAdded = activesAdded.filter(a => a.id !== active.id)
-                            searchActives.requeueActive(active)
+                            hideActives = hideActives.filter(h => h !== active.id)
                         } } 
                     />
                 </div>
