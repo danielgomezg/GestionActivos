@@ -61,7 +61,6 @@
     })
 
     $: getActivesByCode(searchText);
-    $: console.log('HIDE ACTIVES --> ', hideActives)
 
 </script>
 <div style="position: relative;" >
@@ -92,19 +91,21 @@
             </div>
         {/if}
         {#each activesFound as active }
-            {#if !hideActives.includes(active.id) }
-                <div class="active-found">
-                    <span>{ active.bar_code || active.virtual_code }</span>
-                    <IconButton 
-                        icon="add" 
-                        on:click={() => {
-                            dispatch('addActive', active)
-                            activesFound = activesFound.filter(a => a.id !== active.id)
-                            // hideActives = [...hideActives, active.id]
-                        }} 
-                    />
-                </div>
-            {/if}
+            {#key hideActives}
+                {#if !hideActives.includes(active.id) }
+                    <div class="active-found">
+                        <span>{ active.bar_code || active.virtual_code }</span>
+                        <IconButton 
+                            icon="add" 
+                            on:click={() => {
+                                dispatch('addActive', active)
+                                // activesFound = activesFound.filter(a => a.id !== active.id)
+                                // hideActives = [...hideActives, active.id]
+                            }} 
+                        />
+                    </div>
+                {/if}
+            {/key}
         {/each}
     </div>
 </div>
@@ -114,7 +115,6 @@
     .found-container {
         width: 100%;
         max-width: 100%;
-        position: absolute;
         border-radius: 10px;
         border: solid 1px #ccc;
         max-height: 250px;

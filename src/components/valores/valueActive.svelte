@@ -162,13 +162,4 @@
     />
 
 </div>
-<Divider margin={10} />
-
-<style>
-    .row-active__value {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-gap: 20px;
-        align-items: center;
-    }
-</style>
+<!-- <Divider margin={10} /> -->

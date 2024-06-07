@@ -1,7 +1,7 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { getContext, onMount } from "svelte";
-    import { companySelect } from "../../stores/store";
+    import { companySelect, snackbar } from "../../stores/store";
     import { TextField, Button, IconButton } from "$lib";
     import ActivoSearchCode from "../activos/activoSearchCode.svelte";
 
@@ -57,6 +57,14 @@
             activesAdded = [];
             collection.name = '';
         } 
+        else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = response.data.message //"Error al agregar el articulo."
+                return snk
+            })
+        }
     }
 
     const removeActive = (active) => {
@@ -83,15 +91,53 @@
 
 </script>
 <div class="form">
+    <div>
+        <TextField 
+            version=2
+            id="name-collection"
+            required 
+            type="text"
+            label="Nombre" 
+            bind:value={ collection.name }
+        />    
 
-    <TextField 
-        version=2
-        id="name-collection"
-        required 
-        type="text"
-        label="Nombre" 
-        bind:value={ collection.name }
-    />
+        <br>
+
+        <div>
+            <!-- <p style="margin: 5px 0;"><strong>Activos</strong></p> -->
+            <div class="active-list">
+                {#each activesColeccion as active }
+                    <div>
+                        <span>{ active.bar_code || active.virtual_code }</span>
+                        <IconButton 
+                            icon="remove" 
+                            on:click={ () => {
+                                activesColeccion = activesColeccion.filter(a => a.id !== active.id)
+                                hideActives = hideActives.filter(h => h !== active.id)
+                            } } 
+                        />
+                    </div>
+                {:else}
+                    {#if activesAdded.length == 0 && activesColeccion.length == 0 } 
+                        <p>Agrega activos a la colección</p>
+                    {/if}
+                {/each}
+                {#each activesAdded as active }
+                    <div>
+                        <span>{ active.bar_code || active.virtual_code }</span>
+                        <IconButton 
+                            icon="remove" 
+                            on:click={ () => {
+                                activesAdded = activesAdded.filter(a => a.id !== active.id)
+                                hideActives = hideActives.filter(h => h !== active.id)
+                            } } 
+                        />
+                    </div>
+                {/each}
+            </div>
+        </div>
+        
+    </div>
 
     <ActivoSearchCode 
         bind:this={searchActives}
@@ -101,49 +147,15 @@
             hideActives = [...hideActives, e.detail.id]
         }}
     />
+    
+</div>
 
-    <div>
-        <p style="margin: 5px 0;"><strong>Activos</strong></p>
-        <div class="active-list">
-            {#each activesColeccion as active }
-                <div>
-                    <span>{ active.bar_code || active.virtual_code }</span>
-                    <IconButton 
-                        icon="remove" 
-                        on:click={ () => {
-                            activesColeccion = activesColeccion.filter(a => a.id !== active.id)
-                            hideActives = hideActives.filter(h => h !== active.id)
-                        } } 
-                    />
-                </div>
-            {:else}
-                {#if activesAdded.length == 0 && activesColeccion.length == 0 } 
-                    <p>Agrega activos a la colección</p>
-                {/if}
-            {/each}
-            {#each activesAdded as active }
-                <div>
-                    <span>{ active.bar_code || active.virtual_code }</span>
-                    <IconButton 
-                        icon="remove" 
-                        on:click={ () => {
-                            activesAdded = activesAdded.filter(a => a.id !== active.id)
-                            hideActives = hideActives.filter(h => h !== active.id)
-                        } } 
-                    />
-                </div>
-            {/each}
-        </div>
-    </div>
-
-    <div class="grid-col-span-1 mobile-fixed">
-        <Button 
-            label="Guardar"
-            custom
-            on:click={ saveCollection }
-        />
-    </div>
-
+<div class="grid-col-span-1 mobile-fixed">
+    <Button 
+        label="Guardar"
+        custom
+        on:click={ saveCollection }
+    />
 </div>
 
 <style>

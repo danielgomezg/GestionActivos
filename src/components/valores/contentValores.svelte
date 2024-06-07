@@ -3,6 +3,7 @@
     import Api from "../../../helpers/ApiCall";
     import { Button, Fab } from "$lib";
     import ValueActive from "./valueActive.svelte";
+    import SearchValues from "./searchValues.svelte";
     import { companySelect } from "../../stores/store";
     
     let count = 0;
@@ -54,21 +55,17 @@
         </div>
         <!-- <Search value="" /> -->
         <div>
-        <!-- <CompanySearch 
-            bind:empresas={empresas} 
-            on:startSearch={ () => {
-                offset = 0;
-            } }
-            on:removeSearch={ () => {
-                console.log('REMOVE SEARCH')
-                offset = 0
-                empresas = []
-                getCompanies()
-            } }
-            on:notFound={ () => {
-                empresas = []
-            } }
-        /> -->
+            <SearchValues 
+                bind:activesValues={activesValues} 
+                on:removeSearch={ () => {
+                    offset = 0
+                    activesValues = []
+                    getActivosValues($companySelect)
+                } }
+                on:notFound={ () => {
+                    activesValues = []
+                } }
+            /> 
         </div>
     </div>
 

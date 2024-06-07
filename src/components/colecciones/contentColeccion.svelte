@@ -1,12 +1,13 @@
 <script>
-    import { onDestroy, onMount, setContext } from "svelte";
     import { Button, Fab } from "$lib";
     import Api from "../../../helpers/ApiCall";
     import CardColeccion from "./cardColeccion.svelte";
     import FormColeccion from "./formColeccion.svelte";
     import { companySelect } from "../../stores/store";
+    import { onDestroy, onMount, setContext } from "svelte";
+    import SearchCollection from "./searchCollection.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-  
+
     let props;
     let count = 0;
     let limit = 7;
@@ -14,7 +15,9 @@
     let modalContent;
     let modalTitle = '';
     let collections = [];
+    let searchCollection;
     let openModal = false;
+    let searching = false;
     let backButton = false;
 
     setContext('addCollection', (collection) => {
@@ -67,6 +70,8 @@
     const handleScroll = () => {
         if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
             offset = offset + limit;
+            // if (searching) searchCollection.scrollSearch();
+            // else 
             getColletions()
         }
     }
@@ -88,12 +93,25 @@
         <div class="desktop-only">
             <Button label="Nueva colección" custom on:click={ createColeccion } />
         </div>
-        <!-- <Search value="" /> -->
         <div>
-        
+            <SearchCollection 
+                bind:this={searchCollection}
+                on:searching={() => searching = true}
+                bind:collections={collections} 
+                on:removeSearch={ () => {
+                    offset = 0;
+                    collections = [];
+                    searching = false;
+                    getColletions();
+                }}
+                on:notFound={ () => {
+                    collections = []
+                    searching = false;
+                }}
+            />
         </div>
         <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
-            <Fab on:click={ () => createColeccion } />
+            <Fab on:click={ createColeccion } />
         </div>
     </div>
 
