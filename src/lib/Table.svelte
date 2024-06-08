@@ -93,7 +93,7 @@
     {#if showActions}
       <div class="table-actions" >
         <div transition:fly="{{y: 0, x: -5, duration: 200}}">
-          <IconButton icon="edit" disabled={ $user.profile_id != 2 } on:click={() => dispatch("edit")} />
+          <IconButton icon="edit" disabled={ $user.profile_id == 2 } on:click={() => dispatch("edit")} />
             {#if $user.profile_id != 2}
               <IconButton icon="delete" on:click={() => dispatch("delete")} />
             {/if}

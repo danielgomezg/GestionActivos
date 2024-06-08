@@ -1,7 +1,5 @@
 <script>
     import { Tab } from "$lib";
-  import { onMount } from "svelte";
-
     import ActivoForm from "./activoForm.svelte";
     import ActivoValues from "./activoValues.svelte";
 
@@ -12,25 +10,23 @@
     export let article_name = '';
     export let showArticles = false; //Es true cuando lo llama el contentActivo. Se necesita mostrar el select de articulos
 
-    let component = ActivoForm;
-    let props = { activo, article_id, company_id, isEdit, article_name, showArticles };
-
-    onMount(() => {
-        // component = ActivoForm;
-        // props = { activo, article_id, company_id, isEdit, article_name, showArticles };
-    });
+    let isActivoForm = true;
 
 </script>
 
-<Tab 
-    on:info={() => {
-        props = { activo, article_id, company_id, isEdit, article_name, showArticles };
-        component = ActivoForm;
-    }}
-    on:values={() => {
-        props = { activo };
-        component = ActivoValues;
-    }}
-/>
+{#if isEdit}
+    <Tab 
+        on:info={() => {
+            isActivoForm = true;
+        }}
+        on:values={() => {
+            isActivoForm = false;
+        }}
+    />
+{/if}
 
-<svelte:component this={component} {...props} />
+{#if isActivoForm}
+    <ActivoForm {activo} {article_id} {company_id} {isEdit} {article_name} {showArticles} />
+{:else}
+    <ActivoValues {activo} />
+{/if}

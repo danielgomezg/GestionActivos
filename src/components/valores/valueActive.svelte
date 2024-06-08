@@ -5,6 +5,7 @@
     
     export let active = {};
     export let values = {};
+    export let hideCode = false;
 
     let copyValues = { ...values }
     let inputVidaUtil;
@@ -127,8 +128,10 @@
     
 
 </script>
-<div class="row-active__value">
-    <div>{ active.bar_code || active.virtual_code }</div>
+<div class="row-active__value" class:hide-code={hideCode}>
+    {#if !hideCode}
+        <div>{ active.bar_code || active.virtual_code }</div>
+    {/if}	
 
     <TextField 
         label="Valor real" 
@@ -162,4 +165,3 @@
     />
 
 </div>
-<!-- <Divider margin={10} /> -->

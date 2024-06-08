@@ -108,7 +108,8 @@
                 virtual_code: false,
                 state: '',
                 article_id: '',
-                office_id: ''
+                office_id: '',
+                maintenance_days: ''
             },
             article_id: 0,
             company_id,
