@@ -198,9 +198,14 @@ export const headerTableActivos = writable([
         label: 'Adquirido',
         numeric: false
     },
+    // {
+    //     name: 'creation_date',
+    //     label: 'Creado',
+    //     numeric: false
+    // },
     {
-        name: 'creation_date',
-        label: 'Creado',
+        name: 'maintenance_days_remaining',
+        label: 'Mantenimiento',
         numeric: false
     },
     {

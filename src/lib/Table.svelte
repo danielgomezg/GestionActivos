@@ -180,11 +180,25 @@
                       />
                     {/if}
                   </td>
+                {:else if header.name == "maintenance_days_remaining"}
+                  
+                  <td class="mdc-data-table__cell">
+                    {#if row[header.name]}
+                      <Chip type="outlined" chips={ [ { id: `chp-${index}`, label: 'en ' + row[header.name] + ' dias', icon: 'check', dispatch: 'check-chip' } ] } action="" />
+                    {:else}
+                      <Chip type="outlined" chips={ [ { id: `chp-${index}`, label: 'sin info', icon: 'check', dispatch: 'check-chip' } ] } action="" />
+                    {/if}
+                  </td>
+                  
                 {:else}
                   <td class="mdc-data-table__cell">
                     {row[header.name]}
                   </td>
                 {/if}
+              {:else}
+                <td class="mdc-data-table__cell">
+                  <Chip type="outlined" chips={ [ { id: `chp-${index}`, label: '2024/12/12', icon: 'check', dispatch: 'check-chip' } ] } action="" />
+                </td>
               {/if}
             {/each}
           </tr>

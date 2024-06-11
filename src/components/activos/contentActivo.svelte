@@ -467,19 +467,6 @@
                         else offset = 0;
                     } }
                 />
-                <!-- <Menu
-                        bind:open={openActions}
-                        options={
-                            [
-                                { label: "Exportar PDF", dispatch: "toPdf"},
-                                { label: "Exportar Excel", dispatch: "toExcel"}
-                            ]  
-                        }
-                        on:toPdf={() => console.log('toPdf') }
-                        on:toExcel={() => console.log('toExcel') }
-                    >
-                      <IconButton icon="download" on:click={() => openActions = !openActions } />
-                </Menu> -->
             </div>
             <div class="desktop-only" style="display: flex; align-items: center; gap: 8px ">
                 <!-- <IconButton icon="upload_file" tooltipId="btn-active__upload" tooltipText="Cargar activos" on:click={ uploadActivos } /> -->
@@ -489,7 +476,6 @@
                 <Button label="Activos teoricos" custom disabled={ newArticleDisabled } secondary on:click={ activosTeoricos } />
             </div>
         </div>
-        <!-- <Search value="" /> -->
     </div>
 
     <div class="flex-column gap-8 mt-8">
@@ -518,8 +504,6 @@
                 // limit = event.detail.limit;
             } }
             on:rowSelected={ (event) => {
-                // console.log('rowSelected > ', event.detail)
-                // buscar si activo existe en el array
                 let activo = activosSelected.find( activo => activo.id == event.detail.id)
 
                 // quitar el activo del array si ya existe
