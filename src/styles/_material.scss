@@ -113,9 +113,25 @@ $select-colors: (
     bottom: auto;
 }
 
-.chip-custom {
-    @include chips.ripple-color(red);
-    @include chips.selected-container-color(red);
+.chip-danger {
+    @include chips.container-color(#E13038);
+    @include chips.text-label-color(#ffffff);
+}
+
+.chip-success {
+    @include chips.container-color(#6EC86E);
+    @include chips.text-label-color(#000000);    
+}
+
+.chip-warning {
+    @include chips.container-color(#F5A52A);
+    @include chips.text-label-color(#000000);
+}
+
+.chip-normal {
+    @include chips.container-color(#404042);
+    @include chips.text-label-color(#ffffff);
+
 }
 
 $primay_button-colors: (

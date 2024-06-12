@@ -24,7 +24,12 @@
   aria-orientation="horizontal">
     <span class="mdc-evolution-chip-set__chips" role="presentation">
       {#each chips as chip }
-        <span class="mdc-evolution-chip" class:mdc-chip--outlined={type === 'outlined'} role="presentation" id={chip.id} >
+        <span 
+          id={chip.id} 
+          role="presentation" 
+          class="mdc-evolution-chip chip-{chip.color}" 
+          class:mdc-chip--outlined={type === 'outlined'} 
+        >
           <span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell">
             <!-- {#if chip?.action } -->
               <button class="mdc-evolution-chip__action mdc-evolution-chip__action--primary" type="button" tabindex="0" data-mdc-deletable="true" on:click>
@@ -64,7 +69,6 @@
 
     .mdc-chip--outlined {
       border: 1px solid rgba(0, 0, 0, 0.12);
-      background-color: transparent;
     }
 
     .red {
