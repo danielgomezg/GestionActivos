@@ -147,15 +147,15 @@
             hideActives = [...hideActives, e.detail.id]
         }}
     />
-    
-</div>
 
-<div class="grid-col-span-1 mobile-fixed">
-    <Button 
-        label="Guardar"
-        custom
-        on:click={ saveCollection }
-    />
+    <div class="grid-col-span-1 mobile-fixed">
+        <Button 
+            label="Guardar"
+            custom
+            on:click={ saveCollection }
+        />
+    </div>
+    
 </div>
 
 <style>
