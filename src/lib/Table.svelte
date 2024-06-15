@@ -93,7 +93,7 @@
     {#if showActions}
       <div class="table-actions" >
         <div transition:fly="{{y: 0, x: -5, duration: 200}}">
-          <IconButton icon="edit" disabled={ $user.profile_id != 2 } on:click={() => dispatch("edit")} />
+          <IconButton icon="edit" disabled={ $user.profile_id == 2 } on:click={() => dispatch("edit")} />
             {#if $user.profile_id != 2}
               <IconButton icon="delete" on:click={() => dispatch("delete")} />
             {/if}
@@ -180,11 +180,49 @@
                       />
                     {/if}
                   </td>
+                {:else if header.name == "maintenance_days_remaining"}
+                  
+                  <td class="mdc-data-table__cell">
+                    {#if row[header.name]}
+                      <Chip 
+                        type="outlined" 
+                        chips={ [ 
+                          { 
+                            id: `chp-${index}`, 
+                            label: 'En ' + row[header.name] + ' dias', 
+                            icon: 'check', 
+                            dispatch: 'check-chip',
+                            color: row[header.name] > 20 ? 'success' : row[header.name] > 10 ? 'warning' : 'danger'
+                          } 
+                        ] } 
+                        action="" 
+                      />
+                    {:else}
+                      <Chip 
+                        type="outlined" 
+                        chips={ [ 
+                          { 
+                            id: `chp-${index}`, 
+                            label: 'sin info', 
+                            icon: 'check', 
+                            dispatch: 'check-chip',
+                            color: 'normal'
+                          } 
+                        ] } 
+                        action="" 
+                      />
+                    {/if}
+                  </td>
+                  
                 {:else}
                   <td class="mdc-data-table__cell">
                     {row[header.name]}
                   </td>
                 {/if}
+              {:else}
+                <td class="mdc-data-table__cell">
+                  <Chip type="outlined" chips={ [ { id: `chp-${index}`, label: 'Sin fecha', icon: 'check', dispatch: 'check-chip', color: 'normal' } ] } action="" />
+                </td>
               {/if}
             {/each}
           </tr>

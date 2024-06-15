@@ -1,5 +1,5 @@
 <script>
-    import { Card, Divider, Chip } from "$lib"
+    import { Card, Divider } from "$lib"
     import { modulos } from "../../stores/store";  
 
     export let profile = {}
@@ -61,10 +61,8 @@
                         {#each ['get', 'create', 'update', 'delete'] as action, index }
                             <td colspan="{index + 3}" style="text-align: center;">
                                 {#if hasAction(modulo, action)}
-                                    <!-- <Chip chip={ { id: index, label: translate[action], color: action } } /> -->
                                     <span class="material-symbols-rounded" style="color: #4CAF50;">check_circle</span>
                                 {:else}
-                                    <!-- <Chip chip={ { id: index, label: translate[action] } } /> -->
                                     <span class="material-symbols-rounded" style="color: #FF0000;">block</span>
                                 {/if}
                             </td>   

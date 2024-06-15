@@ -12,6 +12,8 @@
     import { user, companySelect } from "../../stores/store";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
+    import ActivoFormContent from "../activos/activoFormContent.svelte";
+
     let props;
     let count = 0;
     let limit = 50;
@@ -85,7 +87,7 @@
         previusProps = { ...props };
 
         modalTitle = `Activo `;
-        modalContent = ActivoForm;
+        modalContent = ActivoFormContent //ActivoForm;
         props = { activo, 
             article_id: article.id,
             company_id: company_id,
@@ -105,7 +107,7 @@
 
     const newActivo = (article, company_id) => {
         modalTitle = `Nuevo activo ${article.name}`
-        modalContent = ActivoForm
+        modalContent = ActivoFormContent // ActivoForm
         props = { 
             activo: {
                 bar_code: '',
@@ -189,7 +191,6 @@
     }
 
     onMount(() => {
-
         window.addEventListener('scroll', handleScroll)
     })
 

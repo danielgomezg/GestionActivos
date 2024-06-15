@@ -3,7 +3,7 @@
     import ArticleSelect from "../articles/articleSelect.svelte";
     import { getContext, onDestroy, onMount, tick } from "svelte";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
-    import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton, BarcodeScanner, Checkbox } from "$lib";
+    import { TextField, Button, Select, FileInput, DatePicker, Snackbar, IconButton, BarcodeScanner, Checkbox, Tab } from "$lib";
     import { snackbar, estadosActivo, lockArticle, lockOffice, lockStore, lockStoreName, lockOfficeName, lockArticleName, user } from "../../stores/store";
 
     export let activo = {};
@@ -214,7 +214,8 @@
                 state: '',
                 virtual_code: false,
                 // article_id: '',
-                office_id: ''
+                office_id: '',
+                maintenance_days: ''
             };
             images = [];
             if (showArticles) {
@@ -507,6 +508,13 @@
         type="text"
         label="Comentario" 
         bind:value={activo.comment}
+    />
+
+    <TextField 
+        version=2 
+        type="number"
+        label="Ciclo de mantención (días)" 
+        bind:value={activo.maintenance_days}
     />
 
     <TextField 

@@ -184,21 +184,21 @@
         </div>
         <!-- <Search value="" /> -->
         <div>
-        <CompanySearch 
-            bind:empresas={empresas} 
-            on:startSearch={ () => {
-                offset = 0;
-            } }
-            on:removeSearch={ () => {
-                console.log('REMOVE SEARCH')
-                offset = 0
-                empresas = []
-                getCompanies()
-            } }
-            on:notFound={ () => {
-                empresas = []
-            } }
-        />
+            <CompanySearch 
+                bind:empresas={empresas} 
+                on:startSearch={ () => {
+                    offset = 0;
+                } }
+                on:removeSearch={ () => {
+                    console.log('REMOVE SEARCH')
+                    offset = 0
+                    empresas = []
+                    getCompanies()
+                } }
+                on:notFound={ () => {
+                    empresas = []
+                } }
+            />
         </div>
         <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
             <Fab on:click={ createCompany } />
