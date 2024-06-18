@@ -6,12 +6,12 @@
     import ArticleHistory from "./articleHistory.svelte";
     import ArticlesSearch from "./articlesSearch.svelte";
     import ReportArticle from "../reports/report.svelte";
-    import ActivoForm from "../activos/activoForm.svelte";
     import ActivoInfo from "../activos/activoInfo.svelte";
     import { setContext, onMount, onDestroy } from "svelte";
-    import { user, companySelect } from "../../stores/store";
+    import { user, companySelect, showImages } from "../../stores/store";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
+    import ImagesView from "../ImagesView/ImagesView.svelte";
     import ActivoFormContent from "../activos/activoFormContent.svelte";
 
     let props;
@@ -26,8 +26,8 @@
     let openModal = false;
     let backButton = false;
     let startSearch = false;
-    let hideSelectCompany = false;
     let newArticleDisabled = true;
+    let imagesComponent;
 
     let previusComponent, previusProps, previusModelTitle = '';
 
@@ -191,7 +191,12 @@
     }
 
     onMount(() => {
-        window.addEventListener('scroll', handleScroll)
+        window.addEventListener('scroll', handleScroll);
+
+        showImages.set((images = []) => {
+            console.log('show images article')
+            imagesComponent.getImage(images);
+        });
     })
 
     onDestroy(() => {
@@ -205,6 +210,8 @@
     }
 
 </script>
+
+<ImagesView bind:this={imagesComponent} />
 
 <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
     {#if $user.profile_id != 2}

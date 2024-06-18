@@ -7,6 +7,7 @@ export { default as Lists } from "./Lists.svelte";
 export { default as Table } from "./Table.svelte";
 export { default as Button } from "./Button.svelte";
 export { default as Search } from "./Search.svelte";
+export { default as Dialog } from "./Dialog.svelte";
 export { default as Select } from "./Select.svelte";
 export { default as Divider } from "./Divider.svelte";
 export { default as Loading } from "./Loading.svelte";
