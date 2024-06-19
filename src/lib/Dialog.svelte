@@ -1,18 +1,25 @@
 <script>
-    import { onMount } from 'svelte';
     import { MDCDialog } from '@material/dialog';
+    import { onMount, createEventDispatcher } from 'svelte';
+
 
     export { open };
 
-    let dialogComponent;
     let dialog;
+    let dialogComponent;
+    let dispatch = createEventDispatcher();
 
     const open = () => {
         dialog.open();
     }
 
+    const closed = () => {
+        dispatch('closed')
+    }
+
     onMount(() => {
         dialog = new MDCDialog(dialogComponent);
+        dialog.listen('MDCDialog:closed', closed);
     });
 
 </script>

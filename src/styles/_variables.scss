@@ -379,3 +379,21 @@ p {
         grid-template-columns: 1fr;
     }
 }
+
+.image-container {
+    display: flex;
+    /* flex-wrap: wrap; */
+    gap: 10px;
+    height: 500px;
+    width: auto;
+    align-items: center;
+    @media only screen and (max-width: 600px) {
+        height: 240px;
+    }
+}
+
+.image {
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+}

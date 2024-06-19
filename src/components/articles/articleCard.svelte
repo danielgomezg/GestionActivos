@@ -1,6 +1,6 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { snackbar, user, showImages } from "../../stores/store";
+    import { snackbar, user, imagesView } from "../../stores/store";
     import { createEventDispatcher, getContext } from "svelte";
     import { Card, IconButton, Button, Snackbar, Menu } from "$lib";
 
@@ -52,9 +52,7 @@
     }
 
     const openImages = () => {
-        showImages.subscribe((func) => {
-            if (func) func(article.photo.split(','))
-        });
+        imagesView.set(article.photo.split(','));
     }
 
     $: getImage(article.photo)

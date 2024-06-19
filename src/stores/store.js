@@ -3,7 +3,7 @@ import { writable } from 'svelte/store'
 export const companySelect = writable(0);
 export const companySelectName = writable('');
 export const articleBackup = writable([]);
-export const showImages = writable(null);
+export const imagesView = writable([]);	
 
 export const snackbar = writable({
     id: 0,
