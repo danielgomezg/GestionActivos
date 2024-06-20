@@ -65,6 +65,8 @@
 // @use "@material/list/mdc-list";
 @use "@material/list";
 
+@use "@material/dialog";
+
 // **** Include
 @include card.core-styles;
 @include textfield.core-styles;
@@ -78,6 +80,7 @@
 @include form-field.core-styles;
 @include fab.core-styles;
 @include list.deprecated-core-styles;
+@include dialog.core-styles;
 
 // Other styles
 .mdc-text-field--custom {

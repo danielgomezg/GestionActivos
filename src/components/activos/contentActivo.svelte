@@ -6,11 +6,20 @@
     import { companySelect } from "../../stores/store";
     import ActivosTeoricos from "./activosTeoricos.svelte";
     import ActivoFormUpload from "./activoFormUpload.svelte";
+    import ActivoFormContent from "./activoFormContent.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-    import { headerTableActivos, snackbar, user } from "../../stores/store";
     import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
-    import ActivoFormContent from "./activoFormContent.svelte";
+    
+    import { 
+        user, 
+        snackbar, 
+        lockStore, 
+        lockOffice, 
+        lockStoreName, 
+        lockOfficeName, 
+        headerTableActivos, 
+    } from "../../stores/store";
 
     let limit = 10;
     let offset = 0;
@@ -145,7 +154,7 @@
         }
 
         modalTitle = `Editar activo ${activosSelected[0].bar_code}`;
-        modalContent = ActivoForm;
+        modalContent = ActivoFormContent; //ActivoForm;
         props = {
             activo: activosSelected[0],
             company_id: companyId,
@@ -369,6 +378,76 @@
         }
     }
 
+    const allActivePdf = async () => {
+        try {
+
+            let response = (await Api.getReport(`report/active/company/${companyId}`));
+            if (response != null) {
+                const downloadUrl = URL.createObjectURL(response);
+                console.log(downloadUrl);
+
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = `Reporte de activos de ${companyName}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            else {
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.type = 'dismiss';
+                    snk.message = 'Error al descargar reporte.';
+                    return snk;
+                });
+            }
+
+            } catch (error) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss';
+                snk.message = 'Error al descargar reporte.';
+                return snk;
+            });
+        }
+
+    }
+
+    const allActiveExcel = async () => {
+        try {
+
+            let response = (await Api.getReport(`report/excel/active/company/${companyId}`));
+            if (response != null) {
+                const downloadUrl = URL.createObjectURL(response);
+                console.log(downloadUrl);
+
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = `Reporte de activos de ${companyName}.xlsx`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            else {
+                snackbar.update(snk => {
+                    snk.open = true;
+                    snk.type = 'dismiss';
+                    snk.message = 'Error al descargar reporte.';
+                    return snk;
+                });
+            }
+
+            } catch (error) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss';
+                snk.message = 'Error al descargar reporte.';
+                return snk;
+            });
+            console.error(error);
+        }
+    }
+
     onMount(() => {
         
     })
@@ -415,7 +494,10 @@
                     console.log('STORE -> ', event.detail.store)
                     // filters.store = event.detail.store
                     if (event.detail.store == undefined) return;
-                    
+                    // 
+                    lockStore.set(event.detail.store.value)
+                    lockStoreName.set(event.detail.store.label)
+
                     // quitar storeFilter de filters
                     filters = filters.filter( filter => filter.label != storeFilter.label )
 
@@ -428,6 +510,9 @@
                     console.log('OFFICE -> ', event.detail.office)
                     // filters.office = event.detail.office
                     if (event.detail.office == undefined) return;
+                    // 
+                    lockOffice.set(event.detail.office.value)
+                    lockOfficeName.set(event.detail.office.label)
 
                     // buscar si ya existe el filtro
                     let filter = filters.find(filter => filter.label == event.detail.office.label)
@@ -547,12 +632,16 @@
                     bind:open={openActions}
                     options={
                         [
-                            { label: "Exportar PDF", dispatch: "toPdf"}, 
-                            { label: "Exportar Excel", dispatch: "toExcel"}
+                            { label: "Tabla a PDF", dispatch: "toPdf"}, 
+                            { label: "Tabla a Excel", dispatch: "toExcel"},
+                            { label: "Activos a PDF", dispatch: "toAllPdf" },
+                            { label: "Activos a Excel", dispatch: "toAllExcel" }
                         ]  
                     }
                     on:toPdf={ reportActivePdf(officesFilter) }
                     on:toExcel={ reportActiveExcel(officesFilter) }
+                    on:toAllPdf={ allActivePdf }
+                    on:toAllExcel={ allActiveExcel }
                 >
                     <IconButton icon="download" on:click={() => openActions = !openActions } />
                 </Menu>

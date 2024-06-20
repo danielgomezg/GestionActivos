@@ -25,7 +25,7 @@ class Api {
         }
 
         // url = `${process.env.REACT_APP_API_URL}${url}`
-        console.log(import.meta.env.MODE)
+        // console.log(import.meta.env.MODE)
         if (import.meta.env.MODE == 'production') {
             url = `https://45-33-99-148.ip.linodeusercontent.com/api/${url}`
         }
@@ -89,9 +89,9 @@ class Api {
             return fetch(`${host}${path}`)
                 .then(response => response.blob())
                 .then(images => {
-                    console.log('IMAGES -> ', images)
+                    // console.log('IMAGES -> ', images)
                     let objectURL = URL.createObjectURL(images);
-                    console.log('OBJECT URL -> ', objectURL)
+                    // console.log('OBJECT URL -> ', objectURL)
                     return objectURL;
 
                 })

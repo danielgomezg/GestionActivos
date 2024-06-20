@@ -39,20 +39,16 @@
     }
 
     const clickTrailing = () => {
-        console.log('click')
         dispatch('click', value)
     }
 
     const removeText = () => {
-        console.log('remove text')
         value = '';
         isFocused = false
         // dispatch('removeSearch')
     }
 
     onMount(() => {
-        console.log('onMount')
-        console.log('textfield -> ', textfield)
         if (textfield != undefined) {
             // handleFocus()
             search = new MDCTextField(textfield) 

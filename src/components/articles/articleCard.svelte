@@ -1,6 +1,6 @@
 <script>
     import Api from "../../../helpers/ApiCall";
-    import { snackbar, user } from "../../stores/store";
+    import { snackbar, user, imagesView } from "../../stores/store";
     import { createEventDispatcher, getContext } from "svelte";
     import { Card, IconButton, Button, Snackbar, Menu } from "$lib";
 
@@ -19,7 +19,7 @@
         name = name.split(',')[0];
 
         let response = (await Api.callImage('/image_article/' + name));
-        console.log('RESPONSE GET IMAGE -> ', response)
+        // console.log('RESPONSE GET IMAGE -> ', response)
         if (response != null) {
             imageUrl = response;
         }
@@ -51,6 +51,10 @@
         }
     }
 
+    const openImages = () => {
+        imagesView.set(article.photo.split(','));
+    }
+
     $: getImage(article.photo)
 
 </script>
@@ -70,7 +74,9 @@
                     {#if article.photo == ''}
                         <img src="https://via.placeholder.com/150" class="article-image" alt={article.name} />
                     {:else}
-                        <img src={ imageUrl } class="article-image" alt={article.name} />
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                        <img src={ imageUrl } class="article-image" alt={article.name} on:click={ openImages } />
                     {/if}
                 </div>
                 <div class="flex-column">
