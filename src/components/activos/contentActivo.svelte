@@ -9,7 +9,8 @@
     import ActivoFormContent from "./activoFormContent.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
-    import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
+    //import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
+    import OfficeSucursalSelected from "../sucursal/v2/officeSucursalSelectedV2.svelte";
     
     import { 
         user, 
@@ -302,7 +303,9 @@
 
                 const link = document.createElement('a');
                 link.href = downloadUrl;
-                link.download = `Reporte de activos de ${companyName}.pdf`;
+                //link.download = `Reporte de activos de ${companyName}.pdf`;
+                console.log("---" + lockStore + " *** " + companyName)
+                link.download = `Activos_${companyName}.pdf`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
