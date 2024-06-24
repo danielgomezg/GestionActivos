@@ -3,14 +3,14 @@
     import { onMount, setContext } from "svelte";
     import ActivoForm from "./activoForm.svelte";	
     import ActivoSearch from "./activoSearch.svelte";
-    import { companySelect } from "../../stores/store";
+    import { companySelect, companySelectName } from "../../stores/store";
     import ActivosTeoricos from "./activosTeoricos.svelte";
     import ActivoFormUpload from "./activoFormUpload.svelte";
     import ActivoFormContent from "./activoFormContent.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
     import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
-    //import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
-    import OfficeSucursalSelected from "../sucursal/v2/officeSucursalSelectedV2.svelte";
+    import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
+    //import OfficeSucursalSelected from "../sucursal/v2/officeSucursalSelectedV2.svelte";
     
     import { 
         user, 
@@ -35,6 +35,8 @@
     let tableCount = 0;
     let modalTitle = '';
     let companyName = '';
+    let companyNameV2 = '';
+    let nameSucursal = '';
     let openModal = false;
     let officesFilter = []; // Array de id de oficinas para realizar la peticion.
     let backButton = false;
@@ -119,7 +121,8 @@
                 state: '',
                 article_id: '',
                 office_id: '',
-                maintenance_days: ''
+                maintenance_days: '',
+                parent_code: ''
             },
             article_id: 0,
             company_id,
@@ -304,8 +307,7 @@
                 const link = document.createElement('a');
                 link.href = downloadUrl;
                 //link.download = `Reporte de activos de ${companyName}.pdf`;
-                console.log("---" + lockStore + " *** " + companyName)
-                link.download = `Activos_${companyName}.pdf`;
+                link.download = `Activos_${companyNameV2}_${nameSucursal}.pdf`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -356,7 +358,7 @@
 
                 const link = document.createElement('a');
                 link.href = downloadUrl;
-                link.download = `Reporte de activos de ${companyName}.xlsx`;
+                link.download = `Activos_${companyNameV2}_${nameSucursal}.xlsx`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -391,7 +393,7 @@
 
                 const link = document.createElement('a');
                 link.href = downloadUrl;
-                link.download = `Reporte de activos de ${companyName}.pdf`;
+                link.download = `Reporte de activos de ${companyNameV2}.pdf`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -421,12 +423,13 @@
 
             let response = (await Api.getReport(`report/excel/active/company/${companyId}`));
             if (response != null) {
+                
                 const downloadUrl = URL.createObjectURL(response);
                 console.log(downloadUrl);
 
                 const link = document.createElement('a');
                 link.href = downloadUrl;
-                link.download = `Reporte de activos de ${companyName}.xlsx`;
+                link.download = `Reporte de activos de ${companyNameV2}.xlsx`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -466,6 +469,9 @@
         newArticleDisabled = false;
         
     }
+
+    $: companyNameV2 = $companySelectName
+    $: nameSucursal = $lockStoreName
 
 </script>
 

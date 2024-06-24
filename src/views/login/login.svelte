@@ -113,7 +113,7 @@
                     navigate("/articulos", {replace: true})
                 }
                 else {
-                    navigate("/sucursales", {replace: true})
+                    navigate("/activos", {replace: true})
                 }
             }else{
                 //aviso

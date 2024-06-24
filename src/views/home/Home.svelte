@@ -96,7 +96,7 @@
                     <Route path="/sucursales" component={ContentSucursal} />
                 {/if} 
                       
-                <Route path="/colecciones" component={ContentColeccion} />
+                 <!-- <Route path="/colecciones" component={ContentColeccion} /> -->
                 <Route path="/valores" component={ContentValores} />
                 <Route path="/articulos" component={ContentArticle} />
                 <Route path="/activos" component={ContentActivo} />

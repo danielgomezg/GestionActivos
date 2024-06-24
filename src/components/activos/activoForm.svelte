@@ -215,7 +215,8 @@
                 virtual_code: false,
                 // article_id: '',
                 office_id: '',
-                maintenance_days: ''
+                maintenance_days: '',
+                parent_code: ''
             };
             images = [];
             if (showArticles) {
@@ -384,6 +385,8 @@
         videoScan = false;
     } 
 
+    $: console.log(activo.parent_code)
+
 </script>
 
 <Snackbar 
@@ -478,16 +481,23 @@
         version=2
         required 
         type="text"
-        label="Modelo" 
-        bind:value={activo.model}
+        label="Marca" 
+        bind:value={activo.brand}
     />
 
     <TextField 
         version=2
         required 
         type="text"
-        label="Marca" 
-        bind:value={activo.brand}
+        label="Modelo" 
+        bind:value={activo.model}
+    />
+
+    <TextField 
+        version=2
+        type="text"
+        label="Código padre" 
+        bind:value={activo.parent_code}
     />
 
     <DatePicker 

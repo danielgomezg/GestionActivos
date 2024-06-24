@@ -108,6 +108,7 @@
                     <li
                         on:click={ () => {
                             companySelect.set(company.value)
+                            companySelectName.set(company.label)
                             nameCompany = company.label
                             showList = false
                         }}
