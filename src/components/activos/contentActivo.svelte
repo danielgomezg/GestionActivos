@@ -1,4 +1,4 @@
-<script>
+z<script>
     import Api from "../../../helpers/ApiCall";
     import { onMount, setContext } from "svelte";
     import ActivoForm from "./activoForm.svelte";	
@@ -8,8 +8,10 @@
     import ActivoFormUpload from "./activoFormUpload.svelte";
     import ActivoFormContent from "./activoFormContent.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
+    import { headerTableActivos, snackbar, user } from "../../stores/store";
     import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
+    //import OfficeSucursalSelected from "../sucursal/v2/officeSucursalSelectedV2.svelte";
     
     import { 
         user, 
@@ -154,7 +156,7 @@
         }
 
         modalTitle = `Editar activo ${activosSelected[0].bar_code}`;
-        modalContent = ActivoFormContent; //ActivoForm;
+        modalContent = ActivoForm;
         props = {
             activo: activosSelected[0],
             company_id: companyId,
@@ -347,76 +349,6 @@
         try {
 
             let response = (await Api.getReport(`report/excel/active/${location}/${id}`, { headers: { companyId }}));
-            if (response != null) {
-                const downloadUrl = URL.createObjectURL(response);
-                console.log(downloadUrl);
-
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = `Reporte de activos de ${companyName}.xlsx`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-            else {
-                snackbar.update(snk => {
-                    snk.open = true;
-                    snk.type = 'dismiss';
-                    snk.message = 'Error al descargar reporte.';
-                    return snk;
-                });
-            }
-
-        } catch (error) {
-            snackbar.update(snk => {
-                snk.open = true;
-                snk.type = 'dismiss';
-                snk.message = 'Error al descargar reporte.';
-                return snk;
-            });
-            console.error(error);
-        }
-    }
-
-    const allActivePdf = async () => {
-        try {
-
-            let response = (await Api.getReport(`report/active/company/${companyId}`));
-            if (response != null) {
-                const downloadUrl = URL.createObjectURL(response);
-                console.log(downloadUrl);
-
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = `Reporte de activos de ${companyName}.pdf`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-            else {
-                snackbar.update(snk => {
-                    snk.open = true;
-                    snk.type = 'dismiss';
-                    snk.message = 'Error al descargar reporte.';
-                    return snk;
-                });
-            }
-
-            } catch (error) {
-            snackbar.update(snk => {
-                snk.open = true;
-                snk.type = 'dismiss';
-                snk.message = 'Error al descargar reporte.';
-                return snk;
-            });
-        }
-
-    }
-
-    const allActiveExcel = async () => {
-        try {
-
-            let response = (await Api.getReport(`report/excel/active/company/${companyId}`));
             if (response != null) {
                 const downloadUrl = URL.createObjectURL(response);
                 console.log(downloadUrl);
@@ -632,16 +564,12 @@
                     bind:open={openActions}
                     options={
                         [
-                            { label: "Tabla a PDF", dispatch: "toPdf"}, 
-                            { label: "Tabla a Excel", dispatch: "toExcel"},
-                            { label: "Activos a PDF", dispatch: "toAllPdf" },
-                            { label: "Activos a Excel", dispatch: "toAllExcel" }
+                            { label: "Exportar PDF", dispatch: "toPdf"}, 
+                            { label: "Exportar Excel", dispatch: "toExcel"}
                         ]  
                     }
                     on:toPdf={ reportActivePdf(officesFilter) }
                     on:toExcel={ reportActiveExcel(officesFilter) }
-                    on:toAllPdf={ allActivePdf }
-                    on:toAllExcel={ allActiveExcel }
                 >
                     <IconButton icon="download" on:click={() => openActions = !openActions } />
                 </Menu>

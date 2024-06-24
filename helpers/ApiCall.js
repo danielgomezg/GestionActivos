@@ -30,8 +30,8 @@ class Api {
             url = `https://45-33-99-148.ip.linodeusercontent.com/api/${url}`
         }
         else {
-            // url = `http://127.0.0.1:9000${url}`	
-            url = `http://192.168.100.8:9000${url}`	
+            url = `http://127.0.0.1:9000${url}`	
+            //url = `http://192.168.100.8:9000${url}`	
         }
         
         return fetch(url, {
@@ -85,7 +85,8 @@ class Api {
         
         let host = '';
             if (import.meta.env.MODE == 'production') host = `https://45-33-99-148.ip.linodeusercontent.com/api`
-            else host = `http://192.168.100.8:9000`	
+            //else host = `http://192.168.100.8:9000`	
+            else host = `http://127.0.0.1:9000`	
             return fetch(`${host}${path}`)
                 .then(response => response.blob())
                 .then(images => {
@@ -105,7 +106,8 @@ class Api {
 
         let host = '';
         if (import.meta.env.MODE == 'production') host = `https://45-33-99-148.ip.linodeusercontent.com/api`
-        else host = `http://192.168.100.8:9000`
+        //else host = `http://192.168.100.8:9000`
+        else host = `http://127.0.0.1:9000`	
 
         let token = Api.getTokenFromLocalStorage();
 

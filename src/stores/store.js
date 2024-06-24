@@ -100,10 +100,10 @@ export const menu = writable([
         icon: 'attach_money',
         profiles: [
             1,
-            2
+            3
         ]
     },
-    {
+    /*{
         id: 9,
         name: 'Colecciones',
         path: '/colecciones',
@@ -112,7 +112,7 @@ export const menu = writable([
             1,
             2
         ]
-    },
+    },*/
     {
         id: 4,
         name: 'Usuarios',
@@ -176,7 +176,7 @@ export const estadosActivo = writable([
 export const headerTableActivos = writable([
     {
         name: 'bar_code',
-        label: 'Codigo de Barras',
+        label: 'Activo fijo',
         numeric: false
     },
     {
@@ -192,6 +192,11 @@ export const headerTableActivos = writable([
     {
         name: 'brand',
         label: 'Marca',
+        numeric: false
+    },
+    {
+        name: 'parent_code',
+        label: 'Codigo padre',
         numeric: false
     },
     {
