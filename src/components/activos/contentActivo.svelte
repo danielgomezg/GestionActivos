@@ -8,20 +8,10 @@ z<script>
     import ActivoFormUpload from "./activoFormUpload.svelte";
     import ActivoFormContent from "./activoFormContent.svelte";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-    import { headerTableActivos, snackbar, user } from "../../stores/store";
+    import { headerTableActivos, snackbar, user, lockStore, lockOffice, lockStoreName, lockOfficeName } from "../../stores/store";
     import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
     import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
     //import OfficeSucursalSelected from "../sucursal/v2/officeSucursalSelectedV2.svelte";
-    
-    import { 
-        user, 
-        snackbar, 
-        lockStore, 
-        lockOffice, 
-        lockStoreName, 
-        lockOfficeName, 
-        headerTableActivos, 
-    } from "../../stores/store";
 
     let limit = 10;
     let offset = 0;
