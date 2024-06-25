@@ -172,6 +172,12 @@
             })
             return console.log(message)
         }
+        console.log("mant " + activo.maintenance_days)
+        if(activo.maintenance_days == ''){
+            activo.maintenance_days = 0
+            console.log("mantii " + activo.maintenance_days)
+        }
+        
         let activeBody = { ...activo }
 
         let imagesUrl = await uploadImage(images);

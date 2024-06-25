@@ -168,12 +168,15 @@
             {#each headers as header (header.name)}
               {#if row[header.name] !== undefined}
                 {#if header.name == "bar_code"}
-                  <th class="mdc-data-table__cell" scope="row" id={`u${index}`}
-                    >{row[header.name]}</th
-                  >
+                    {#if row[header.name] == ""}
+                      <th class="mdc-data-table__cell" scope="row" id={`u${index}`}
+                      >{row["virtual_code"] + " (virtual)"}</th>
+                    {:else}
+                      <th class="mdc-data-table__cell" scope="row" id={`u${index}`}
+                        >{row[header.name]}</th>
+                    {/if}
 
                 {:else if header.name == "parent_code"}
-                  <td class="mdc-data-table__cell">
                     {#if row[header.name] == null}
                       <th class="mdc-data-table__cell" scope="row" id={`u${index}`}
                       ></th>
@@ -182,7 +185,6 @@
                       <th class="mdc-data-table__cell" scope="row" id={`u${index}`}
                         >{row[header.name]}</th>
                     {/if}
-                  </td>
                 {:else if header.name == "accounting_document"}
                   <td class="mdc-data-table__cell">
                     {#if row[header.name] != ""}
