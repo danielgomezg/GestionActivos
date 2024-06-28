@@ -15,9 +15,27 @@
     let startSearch = false;
     let dispatch = createEventDispatcher();
 
+    const searchActive = async (text) => {
+        console.log('comapanyId > ', companyId)
+        if(companyId == 0) return
+
+        if (!startSearch) dispatch('startSearch')
+        startSearch = true;
+
+        let response = (await Api.call(`/active/search/all?search=${text}&limit=${limit}&offset=${offset}`, 'GET', {}, 'json', companyId));
+        console.log('RESPONSE SEARCH ACTIVE -> ', response)
+        if (response.success && response.statusCode == '200') {
+            activos = response.data.result
+            count = response.data.count
+        } 
+    }
+
     const searchActiveStore = async (text) => {
         console.log('storeId > ', storeId)
-        if (storeId.value == 0) return;
+        if (storeId.value == 0 || storeId.value == undefined) {
+            searchActive(text)
+            return;
+        }
 
         if (!startSearch) dispatch('startSearch')
         startSearch = true;

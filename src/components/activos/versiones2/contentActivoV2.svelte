@@ -1,16 +1,17 @@
 <script>
-    import Api from "../../../helpers/ApiCall";
+    import Api from "../../../../helpers/ApiCall";
     import { onMount, setContext } from "svelte";
-    import ActivoForm from "./activoForm.svelte";	
-    import ActivoSearch from "./activoSearch.svelte";
-    import ActivosTeoricos from "./activosTeoricos.svelte";
-    import ActivoFormUpload from "./activoFormUpload.svelte";
-    import ActivoFormContent from "./activoFormContent.svelte";
-    import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
-    import { headerTableActivos, snackbar, user, lockStore, lockOffice, lockStoreName, lockOfficeName, companySelect, companySelectName } from "../../stores/store";
+    import ActivoForm from "../activoForm.svelte";	
+    import ActivoSearch from "../activoSearch.svelte";
+    import ActivosTeoricos from "../activosTeoricos.svelte";
+    import ActivoFormUpload from "../activoFormUpload.svelte";
+    import ActivoFormContent from "../activoFormContent.svelte";
+    import SheetHandler from "../../SheetsHandler/sheetHandler.svelte";
+    import { headerTableActivos, snackbar, user, lockStore, lockOffice, lockStoreName, lockOfficeName, companySelect, companySelectName } from "../../../stores/store";
     import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
-    import OfficeSucursalSelected from "../sucursal/officeSucursalSelected.svelte";
+    import OfficeSucursalSelected from "../../sucursal/officeSucursalSelected.svelte";
     //import OfficeSucursalSelected from "../sucursal/v2/officeSucursalSelectedV2.svelte";
+    import Autocomplete from "../../selectAutocomplete/autocomplete.svelte";
 
     let limit = 10;
     let offset = 0;
@@ -482,6 +483,12 @@
     $: companyNameV2 = $companySelectName
     $: nameSucursal = $lockStoreName
 
+  let valueOutlined = '';
+
+  function handleValueChange(newValue) {
+    valueOutlined = newValue;
+  }
+
 </script>
 
 
@@ -540,7 +547,16 @@
 
                     officesFilter = [ ...officesFilter, event.detail.office.value ]   
                 } }
-            />
+            /> 
+
+            <Autocomplete 
+                {companyId}
+                custom
+                required = {true}
+                bind:value={valueOutlined}
+                label="Outlined"
+                onInputChange={handleValueChange}/>
+            
             
         </div>
         <div class="flex-row gap-8" style="align-items: center;">

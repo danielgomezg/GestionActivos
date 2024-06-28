@@ -8,7 +8,7 @@
     import ReportArticle from "../reports/report.svelte";
     import ActivoInfo from "../activos/activoInfo.svelte";
     import { setContext, onMount, onDestroy } from "svelte";
-    import { user, companySelect } from "../../stores/store";
+    import { user, companySelect, companySelectName } from "../../stores/store";
     import SheetHandler from "../SheetsHandler/sheetHandler.svelte";
 
     import ImagesView from "../ImagesView/ImagesView.svelte";
@@ -21,6 +21,7 @@
     let message = "";
     let modalContent;
     let companyId = 0;
+    let companyName = '';
     let modalTitle = '';
     let loading = false;
     let openModal = false;
@@ -204,6 +205,8 @@
         findArticles($companySelect)
     }
 
+    $: companyName = $companySelectName
+
 </script>
 
 <ImagesView />
@@ -225,6 +228,7 @@
                 id={ companyId } 
                 label="Exportar a PDF"
                 disabled={ newArticleDisabled }
+                nameCompany={companyName}
             />
         </div>
 

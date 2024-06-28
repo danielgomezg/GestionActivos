@@ -1,17 +1,18 @@
 <script>
     import { Search } from "$lib";
-    import Api from "../../../helpers/ApiCall";
+    import Api from "../../../../helpers/ApiCall";
     import { createEventDispatcher } from "svelte";
 
-    export let sucursales = [];
+    export let actives = [];
     export let companyId = 0
+    export let article_id = 0
 
-    let limit = 50;
+    let limit = 300;
     let searchText = '';
     let startSearch = false;
     let dispatch = createEventDispatcher();
 
-    const searchSucursal = async (text) => {
+    const searchActive = async (text) => {
         if (text == '') {
             startSearch = false;
            // dispatch('removeSearch')
@@ -21,18 +22,17 @@
         if (!startSearch) dispatch('startSearch')
         startSearch = true;
 
-
-        let response = (await Api.call(`/sucursal/search/${companyId}?search=${text}&limit=${limit}`, 'GET'));
-        console.log('RESPONSE SEARCH SUCURSAL -> ', response)
+        let response = (await Api.call(`/active/search/article/${article_id}?search=${text}&limit=${limit}`, 'GET', {}, 'json', companyId));
+        console.log('RESPONSE SEARCH ACTIVE -> ', response)
         if (response.success && response.statusCode == '200') {
-            sucursales = response.data.result
-        }
-       
+            actives = response.data.result
+        } 
     }
 
-    $: searchSucursal(searchText)
+    $: searchActive(searchText)
 
 </script>
+
 <Search 
     bind:value={searchText} 
     on:removeSearch    

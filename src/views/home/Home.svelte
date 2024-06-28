@@ -9,7 +9,8 @@
 
     import NotFound from "../../components/notFound/notFound.svelte";
     import UserAccount from "../../components/userAccount/userAccount.svelte";
-    import ContentActivo from "../../components/activos/contentActivo.svelte";
+    //import ContentActivo from "../../components/activos/contentActivo.svelte";
+    import ContentActivo from "../../components/activos/versiones2/contentActivoV2.svelte";
     import ContentCompany from "../../components/company/contentCompany.svelte";
     import ContentProfile from "../../components/profile/contentProfile.svelte";
     import ContentArticle from "../../components/articles/contentArticle.svelte";

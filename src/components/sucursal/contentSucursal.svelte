@@ -43,8 +43,8 @@
     }
 
     const getStores = async (companyId) => {
+        
         if (offset > count) return;
-
         let response = (await Api.call(`/sucursalPorCompany/${companyId}?limit${limit}&offset=${offset}`, 'GET'))
         console.log('RESPONSE GET Sucursales --> ', response)
         if (response.success && response.statusCode == '200') {
@@ -94,6 +94,8 @@
                 } }
                 on:removeSearch={ () => {
                     startSearch = false;
+                    offset = 0;
+                    stores = [];
                     getStores($user.company_id)
                 } }
             />

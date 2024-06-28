@@ -7,6 +7,7 @@
     export let label = '';
     export let disabled = true;
     export let type = 'button';
+    export let nameCompany = '';
     
     let downloadUrl = '';
 
@@ -18,7 +19,7 @@
             downloadUrl =  URL.createObjectURL(response);
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.download = `Reporte de artículos.pdf`//'report.pdf';
+            link.download = nameCompany != '' ? `Catalogo_de_artículos_${nameCompany}.pdf` : `Reporte_de_artículos.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link); 

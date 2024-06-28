@@ -3,6 +3,7 @@
     import { onMount, getContext, createEventDispatcher } from "svelte";
     import { snackbar } from "../../stores/store";
     import { Divider, IconButton, Snackbar, Menu } from "$lib";
+    import SucursalSearch from "../sucursal/sucursalSearch.svelte";
 
     export let company = {};
     export let company_id = 0; 
@@ -19,6 +20,7 @@
     let dispatch = createEventDispatcher();
     let editStore = getContext('editStore');
     let addSucursalCount = getContext('addSucursalCount');
+    let startSearch = false;
 
     const getSucursalePorCompany = async () => {
         if (offset > count) return
@@ -76,6 +78,13 @@
     $: updateOffset(endSroll);
     $: if(offset != 0) getSucursalePorCompany();
 
+    const handleRemoveSearch = async () => {
+        startSearch = false;
+        stores = []
+        offset = 0
+        await getSucursalePorCompany();
+    }
+
 </script>
 
 <Snackbar 
@@ -84,6 +93,18 @@
     message={messageSnackbar}
     on:confirm={ deleteStore(storeToDelete) }
 />
+
+<div>
+    <SucursalSearch
+        bind:sucursales = {stores}
+        companyId={company_id}
+        on:startSearch={ () => {
+            startSearch = true;
+            console.log("startSearch " + startSearch)
+        } }
+        on:removeSearch={handleRemoveSearch} 
+    />
+</div>
 
 <div class="store-info__container">
     {#each stores as store, index}

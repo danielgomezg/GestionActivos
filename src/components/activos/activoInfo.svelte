@@ -3,6 +3,7 @@
     import { getContext, onMount } from "svelte";
     import { snackbar, user } from "../../stores/store";
     import { Divider, IconButton, Snackbar, Menu } from "$lib";
+    import ActivoSearch from "./versiones2/activoSearchByArticle.svelte";
 
     export let article = {};
     export let company_id = 0;
@@ -17,6 +18,7 @@
     let openSnackbar = false;
     let messageSnackbar = '';
     let openActions = [];
+    let startSearch = false;
 
     let editActivo = getContext('editActivo')
     let addActivoCount = getContext('addActivoCount');
@@ -110,6 +112,13 @@
         offset += limit;
     }
 
+    const handleRemoveSearch = async () => {
+        startSearch = false;
+        activos = []
+        offset = 0
+        await getActives();
+    }
+
     onMount(async () => {
         offset = 0;
         await getActives()
@@ -127,6 +136,19 @@
     message={ messageSnackbar }
     on:confirm={ deleteActive(activoToDelete) }
 />
+
+<div>
+    <ActivoSearch
+        bind:actives = {activos}
+        companyId={company_id}
+        article_id={article.id}
+        on:startSearch={ () => {
+            startSearch = true;
+            console.log("startSearch " + startSearch)
+        } }
+        on:removeSearch={handleRemoveSearch} 
+    />
+</div>
 
 <div>
     {#each activos as activo, index}
