@@ -122,7 +122,6 @@
         openModal = true;
     }
 
-
     const editActivo = () => {
         console.log('EDIT ACTIVO');
         console.log(activosSelected);
@@ -510,7 +509,7 @@
         
         <div class="flex-row gap-8 space-between">
             
-            <OfficeSucursalSelected 
+           <!-- <OfficeSucursalSelected 
                 custom
                 cleanStore
                 {companyId}
@@ -547,7 +546,7 @@
 
                     officesFilter = [ ...officesFilter, event.detail.office.value ]   
                 } }
-            /> 
+            /> -->
 
             <Autocomplete 
                 {companyId}
@@ -555,7 +554,39 @@
                 required = {true}
                 bind:value={valueOutlined}
                 label="Outlined"
-                onInputChange={handleValueChange}/>
+                onInputChange={handleValueChange}
+                on:sucursalSelected={ (event) => {
+                    console.log('STORE -> ', event.detail)
+                    // filters.store = event.detail.store
+                    if (event.detail.label == undefined) return;
+                    
+                    lockStore.set(event.detail.value)
+                    lockStoreName.set(event.detail.label)
+
+                    // quitar storeFilter de filters
+                    filters = filters.filter( filter => filter.label != storeFilter.label )
+
+                    storeFilter = event.detail
+
+                    filters = [ storeFilter ]
+                    officesFilter = []
+                }}
+                on:officeSelected={ (event) => {
+                    console.log('OFFICE -> ', event.detail.office)
+                    // filters.office = event.detail.office
+                    if (event.detail == undefined) return;
+
+                    lockOffice.set(event.detail.value)
+                    lockOfficeName.set(event.detail.label)
+
+                    // buscar si ya existe el filtro
+                    let filter = filters.find(filter => filter.label == event.detail.label)
+                    if (filter) return;
+
+                    filters = [ ...filters, event.detail ]
+
+                    officesFilter = [ ...officesFilter, event.detail.value ]   
+                }}/>
             
             
         </div>
