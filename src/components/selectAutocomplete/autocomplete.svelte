@@ -1,7 +1,7 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { companySelect } from "../../stores/store";
-    import { TextField, IconButton, Loading } from "$lib";
+    import { TextField, IconButton } from "$lib";
     import { createEventDispatcher, onMount } from "svelte";
     import App from "../../App.svelte";
 
@@ -10,7 +10,9 @@
     let sucursales = [];
     let showResultStore = false;
     let searchTextStore = '';
+    let storeSelected = false;
     let notFoundStore = false;
+    let storeId = 0;
     let offices = [];
     let showResultOffice = false;
     let searchTextOffice = '';
@@ -19,15 +21,14 @@
     let count = 0;
     let limit = 25;
     let offset = 0;
-    
-    let loading = false;
+
     
 
     let dispatch = createEventDispatcher();
 
     const searchSucursales = async (text) => {
+        if(companyId == 0) return;
         sucursales = [];
-        loading = true;
 
         let response = await Api.call(`/sucursal/search/select/${companyId}?search=${text}&limit=50&offset=0`, 'GET', {}, 'json')
         console.log('RESPONSE SEARCH SUCURSALES BY TEXT--> ', response)
@@ -40,7 +41,6 @@
             else{
                 notFoundStore = false;
             }
-            loading = false;
         }
     }
 
@@ -48,7 +48,7 @@
         console.log("SUCURSALES AUTOCOMPLETE ")
         if (companyId == 0) {
             sucursales = [];
-            //sucursalLabels = [];
+            offices = [];
             return;
         }; 
         let response = await Api.call(`/sucursalPorCompany/${companyId}`, 'GET');
@@ -56,17 +56,16 @@
         if (response.success && response.statusCode === '200') {
             sucursales = response.data.result.map(r => ({ label: `${r.number} - ${r.description}`, value: r.id }));
             console.log(sucursales)
-            //sucursalLabels = sucursales.map(s => s.label);
         }
         else {
             sucursales = [];
-            //sucursalLabels = [];
         }
+        offices = [];
     };
 
     const getOffices = async (sucursalId) => {
         console.log("OFICCES AUTOCOMPLETE ")
-        if (searchTextStore == '') {
+        if (!storeSelected) {
             offices = [];
             return;
         }; 
@@ -74,12 +73,31 @@
         console.log('RESPONSE GET OFFICES  AUTOCOMPLETE -> ', response);
         if (response.success && response.statusCode === '200') {
             offices = response.data.result.map(r => ({ label: `${r.floor} - ${r.description}`, value: r.id }));
-            console.log(offices)
+            count = response.data.count;
         }
         else {
             offices = [];
         }
     };
+
+    const searchOffices = async (text) => {
+        if(companyId == 0) return;
+        if(storeId == 0) return;
+        offices = [];
+
+        let response = await Api.call(`/office/search/select/${storeId}?search=${text}&limit=50&offset=0`, 'GET', {}, 'json', companyId)
+        console.log('RESPONSE SEARCH OFICINAS BY TEXT--> ', response)
+        if(response.success && response.statusCode == "200"){
+            offices = response.data.result.map(r => ({ label: `${r.floor} - ${r.description}`, value: r.id }));
+            count = response.data.count;
+            if(count == 0){
+                notFoundOffice = true;
+            }
+            else{
+                notFoundOffice = false;
+            }
+        }
+    }
 
     const onScroll = async (e) => {
         if (e.target.scrollTop + e.target.clientHeight >= e.target.scrollHeight) {
@@ -115,28 +133,26 @@
         }
     });
 
-    function selectSucursal(value) {
-        searchTextStore = value.label;
+    function selectSucursal(store) {
+        //searchTextStore = value.label;
+        searchTextStore = " "
+        storeSelected = true;
         showResultStore = false; // Oculta el contenedor de resultados
-        getOffices(value.value)
-        dispatch('sucursalSelected', value);
+        storeId = store.value
+        getOffices(storeId)
+        dispatch('sucursalSelected', store);
     }
 
     function selectOffice(value) {
-        //searchTextOffice = value.label;
-        //showResultOffice = false; // Oculta el contenedor de resultados
-        //getOffices(value.value)
         dispatch('officeSelected', value);
-
     }
 
     onMount(async () => {
-        await getSucursales()
+        if (companyId != 0) await getSucursales();
     })
 
-    $: console.log("showResult " + searchTextStore)
-
     $: searchSucursales(searchTextStore)
+    $: searchOffices(searchTextOffice)
 
     $: if (companyId != 0) {
         searchTextStore = ''
@@ -164,11 +180,6 @@
         />
         {#if showResultStore}
             <div class="found-container" on:scroll={ onScroll }>
-                {#if loading}
-                    <div style="display: flex; justify-content: center; margin: 10px 0;">
-                        <Loading />
-                    </div>
-                {/if}
                 {#if notFoundStore}
                     <div style="display: flex; justify-content: center; margin: 10px 0;">
                         <span>No se encontraron sucursales</span>
@@ -201,11 +212,6 @@
         />
         {#if showResultOffice}
             <div class="found-container" on:scroll={ onScroll }>
-                {#if loading}
-                    <div style="display: flex; justify-content: center; margin: 10px 0;">
-                        <Loading />
-                    </div>
-                {/if}
                 {#if notFoundOffice}
                     <div style="display: flex; justify-content: center; margin: 10px 0;">
                         <span>No se encontraron oficinas</span>

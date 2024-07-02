@@ -39,6 +39,8 @@
     let hideSelectCompany = false;
     let newArticleDisabled = true;
 
+    //cuando se selecciona una sucursal y despues se quita no se quitan las opciones de las oficinas
+
     setContext('newActivo', (locations) => {
         console.log('newActivo')
         console.log(locations)
@@ -248,6 +250,7 @@
 
     const getActivosByOffice = async (officesId) => {
         console.log('getActivosByOffice > ')
+        console.log('store ' + storeFilter)
         if (startSearch) return;
 
         if(filters.length == 0){
@@ -278,7 +281,9 @@
         console.log('ACTIVOS ALL -> ')
         if (startSearch) return;
 
+        if (companyId == 0) return;
 
+        officesFilter = [];
         let response = (await Api.call(`/actives?limit=${limit}&offset=${offset}`, 'GET', {}, 'json', companyId));
         console.log('RESPONSE ACTIVOS ALL > ', response)
         if (response.success && response.statusCode == '200') {
@@ -469,6 +474,7 @@
 
     // $: getActivosByStore(storeFilter, offset, limit)
     $: getActivosByOffice(officesFilter, offset, limit)
+    $: console.log("officesFilter " + officesFilter + " storeID ", storeFilter)
     $: if ($companySelect != 0) {
         companyId = $companySelect;
         filters = [];
@@ -508,45 +514,6 @@
     <div class="header-content mt-18">
         
         <div class="flex-row gap-8 space-between">
-            
-           <!-- <OfficeSucursalSelected 
-                custom
-                cleanStore
-                {companyId}
-                show={ ['sucursal', 'office']}
-                on:changeStore={ (event) => {
-                    console.log('STORE -> ', event.detail.store)
-                    // filters.store = event.detail.store
-                    if (event.detail.store == undefined) return;
-                    
-                    lockStore.set(event.detail.store.value)
-                    lockStoreName.set(event.detail.store.label)
-
-                    // quitar storeFilter de filters
-                    filters = filters.filter( filter => filter.label != storeFilter.label )
-
-                    storeFilter = event.detail.store
-
-                    filters = [ storeFilter ]
-                    officesFilter = []
-                } }
-                on:changeOffice={ (event) => {
-                    console.log('OFFICE -> ', event.detail.office)
-                    // filters.office = event.detail.office
-                    if (event.detail.office == undefined) return;
-
-                    lockOffice.set(event.detail.office.value)
-                    lockOfficeName.set(event.detail.office.label)
-
-                    // buscar si ya existe el filtro
-                    let filter = filters.find(filter => filter.label == event.detail.office.label)
-                    if (filter) return;
-
-                    filters = [ ...filters, event.detail.office ]
-
-                    officesFilter = [ ...officesFilter, event.detail.office.value ]   
-                } }
-            /> -->
 
             <Autocomplete 
                 {companyId}
@@ -635,8 +602,19 @@
             headers={ $headerTableActivos }
             on:deleteFilter={ (event) => {
                 console.log('deleteFilter > ', event.detail)
+                console.log(storeFilter)
+                console.log(storeFilter == event.detail)
+                console.log(filters)
+                if(storeFilter == event.detail) {
+                    filters = [];
+                    officesFilter = [];
+                    return
+                }
                 filters = filters.filter( filter => filter.label != event.detail.label )
+                console.log(filters)
+                console.log(officesFilter)
                 officesFilter = officesFilter.filter( office => office != event.detail.value )
+                console.log(officesFilter)
 
             } }
             {filters}
