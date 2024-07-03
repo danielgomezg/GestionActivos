@@ -39,8 +39,6 @@
     let hideSelectCompany = false;
     let newArticleDisabled = true;
 
-    //cuando se selecciona una sucursal y despues se quita no se quitan las opciones de las oficinas
-
     setContext('newActivo', (locations) => {
         console.log('newActivo')
         console.log(locations)
