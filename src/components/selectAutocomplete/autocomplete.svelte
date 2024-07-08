@@ -6,6 +6,7 @@
     import App from "../../App.svelte";
 
     export let companyId = 0;
+    export let value;
 
     let sucursales = [];
     let showResultStore = false;
@@ -25,7 +26,7 @@
     let offsetOffice = 0;
     let countOffice = 0;
     
-    let limit = 10;
+    let limit = 100;
     
     let dispatch = createEventDispatcher();
 
@@ -82,7 +83,6 @@
             notFoundStore = true;
             sucursales = [];
         }
-        offices = [];
     };
 
     const getOffices = async (sucursalId) => {
@@ -135,7 +135,6 @@
             else{
                 notFoundOffice = false;
             }
-            console.log(offices)
         }
     }
 
@@ -232,6 +231,9 @@
         getSucursales(); 
     }
 
+    $: if(value == '') offices = [];
+    $: console.log('--------> ' + storeId)
+
 </script>
 
 <div class="selects-container">
@@ -277,9 +279,7 @@
             on:click={() => { 
                 showResultOffice = !showResultOffice;
                 if (searchTextOffice.length > 0) searchTextOffice = '';
-                offset = 0;
-                //getSucursales();
-
+                offsetOffice = 0;
             }}
             on:focus={() => handleTextFieldFocus('offices')}
         />

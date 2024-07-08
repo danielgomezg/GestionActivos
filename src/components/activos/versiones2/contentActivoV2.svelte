@@ -9,6 +9,8 @@
     import SheetHandler from "../../SheetsHandler/sheetHandler.svelte";
     import { headerTableActivos, snackbar, user, lockStore, lockOffice, lockStoreName, lockOfficeName, companySelect, companySelectName } from "../../../stores/store";
     import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
+    //import { Button, Snackbar, Fab, Menu, IconButton } from "$lib";
+    //import Table from "../../../lib/version2/Table2.svelte";
     import OfficeSucursalSelected from "../../sucursal/officeSucursalSelected.svelte";
     //import OfficeSucursalSelected from "../sucursal/v2/officeSucursalSelectedV2.svelte";
     import Autocomplete from "../../selectAutocomplete/autocomplete.svelte";
@@ -229,7 +231,6 @@
     }
 
     const getActivosByStore = async (store) => {
-        console.log('getActivosByStore > ')
         if (startSearch) return;
         if (store == undefined) return;
         if (officesFilter.length > 0) return;
@@ -247,8 +248,6 @@
     }
 
     const getActivosByOffice = async (officesId) => {
-        console.log('getActivosByOffice > ')
-        console.log('store ' + storeFilter)
         if (startSearch) return;
 
         if(filters.length == 0){
@@ -276,7 +275,6 @@
     }
 
     const getActivosAll = async () => {
-        console.log('ACTIVOS ALL -> ')
         if (startSearch) return;
 
         if (companyId == 0) return;
@@ -472,7 +470,6 @@
 
     // $: getActivosByStore(storeFilter, offset, limit)
     $: getActivosByOffice(officesFilter, offset, limit)
-    $: console.log("officesFilter " + officesFilter + " storeID ", storeFilter)
     $: if ($companySelect != 0) {
         companyId = $companySelect;
         filters = [];
@@ -487,11 +484,11 @@
     $: nameSucursal = $lockStoreName
 
   let valueOutlined = '';
+  $: console.log('VALOR OUTLINED ', valueOutlined)
 
   function handleValueChange(newValue) {
     valueOutlined = newValue;
   }
-
 </script>
 
 
@@ -519,7 +516,7 @@
                 required = {true}
                 bind:value={valueOutlined}
                 label="Outlined"
-                onInputChange={handleValueChange}
+                onInputChange={handleValueChange(storeFilter)}
                 on:sucursalSelected={ (event) => {
                     console.log('STORE -> ', event.detail)
                     // filters.store = event.detail.store
@@ -574,8 +571,6 @@
                         startSearch = false;
                         
                         if (offset == 0) {
-                            console.log(storeFilter.value != undefined)
-                            console.log(storeFilter.value)
                             if (officesFilter.length > 0) getActivosByOffice(officesFilter)
                             else if (storeFilter.value != undefined) getActivosByStore(storeFilter)
                             else getActivosAll()
@@ -599,20 +594,15 @@
             bind:this={ table }
             headers={ $headerTableActivos }
             on:deleteFilter={ (event) => {
-                console.log('deleteFilter > ', event.detail)
-                console.log(storeFilter)
-                console.log(storeFilter == event.detail)
-                console.log(filters)
                 if(storeFilter == event.detail) {
                     filters = [];
                     officesFilter = [];
+                    valueOutlined = '';
+                    console.log(valueOutlined)
                     return
                 }
                 filters = filters.filter( filter => filter.label != event.detail.label )
-                console.log(filters)
-                console.log(officesFilter)
                 officesFilter = officesFilter.filter( office => office != event.detail.value )
-                console.log(officesFilter)
 
             } }
             {filters}
@@ -654,10 +644,8 @@
                     })
                     return;
                 }
-
                 messageSnackbar = "¿Estas seguro de eliminar los activos seleccionados?"
                 openSnackbar = true;
-
             } }
             on:selectedAll={ () => {
                 activosSelected = activos;
