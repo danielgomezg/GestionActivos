@@ -8,9 +8,9 @@
     import ActivoFormContent from "../activoFormContent.svelte";
     import SheetHandler from "../../SheetsHandler/sheetHandler.svelte";
     import { headerTableActivos, snackbar, user, lockStore, lockOffice, lockStoreName, lockOfficeName, companySelect, companySelectName } from "../../../stores/store";
-    import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
-    //import { Button, Snackbar, Fab, Menu, IconButton } from "$lib";
-    //import Table from "../../../lib/version2/Table2.svelte";
+    //import { Button, Table, Snackbar, Fab, Menu, IconButton } from "$lib";
+    import { Button, Snackbar, Fab, Menu, IconButton } from "$lib";
+    import Table from "../../../lib/version2/Table2.svelte";
     import OfficeSucursalSelected from "../../sucursal/officeSucursalSelected.svelte";
     //import OfficeSucursalSelected from "../sucursal/v2/officeSucursalSelectedV2.svelte";
     import Autocomplete from "../../selectAutocomplete/autocomplete.svelte";
@@ -156,10 +156,85 @@
             article_id: activosSelected[0].article_id,
             isEdit: true
         }
-
         backButton = false;
         openModal = true;
+    }
 
+    const maintenanceActive = () => {
+        console.log("MANTENIMIENTO")
+        console.log(activosSelected)
+
+        if (activosSelected.length == 0) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Debes seleccionar al menos un activo."
+                return snk
+            })
+            return;
+        }
+
+        // Filtra los objetos que tienen el atributo maintenance_days_remaining
+        const withMaintenanceDaysRemaining = activosSelected.filter(item => 'maintenance_days_remaining' in item);
+        // Filtra los objetos que no tienen el atributo maintenance_days_remaining
+        const withoutMaintenanceDaysRemaining = activosSelected.filter(item => !('maintenance_days_remaining' in item));
+
+        if (withoutMaintenanceDaysRemaining.length > 0) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = "Hay activos seleccionados que no tienen una fecha de mantencion.";
+                return snk
+            })
+            return;
+        }
+
+         // Verificar si hay activos con maintenance_days_remaining mayor a 0
+        const hasMaintenanceDaysRemainingGreaterThanZero = withMaintenanceDaysRemaining.some(item => item.maintenance_days_remaining > 0);
+
+        if (hasMaintenanceDaysRemainingGreaterThanZero) {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss';
+                snk.message = "Hay activos seleccionados que tienen días de mantenimiento restantes.";
+                return snk;
+            });
+            return;
+        }
+        editActivoMaintenance(withMaintenanceDaysRemaining)
+    }
+
+    const editActivoMaintenance = async (activos) => {
+        let clean = true;
+
+        let response = (await Promise.all(activos.map(act => {
+            return Api.call(`/active/mantencion/${act.id}`, 'PUT', {}, 'json', companyId)
+        })));
+        console.log('RESPONSE SAVE ACTIVES MAINTENANCE --> ', response)
+
+        let failed = response.filter(r => r.data.code != "201");
+        console.log("FALLO ACTUALIZACION DE LA FECHA DE MANTENCION ", failed)
+        //return failed
+
+        if (failed.length == 0){
+            getActivosByOffice(officesFilter)
+            snackbar.update(snk => {
+                    snk.open = true;
+                    snk.type = 'dismiss'
+                    snk.message = "Mantención confirmada con éxito."
+                    return snk
+            })
+            activosSelected = [];
+        }
+        else {
+            snackbar.update(snk => {
+                snk.open = true;
+                snk.type = 'dismiss'
+                snk.message = response.data.message?  response.data.message : 'Ha ocurrido un error al confirmar la mantención'
+                return snk
+            })
+            clean = false
+        }
     }
 
     const deleteActivos = async () => {
@@ -630,6 +705,7 @@
                 
                 // newArticleDisabled = false;
             } }
+            on:maintenance={ maintenanceActive }
             on:edit={ editActivo }
             on:delete={ () => {
                 console.log('DELETE ACTIVOS');

@@ -99,6 +99,7 @@
               {#if $user.profile_id != 2}
                 <IconButton icon="delete" on:click={() => dispatch("delete")} />
               {/if}
+            <IconButton icon="engineering" tooltipText="confirmar mantenimiento" disabled={ $user.profile_id == 2 } on:click={ () => dispatch("maintenance")}/>
           </div>
         </div>
       {/if}
@@ -196,23 +197,38 @@
                         />
                       {/if}
                     </td>
-                  {:else if header.name == "maintenance_days_remaining"}
-                    
+                    {:else if header.name == "maintenance_days_remaining"}
                     <td class="mdc-data-table__cell">
-                      {#if row[header.name]}
-                        <Chip 
-                          type="outlined" 
-                          chips={ [ 
-                            { 
-                              id: `chp-${index}`, 
-                              label: row[header.name] == 0 ? 'Requiere autenticacion' : 'En ' + row[header.name] + ' dias', 
-                              icon: 'check', 
-                              dispatch: 'check-chip',
-                              color: row[header.name] > 20 ? 'success' : row[header.name] > 10 ? 'warning' : 'danger'
-                            } 
-                          ] } 
-                          action="" 
-                        />
+                      {#if row[header.name] !== undefined && row[header.name] !== null}
+                        {#if row[header.name] <= 0}
+                          <Chip 
+                            type="outlined" 
+                            chips={ [ 
+                              { 
+                                id: `chp-${index}`, 
+                                label: 'Requiere mantencion', 
+                                icon: 'check', 
+                                dispatch: 'check-chip',
+                                color: 'danger'
+                              } 
+                            ] } 
+                            action="" 
+                          />
+                        {:else}
+                          <Chip 
+                            type="outlined" 
+                            chips={ [ 
+                              { 
+                                id: `chp-${index}`, 
+                                label: 'En ' + row[header.name] + ' dias', 
+                                icon: 'check', 
+                                dispatch: 'check-chip',
+                                color: row[header.name] > 20 ? 'success' : row[header.name] > 10 ? 'warning' : 'danger'
+                              } 
+                            ] } 
+                            action="" 
+                          />
+                        {/if}
                       {:else}
                         <Chip 
                           type="outlined" 
@@ -229,7 +245,6 @@
                         />
                       {/if}
                     </td>
-                    
                   {:else}
                     <td class="mdc-data-table__cell">
                       {row[header.name]}
