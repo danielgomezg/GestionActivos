@@ -171,8 +171,12 @@
         let response = (await Api.call(`/articles/company/${company_id}?limit=${limit}&offset=${offset}`, 'GET'));
         console.log('RESPONSE GET ARTICLES --> ', response)
         if (response.success && response.statusCode == "200") {
-            articles = response.data.result;
-            count = response.data.count;
+            if(offset == 0){
+                articles = response.data.result;
+                count = response.data.count;
+            } else{
+                articles = [...articles, ...response.data.result]
+            }
         }
         else {
             message = "La empresa no tiene articulos registrados."
