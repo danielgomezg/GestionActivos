@@ -1,9 +1,10 @@
 <script>
     import Api from "../../../helpers/ApiCall";
     import { getContext, onMount } from "svelte";
-    import { snackbar, user } from "../../stores/store";
+    import { snackbar, user, imagesView } from "../../stores/store";
     import { Divider, IconButton, Snackbar, Menu } from "$lib";
     import ActivoSearch from "./versiones2/activoSearchByArticle.svelte";
+    import ImagesView from "../ImagesView/ImagesView.svelte";
 
     export let article = {};
     export let company_id = 0;
@@ -19,6 +20,7 @@
     let messageSnackbar = '';
     let openActions = [];
     let startSearch = false;
+    let openDialogImage = false;
 
     let editActivo = getContext('editActivo')
     let addActivoCount = getContext('addActivoCount');
@@ -119,6 +121,15 @@
         await getActives();
     }
 
+    const openImages = (activo) => {
+        let imageActives = [activo.photo1];
+        if(activo.photo2) imageActives = [...imageActives, activo.photo2];
+        if(activo.photo3) imageActives = [...imageActives, activo.photo3];
+        if(activo.photo4) imageActives = [...imageActives, activo.photo4];
+        imagesView.set(imageActives);
+        openDialogImage = true;
+    }
+
     onMount(async () => {
         offset = 0;
         await getActives()
@@ -129,6 +140,10 @@
     $: console.log('ACTIVOS --> ', activos)
 
 </script>
+
+{#if openDialogImage}
+    <ImagesView bind:openDialog={openDialogImage} type_image={'/image_active/'} />
+{/if}
 
 <Snackbar 
     bind:open={ openSnackbar }
@@ -220,7 +235,9 @@
                 </div>
                 {#if activo.urlphoto1}
                     <div class="content-image" style="margin: 0 auto;">
-                        <img src={ activo.urlphoto1 } class="article-image" alt={activo.bar_code} />
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+                        <img src={ activo.urlphoto1 } class="article-image" alt={activo.bar_code}  on:click={ openImages(activo) }/>
                     </div>
                 {/if}
                 

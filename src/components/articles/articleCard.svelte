@@ -5,6 +5,7 @@
     import { Card, IconButton, Button, Snackbar, Menu } from "$lib";
 
     export let article = {}
+    export let openDialog;
 
     let imageUrl;
     let openActions = false;
@@ -53,6 +54,7 @@
 
     const openImages = () => {
         imagesView.set(article.photo.split(','));
+        openDialog = true;
     }
 
     $: getImage(article.photo)

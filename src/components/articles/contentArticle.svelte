@@ -28,6 +28,7 @@
     let backButton = false;
     let startSearch = false;
     let newArticleDisabled = true;
+    let openDialogImage = false;
 
     let previusComponent, previusProps, previusModelTitle = '';
 
@@ -196,7 +197,7 @@
 
     onMount(() => {
         window.addEventListener('scroll', handleScroll);
-
+        console.log("AAAA", openDialogImage);
     })
 
     onDestroy(() => {
@@ -210,10 +211,12 @@
     }
 
     $: companyName = $companySelectName
-
 </script>
 
-<ImagesView />
+{#if openDialogImage}
+    <ImagesView bind:openDialog={openDialogImage} />
+{/if}
+
 
 <div class="mobile-only" style="position: fixed; bottom: 10px; right: 10px; z-index: 10">
     {#if $user.profile_id != 2}
@@ -257,7 +260,8 @@
         {/if}
         {#each articles as article }    
             <CardArticle 
-                {article} 
+                {article}
+                bind:openDialog={openDialogImage} 
                 on:edit={ (event) => editArticle(event.detail) } 
                 on:newActivo={ (event) => newActivo(event.detail, companyId) } 
                 on:showActivos={ (event) => showActivos(event.detail, companyId) } 

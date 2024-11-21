@@ -3,6 +3,8 @@
     import Api from "../../../helpers/ApiCall";
     import { imagesView } from "../../stores/store";
 
+    export let type_image = '/image_article/';
+    export let openDialog = false;
     let dialog;
     let blob = '';
     let imagefocus = 0;
@@ -11,7 +13,7 @@
     const getImage = async (images) => {
         
         await Promise.all(images.map(async (url) => {
-            let response = await Api.callImage('/image_article/' + url);
+            let response = await Api.callImage(type_image + url);
             if (response != null) {
                 blobImages.push(response);
             }
@@ -33,6 +35,7 @@
         imagefocus = 0;
         blobImages = [];
         imagesView.set([]);
+        openDialog = false;
     }}
     >
     <div slot="content" class="image-container">
